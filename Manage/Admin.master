@@ -1,0 +1,166 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Admin.master.cs" Inherits="Manage_Admin" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="關鍵字內容" />
+<meta name="description" content="描述" /><!--告訴搜尋引擎這篇網頁的內容或摘要。--> 
+<meta name="generator" content="Notepad" /><!--告訴搜尋引擎這篇網頁是用什麼軟體製作的。--> 
+<meta name="author" content="工研院 資科中心" /><!--告訴搜尋引擎這篇網頁是由誰製作的。--> 
+<meta name="copyright" content="本網頁著作權所有" /><!--告訴搜尋引擎這篇網頁是...... --> 
+<meta name="revisit-after" content="3 days" /><!--告訴搜尋引擎3天之後再來一次這篇網頁，也許要重新登錄。-->
+<title>綠能節電平台-後台管理</title>
+<link href="<%= ResolveUrl("~/App_Themes/css/bootstrap.css") %>" rel="stylesheet" /><!-- normalize & bootstrap's grid system -->
+<link href="<%= ResolveUrl("~/App_Themes/css/font-awesome.min.css") %>" rel="stylesheet" type="text/css" /><!-- CSS icon -->
+<link href="<%= ResolveUrl("~/App_Themes/css/superfish.css") %>" rel="stylesheet" type="text/css" /><!-- 下拉選單 -->
+<link href="<%= ResolveUrl("~/App_Themes/css/jquery.mmenu.css") %>" rel="stylesheet" type="text/css" /><!-- mmenu css:行動裝置選單 -->
+<link href="<%= ResolveUrl("~/App_Themes/css/colorbox.css") %>" rel="stylesheet" type="text/css" />
+<link href="<%= ResolveUrl("~/App_Themes/css/jquery.powertip.css") %>" rel="stylesheet" type="text/css" />
+<link href="<%= ResolveUrl("~/App_Themes/css/jquery.datetimepicker.css") %>" rel="stylesheet" type="text/css" /><!-- datepicker -->
+<link href="<%= ResolveUrl("~/App_Themes/css/OchiLayout.css") %>" rel="stylesheet" type="text/css" /><!-- ochsion layout base -->
+<link href="<%= ResolveUrl("~/App_Themes/css/OchiColor.css") %>" rel="stylesheet" type="text/css" /><!-- ochsion layout color -->
+<link href="<%= ResolveUrl("~/App_Themes/css/OchiRWD.css") %>" rel="stylesheet" type="text/css" /><!-- ochsion layout RWD -->
+<link href="<%= ResolveUrl("~/App_Themes/css/style.css") %>" rel="stylesheet" type="text/css" />
+<link href="<%= ResolveUrl("~/App_Themes/css/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
+<link href="<%= ResolveUrl("~/js/fancybox/jquery.fancybox.css") %>" rel="stylesheet" type="text/css"  />
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery-1.11.2.min.js") %>"></script>
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery-ui-1.10.2.custom.min.js") %>"></script>
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.blockUI.js") %>"></script>
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.breakpoint-min.js") %>"></script><!-- 斷點設定 -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/superfish.min.js") %>"></script><!-- 桌機版下拉選單 -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/supposition.js") %>"></script><!-- 下拉選單:修正最後項在視窗大小不夠時的BUG -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.mmenu.min.js") %>"></script><!-- mmenu js:行動裝置選單 -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.touchSwipe.min.js") %>"></script><!-- 增加JS觸控操作 for mmenu -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.colorbox.js") %>"></script>
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.easytabs.min.js") %>"></script><!-- easytabs tab -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.powertip.min.js") %>"></script><!-- powertip:tooltips -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.datetimepicker.js") %>"></script><!-- datepicker -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/restables.min.js") %>"></script><!-- RWD table -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/downfile.js") %>"></script>
+<script type="text/javascript" src="<%= ResolveUrl("~/js/Pager.js") %>"></script>
+<script type="text/javascript" src="<%= ResolveUrl("~/js/PageList.js") %>"></script>
+<script type="text/javascript" src="<%= ResolveUrl("~/js/fancybox/jquery.fancybox.js") %>"></script>
+    <asp:ContentPlaceHolder id="head" runat="server"></asp:ContentPlaceHolder>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+
+        function logoutbtn() {
+            window.location = "../WebPage/LogOut.aspx";
+        }
+</script>
+</head>
+<body>
+    <%--<form id="form1" runat="server">--%>
+    <div class="WrapperBody">
+        <div class="WrapperHeader container">
+            <div class="logo"><a href="<%= ResolveUrl("~/WebPage/ProjectList.aspx") %>">
+                <img src="<%= ResolveUrl("~/App_Themes/images/logo.png") %>" /></a></div>
+            <div class="loginfo font-normal">
+                登入者：<asp:Label ID="mName" runat="server"></asp:Label>
+                <!-- RWD 外部連結 start -->
+                <span class="HeaderOtherLinkOpen"><a href="#HeaderOtherLink" class="colorboxS" title="外部連結">外部連結</a></span>
+                <div class="HeaderOtherLinkWrapper">
+                    <span class="HeaderOtherLink" id="HeaderOtherLink">
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="logoutbtn()">登出</a></li>
+                        </ul>
+                    </span>
+                </div><!-- HeaderOtherLinkWrapper -->
+                <!-- RWD 外部連結 end -->
+            </div><!-- loginfo -->
+
+            <div class="MainMenu"><!-- 側邊選單開關容器 -->
+                <div id="opensidemenu"></div><!-- 桌機主選單 -->
+                <ul id="mainmenu" class="sf-menu font-size2">
+                    <li class="activemenu"><a href="<%= ResolveUrl("~/WebPage/ProjectList.aspx") %>">退出管理</a></li>
+                    <li class="activemenu"><a href="<%= ResolveUrl("~/Manage/NewsManage.aspx") %>">最新消息</a></li>
+                    <li class="activemenu"><a href="<%= ResolveUrl("~/Manage/setProjectDate.aspx") %>">專案期程</a></li>
+                    <li class="activemenu"><a href="<%= ResolveUrl("~/Manage/MemberManage.aspx") %>">成員管理</a></li>
+                    <li class="activemenu"><a href="<%= ResolveUrl("~/Manage/ChangeContractor.aspx") %>">更換承辦人</a></li>
+                    <li class="activemenu"><a href="javascript:void(0);">紀錄查詢</a>
+                        <ul>
+                            <li><a href="<%= ResolveUrl("~/Manage/Log_ModPw.aspx") %>">密碼修改紀錄</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/Log_ProjectInfo.aspx") %>">計畫書更動紀錄</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/Log_MSModify.aspx") %>">月/季報更動紀錄</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/Log_ChangeContractor.aspx") %>">承辦人異動紀錄</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/Log_ReportSubDate.aspx") %>">月/季報送審日期</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/Log_ReviewDate.aspx") %>">主管簽核日期</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/Log_IO.aspx") %>">使用者登入/登出</a></li>
+                        </ul>
+                    </li>
+                    <li id="OtherManage" class="activemenu"><a href="javascript:void(0);">其他管理</a>
+                        <ul>
+                            <li><a href="<%= ResolveUrl("~/Manage/MonthManage.aspx") %>">月報</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/SeasonManage.aspx") %>">季報</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/MoneyExecute.aspx") %>">經費執行</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- WrapperMenu -->
+        </div>
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+    </div>
+    <div class="WrapperFooter">
+        <div class="footerblock container font-size2 font-normal lineheight02">
+            版權所有©2015 工業技術研究院｜ 建議瀏覽解析度1024x768以上<br />
+            業務窗口：陳奕宏(電話:03-5917242)｜網站製作：資科中心｜意見反應｜系統使用說明書｜網站地圖｜
+        </div><!--{* footerblock *}-->
+    </div>
+<%--</form>--%>
+        <!-- 側邊選單內容:動態複製主選單內容 -->
+<div id="sidebar-wrapper"  style="z-index:999;"></div><!-- sidebar-wrapper -->
+
+<div style="display:none;">
+<div id="appblock">
+<div class="margin35T padding5RL">
+<div class="twocol">
+	<div class="left width50 textcenter">
+    <div>Android</div>
+    <div class="margin5T">
+    	<a href="./ApkDownload.ashx?app=mmsapp&url=http://AppsPX.itri.org.tw/OurApps/MMSApp/mmsapp.apk" target="_blank"><img src="images/AppQRCode1.png" /></a>
+    </div>    
+    </div><!-- left -->
+    <div class="left width50 textcenter">
+    <div>iOS</div>
+    <div class="margin5T">
+    	<a href="itms-services://?action=download-manifest&url=http://appspx.itri.org.tw/OurApps/MMSApp/MMSApp_1.0.plist" target="_blank"><img src="images/AppQRCode2.png" /></a>
+    </div>    
+    </div><!-- left -->
+</div><!-- twocol -->
+<div class="margin10T">註：當您的手機無法識別QR Code時，請直接點擊QR Code圖示即可下載安裝。</div>
+<div class="twocol margin20T">
+            <div class="right">
+                <a href="#" class="genbtn closecolorbox">關閉</a>
+            </div>
+</div>
+<br /><br />
+</div>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+//RWD table
+	 $('.RWDtableJS').resTables({
+        move: {
+        1: 0,//移動位置:第二到第一欄
+		3: 1,
+		4: 2,
+		5: 3,
+    	},
+		span:[1],//標題欄位(桌機版第二欄)
+      });	
+});
+</script>
+        
+<script type="text/javascript" src="<%= ResolveUrl("~/js/GenCommon.js") %>"></script><!-- UIcolor JS -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/PageCommon.js") %>"></script><!-- 系統共用 JS -->
+<script type="text/javascript" src="<%= ResolveUrl("~/js/autoHeight.js") %>"></script><!-- 高度不足頁面的絕對置底footer -->
+
+</body>
+</html>

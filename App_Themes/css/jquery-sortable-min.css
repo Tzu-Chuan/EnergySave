@@ -1,0 +1,96 @@
+@charset "utf-8";
+/* CSS Document */
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.sortedList li.placeholder {
+  position: relative;
+  
+  /** More li styles **/
+}
+ol.sortedList li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+  content: "";
+  width: 0;
+  height: 0;
+  margin-top: -5px;
+  left: -5px;
+  top: -4px;
+  border: 5px solid transparent;
+  border-left-color: red;
+  border-right: none;
+}
+ul.sortedList li.placeholder {
+  position: relative;
+  
+  /** More li styles **/
+}
+ul.sortedList li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+  content: "";
+  width: 0;
+  height: 0;
+  margin-top: -5px;
+  left: -5px;
+  top: -4px;
+  border: 5px solid transparent;
+  border-left-color: red;
+  border-right: none;
+}
+
+.sortedTable tr td{
+  cursor: pointer;	
+}
+.sortedTable tr.placeholder{
+  display: block;
+  background: red;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: none;	
+}
+.sortedTable tr.placeholder:before{
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-left-color: red;
+  margin-top: -5px;
+  left: -5px;
+  border-right: none;	
+}
+
+.sortedTableCol th{
+  cursor: pointer;	
+}
+.sortedTableCol th.placeholder{
+  display: block;
+  background: red;
+  position: relative;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;	
+}
+.sortedTableCol th.placeholder:before{
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-top-color: red;
+  top: -6px;
+  margin-left: -5px;
+  border-bottom: none;	
+}

@@ -1,0 +1,123 @@
+@charset "utf-8";
+/* 基本樣式:版型使用顏色(綠色)V1601 */
+
+/*  ===== 網站元件樣式 ===== */
+/* font style */
+.font-normal{color:#181818;}
+.font-normal a{color:#4e9700;text-decoration: none;border-bottom: 1px solid transparent;transition: all ease-in-out 0.2s;}
+.font-normal a:hover{color:#39c900;border-color:#39c900;}
+
+.font-white{color:#FFFFFF;}
+.font-white a{color:#FFFFFF; text-decoration:none;border-bottom: 1px solid transparent;transition: all ease-in-out 0.2s;}
+.font-white a:hover{color:#FF0;border-color:#FF0;}
+.font-title{color:#4e9700;}
+.font-title a{color:#4e9700; text-decoration:none;border-bottom: 1px solid transparent;transition: all ease-in-out 0.2s;}
+.font-title a:hover{color:#39c900; border-color:#39c900;}
+.font-red{color:red;}
+
+/* 指引步驟 */
+.processtable .prononework{background:#f1f1f1; border:1px solid #cbcbcb; color:#9c9c9c;}
+.processtable .procurrent{ font-weight:bold; border:1px solid #254e01; background:#3b7507; color:#fff;}
+.processtable .profinish{background:#eaf6dd; color:#58871c; border:1px solid #d1ddbb;}
+.processtable .proiconfinish{background:url(../images/GenStyleImage/ProArFinishGreen.gif) no-repeat;}
+.processtable .proiconcurrent{background:url(../images/GenStyleImage/ProArNextGreen.gif) no-repeat;}
+.processtable .proiconnone{background:url(../images/GenStyleImage/ProArNoneGreen.gif) no-repeat;}
+/* 指引步驟樣式二 */
+.OchiStep li a {color: white;background-color: hsla(0, 0%, 83%, 1);text-align: center;text-transform: capitalize;}
+.OchiStep li.completed a {background:#eaf6dd; color:#58871c;}
+.OchiStep li.completed a:after {border-left: 30px solid #eaf6dd;}
+.OchiStep li.active a {background: #3b7507;}
+.OchiStep li.active a:after {border-left: 30px solid #3b7507;}
+.OchiStep li a:before {border-left: 30px solid white;}
+.OchiStep li a:after {border-left: 30px solid hsla(0, 0%, 83%, 1);}
+
+/* 頁籤式按鈕 */
+.tabmenublock{border-bottom:1px solid #d3d3d3;}
+.SlimTabBtnCurrent{background:#FFFFFF; border:1px solid #d3d3d3; border-bottom:0; font-weight:bold;}
+.SlimTabBtn a{color:#557500; text-decoration:none; background:#e4ebd2;border:1px solid #d3d3d3;transition: all ease-in-out 0.2s;}
+.SlimTabBtn a:hover{color:#90c600; background:#fff;}
+
+/* 按鈕樣式 */
+a.genbtn,input.genbtn,button.genbtn{
+border:1px solid #a9d583; padding:5px 15px;*padding:5px;_padding:5px;color:#2e5d1d; font-size:15px; margin:0px 2px;font-weight:bold;
+background-color:#ecfae0;text-shadow: 1px 1px 1px #fff;
+background-image: -webkit-linear-gradient(top, #ecfae0, #d1f2b4);
+background-image: -moz-linear-gradient(top, #ecfae0, #d1f2b4);
+background-image: -ms-linear-gradient(top, #ecfae0, #d1f2b4);
+background-image: -o-linear-gradient(top, #ecfae0, #d1f2b4);
+background-image: linear-gradient(to bottom, #ecfae0, #d1f2b4);
+-webkit-border-radius:8px;
+-moz-border-radius:8px;
+border-radius:8px;
+transition: all ease-in-out 0.2s;
+}
+a.genbtn:hover,input.genbtn:hover,button.genbtn:hover{
+cursor:pointer;color:#fff;border:1px solid #2f4701;text-decoration:none;
+background-color:#365f0e;text-shadow: 1px 1px 1px #000;
+background-image: -webkit-linear-gradient(top, #365f0e, #67950d);
+background-image: -moz-linear-gradient(top, #365f0e, #67950d);
+background-image: -ms-linear-gradient(top, #365f0e, #67950d);
+background-image: -o-linear-gradient(top, #365f0e, #67950d);
+background-image: linear-gradient(to bottom, #365f0e, #67950d);
+}
+a.genbtnS,input.genbtnS,button.genbtnS{
+border:1px solid #a9d583; padding:3px 15px;*padding:5px;_padding:5px;color:#2e5d1d; font-size:12px; margin:0px 2px;font-weight:bold;
+background-color:#ecfae0;text-shadow: 1px 1px 1px #fff;
+background-image: -webkit-linear-gradient(top, #ecfae0, #d1f2b4);
+background-image: -moz-linear-gradient(top, #ecfae0, #d1f2b4);
+background-image: -ms-linear-gradient(top, #ecfae0, #d1f2b4);
+background-image: -o-linear-gradient(top, #ecfae0, #d1f2b4);
+background-image: linear-gradient(to bottom, #ecfae0, #d1f2b4);
+-webkit-border-radius:6px;
+-moz-border-radius:6px;
+border-radius:6px;
+transition: all ease-in-out 0.2s;
+}
+a.genbtnS:hover,input.genbtnS:hover,button.genbtnS:hover{
+cursor:pointer;color:#fff;border:1px solid #2f4701;text-decoration:none;
+background-color:#365f0e;text-shadow: 1px 1px 1px #000;
+background-image: -webkit-linear-gradient(top, #365f0e, #67950d);
+background-image: -moz-linear-gradient(top, #365f0e, #67950d);
+background-image: -ms-linear-gradient(top, #365f0e, #67950d);
+background-image: -o-linear-gradient(top, #365f0e, #67950d);
+background-image: linear-gradient(to bottom, #365f0e, #67950d);
+}
+a.genbtn:hover,a.genbtnS:hover{cursor:pointer;}
+
+input.genbtn{
+padding:3px 15px;*padding:5px;_padding:5px;
+}
+input.genbtnS{
+padding:2px 15px;*padding:5px;_padding:5px;
+}
+button.genbtn{
+padding:3px 15px;*padding:5px;_padding:5px;
+}
+button.genbtnS{
+padding:2px 15px;*padding:5px;_padding:5px;
+}
+
+/* 輸入框 */
+.inputex{border:1px solid #c5c5c5;transition: all ease-in-out 0.2s;}
+.inputex:hover{border:1px solid #7b7b7b;}
+.inputex:focus{border:1px solid #202020;}
+/* 表單樣式 */
+.gentable table{}
+.gentable th{border-bottom:1px solid #bababa;}
+.gentable td{border-bottom:1px dotted #bababa;}
+.gentable td.titlebg{background:#f6f9f1;}
+.titlebackicon{background:url(../images/GenStyleImage/twocoltitlebackBlue.gif) no-repeat right; padding-right:10px;}
+
+/* 雙色表格 */
+.stripeMe table{border:1px solid #b9cb9f;}
+.stripeMe table tr td{border:1px solid #d7e4c5; background-color:#fbfdf8;}
+.stripeMe th{color:#3e5120; border:1px solid #b9cb9f; background:#deebce;}
+.stripeMe th a{color:#4e9700; text-decoration:none;border-bottom: 1px solid transparent;transition: all ease-in-out 0.2s;}
+.stripeMe th a:hover{color:#39c900; border-color:#39c900;}
+.stripeMe tr.alt td{background-color:#f4f9ee;}
+.stripeMe tr td:first-child{border-left-color:#b9cb9f;}
+.stripeMe tr th:first-child{border-left-color:#b9cb9f;}
+.stripeMe tr td:last-child{border-right-color:#b9cb9f;}
+.stripeMe tr th:last-child{border-right-color:#b9cb9f;}
+.stripeMe tr:last-child td{border-bottom-color:#b9cb9f;}
+.stripeMe tr.spe td{background-color:#FEFBC2;}
