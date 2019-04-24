@@ -135,11 +135,11 @@ public class accReport : IHttpHandler,IRequiresSessionState
                     strStage = string.IsNullOrEmpty(context.Request.Form["strStage"]) ? "" :  context.Request.Form["strStage"].ToString().Trim();
                     ch_db._strStage = strStage;
                     ds = ch_db.getReportTotalBehindgForEx();
-                    if (ds.Tables[2].Rows.Count>0) {
+                    if (ds.Tables[0].Rows.Count>0) {
                         xmlStr1 = DataTableToXml.ConvertDatatableToXML(ds.Tables[0], "dataList", "dataHead");
-                        xmlStr2 = DataTableToXml.ConvertDatatableToXML(ds.Tables[1], "dataList", "data_item");
-                        xmlStr3 = DataTableToXml.ConvertDatatableToXML(ds.Tables[2], "dataList", "dataCity");
-                        xmlStr = "<root>" + xmlStr1 + xmlStr2 + xmlStr3 + "</root>";
+                        //xmlStr2 = DataTableToXml.ConvertDatatableToXML(ds.Tables[1], "dataList", "data_item");
+                        xmlStr2 = DataXML(ds.Tables[1]);
+                        xmlStr = "<root>" + xmlStr1 + xmlStr2 + "</root>";
                         context.Response.Write(xmlStr);
                     }
                     break;
@@ -164,15 +164,17 @@ public class accReport : IHttpHandler,IRequiresSessionState
             for (int i = 0; i < dv.Count; i++)
             {
                 /// Node - City 
-                City = doc.CreateElement("City");
-                City.SetAttribute("city_Item", dv[i]["city_Item"].ToString());
-                City.SetAttribute("city_Item_cn", dv[i]["city_Item_cn"].ToString());
-                City.SetAttribute("city_I_Guid", dv[i]["city_I_Guid"].ToString());
-                City.SetAttribute("city_Stage", dv[i]["city_Stage"].ToString());
-                City.SetAttribute("city_Year", dv[i]["city_Year"].ToString());
-                City.SetAttribute("city_Season", dv[i]["city_Season"].ToString());
-                dataList.AppendChild(City);
-
+                if (!(i != 0 && dv[i - 1]["city_I_Guid"].ToString() == dv[i]["city_I_Guid"].ToString() && dv[i - 1]["city_Year"].ToString() == dv[i]["city_Year"].ToString() && dv[i - 1]["city_Season"].ToString() == dv[i]["city_Season"].ToString()))
+                {
+                    City = doc.CreateElement("City");
+                    City.SetAttribute("city_Item", dv[i]["city_Item"].ToString());
+                    City.SetAttribute("city_Item_cn", dv[i]["city_Item_cn"].ToString());
+                    City.SetAttribute("city_I_Guid", dv[i]["city_I_Guid"].ToString());
+                    City.SetAttribute("city_Stage", dv[i]["city_Stage"].ToString());
+                    City.SetAttribute("city_Year", dv[i]["city_Year"].ToString());
+                    City.SetAttribute("city_Season", dv[i]["city_Season"].ToString());
+                    dataList.AppendChild(City);
+                }
 
                 /// Node - Data Item 
                 XmlElement data_item = doc.CreateElement("data_item");
@@ -213,7 +215,7 @@ public class accReport : IHttpHandler,IRequiresSessionState
                 XmlElement sum4 = doc.CreateElement("sum4");
                 sum4.InnerText = VerificationString(dv[i]["sum4"].ToString());
                 data_item.AppendChild(sum4);
-                dataList.AppendChild(data_item);
+                City.AppendChild(data_item);
 
             }
             rVal = doc.OuterXml.ToString();

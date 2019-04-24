@@ -103,24 +103,7 @@ public partial class handler_GetCheckPoint : System.Web.UI.Page
             XmlElement PushItem = doc.DocumentElement;
             for (int i = 0; i < dv.Count; i++)
             {
-                if (i == 0)
-                {
-                    /// Node - PushItem 
-                    PushItem = doc.CreateElement("PushItem");
-                    PushItem.SetAttribute("P_Guid", dv[i]["P_Guid"].ToString());
-                    PushItem.SetAttribute("P_Type", dv[i]["P_Type"].ToString());
-                    PushItem.SetAttribute("P_Period", dv[i]["P_Period"].ToString());
-                    string CodeStr = (dv[i]["P_Type"].ToString() == "03") ? getDeviceReplaceCode(dv[i]["P_ItemName"].ToString()) : dv[i]["P_ItemName"].ToString();
-                    CodeStr = (dv[i]["P_Type"].ToString() == "04") ? getExPandCode(dv[i]["P_ItemName"].ToString()) : dv[i]["P_ItemName"].ToString();
-                    PushItem.SetAttribute("P_ItemName", CodeStr);
-                    PushItem.SetAttribute("P_ItemNameCode", dv[i]["P_ItemName"].ToString());
-                    PushItem.SetAttribute("P_WorkRatio", dv[i]["P_WorkRatio"].ToString());
-                    PushItem.SetAttribute("P_ExFinish", dv[i]["P_ExFinish"].ToString());
-                    PushItem.SetAttribute("P_ExType", dv[i]["P_ExType"].ToString());
-                    PushItem.SetAttribute("P_ExDeviceType", dv[i]["P_ExDeviceType"].ToString());
-                    cpList.AppendChild(PushItem);
-                }
-                else if (dv[i - 1]["P_Guid"].ToString() != dv[i]["P_Guid"].ToString())
+                if (i == 0 || dv[i - 1]["P_Guid"].ToString() != dv[i]["P_Guid"].ToString())
                 {
                     /// Node - PushItem 
                     PushItem = doc.CreateElement("PushItem");
