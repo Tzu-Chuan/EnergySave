@@ -510,6 +510,7 @@ select @RS_PorjectGuid=I_Guid from ProjectInfo where I_People=@M_Guid and I_Stat
 SELECT * into #tmpp from PushItem
 where P_ParentId=@RS_PorjectGuid and P_Period=@RS_Stage and P_Status='A'
 
+
 --撈出所有的推動項目、查核點、預定工作進度
 insert into #tmpPro(P_Guid,P_ItemName,P_Type,P_Period,CP_Point,P_WorkRatio,CP_ReserveYear,CP_ReserveMonth,CP_Desc,CP_Process,CP_RealProcess,CP_Summary,CP_BackwardDesc,CP_showhide)
 select P_Guid,P_ItemName,P_Type,P_Period,CP_Point,P_WorkRatio,CP_ReserveYear,CP_ReserveMonth,CP_Desc
@@ -518,7 +519,8 @@ select P_Guid,P_ItemName,P_Type,P_Period,CP_Point,P_WorkRatio,CP_ReserveYear,CP_
 ,CP_Summary,CP_BackwardDesc,
 case when CP_ReserveMonth=@mth and CP_ReserveYear=@RS_Year and P_Period=@RS_Stage then 'Y' else 'N' end as CP_showhide
 from #tmpp left join Check_Point on P_Guid=CP_ParentId and CP_Status='A'
-where  CP_ReserveYear=@RS_Year and CP_ProjectId=@RS_PorjectGuid -- and CP_ReserveMonth=@mth
+where  P_Period=@RS_Stage and CP_ProjectId=@RS_PorjectGuid and CP_Status='A'  -- and CP_ReserveMonth=@mth and CP_ReserveYear=@RS_Year and
+
 
 --算出當季
 declare @while_rowcount int=0;
@@ -529,11 +531,19 @@ declare @w_P_Type nvarchar(50)=''
 declare @w_P_ItemName nvarchar(50)=''
 select @while_rowcount = count(*) from #tmpp
 declare @rcount int=0;
+declare @newYM nvarchar(10)='';
+declare @minYM nvarchar(10)='';
+declare @strYM nvarchar(5)='';
 while @while_rowcount>0
 	begin
+		
 		select top 1 @w_P_Guid = P_Guid,@w_P_ParentID = P_ParentID,@w_P_Period=P_Period,@w_P_Type=P_Type,@w_P_ItemName=P_ItemName
 		from #tmpp
-		if @mth='3'
+		
+		select @minYM = Min(convert(int,CP_ReserveYear+ case when LEN(CP_ReserveMonth)=1 then '0'+CP_ReserveMonth else CP_ReserveMonth end)) from #tmpPro where P_Guid=@w_P_Guid
+		select @strYM = (case when LEN(@mth)=1 then @RS_Year+'0'+@mth else @RS_Year+@mth end)
+		--if @mth='3'
+		if @minYM=@strYM
 			begin
                 insert into #tmpProTMP(P_ItemName,P_Type,P_Period,CP_ReserveYear,CP_ReserveMonth,CP_Desc,CP_Process,CP_RealProcess)
 				select @w_P_ItemName,@w_P_Type,@w_P_Period,CP_ReserveYear,CP_ReserveMonth,CP_Desc
@@ -568,20 +578,24 @@ while @while_rowcount>0
 					begin
 						insert into #tmpProTMP(P_ItemName,P_Type,P_Period,CP_ReserveYear,CP_ReserveMonth,CP_Desc,CP_Process,CP_RealProcess)
 						select @w_P_ItemName,@w_P_Type,@w_P_Period,@RS_Year,@mth,''--,'20'--CP_Desc
-						,(select top 1 isnull(CP_Process,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID and CP_ReserveYear=@RS_Year  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveMonth)<convert(int,@mth) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_Process 
-						,(select top 1 isnull(CP_RealProcess,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID and CP_ReserveYear=@RS_Year  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveMonth)<convert(int,@mth) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc ) as CP_RealProcess 
+						--,(select top 1 isnull(CP_Process,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID and CP_ReserveYear=@RS_Year  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveMonth)<convert(int,@mth) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_Process 
+						--,(select top 1 isnull(CP_RealProcess,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID and CP_ReserveYear=@RS_Year  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveMonth)<convert(int,@mth) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc ) as CP_RealProcess 
+						,(select top 1 isnull(CP_Process,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID   and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveYear + case when LEN(CP_ReserveMonth)=1 then '0'+CP_ReserveMonth else CP_ReserveMonth end )<convert(int,@strYM) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_Process 
+						,(select top 1 isnull(CP_RealProcess,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID   and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveYear + case when LEN(CP_ReserveMonth)=1 then '0'+CP_ReserveMonth else CP_ReserveMonth end )<convert(int,@strYM) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc ) as CP_RealProcess 
 						
 						insert into #tmpNoVal(P_Type,CP_Process,CP_RealProcess)
 						select @w_P_Type
-						,(select top 1 isnull(CP_Process,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID and CP_ReserveYear=@RS_Year  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveMonth)<convert(int,@mth) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_Process 
-						,(select top 1 isnull(CP_RealProcess,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID and CP_ReserveYear=@RS_Year  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveMonth)<convert(int,@mth) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_RealProcess 
+						--,(select top 1 isnull(CP_Process,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID and CP_ReserveYear=@RS_Year  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveMonth)<convert(int,@mth) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_Process 
+						--,(select top 1 isnull(CP_RealProcess,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID and CP_ReserveYear=@RS_Year  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveMonth)<convert(int,@mth) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_RealProcess 
+						,(select top 1 isnull(CP_Process,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID   and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveYear + case when LEN(CP_ReserveMonth)=1 then '0'+CP_ReserveMonth else CP_ReserveMonth end )<convert(int,@strYM) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_Process 
+						,(select top 1 isnull(CP_RealProcess,0) from Check_Point where  CP_ParentId =@w_P_Guid and CP_ProjectId=@w_P_ParentID  and CP_ProjectId=@RS_PorjectGuid and convert(int,CP_ReserveYear + case when LEN(CP_ReserveMonth)=1 then '0'+CP_ReserveMonth else CP_ReserveMonth end )<convert(int,@strYM) and CP_Status='A' order by convert(int,isnull(CP_ReserveYear,0))+convert(int,isnull(CP_ReserveMonth,0)) desc  ) as CP_RealProcess 
 					end
 			end
 
 			delete from #tmpp where P_Guid=@w_P_Guid and P_ParentID=@w_P_ParentID and P_Period=@w_P_Period and P_Type=@w_P_Type and P_ItemName=@w_P_ItemName
 			select @while_rowcount = @while_rowcount-1
 	end
-
+	
 --整體(四大項加總後) 平均數
 select P_Period,CP_ReserveYear,CP_ReserveMonth,convert(float,sum(convert(float,isnull(CP_Process,0)))/4) as avgVal ,convert(float,sum(convert(float,isnull(CP_RealProcess,0)))/4) as avgRealVal
 into #tPAll from #tmpProTMP group by P_Period,CP_ReserveYear,CP_ReserveMonth
@@ -628,6 +642,7 @@ drop table #tP
 drop table #tPAll
 drop table #tmpNoVal
 drop table #tN
+
 ");
 
         oCmd.CommandText = sb.ToString();
