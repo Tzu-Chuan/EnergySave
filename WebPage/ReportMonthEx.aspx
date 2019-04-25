@@ -628,7 +628,9 @@
                 str += '<div><input type="hidden" name="report_Guid" value="' + xmlData.children("RM_ReportGuid").text().trim() + '" /></div>';
             }
             else {
-                if (strItem != "14") {
+                if (strItem == "05") {
+                    strUnit = "KW";
+                }else if (strItem != "14") {
                     strUnit = "台";
                 } else {
                     strUnit = "組";
