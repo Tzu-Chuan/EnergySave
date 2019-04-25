@@ -338,8 +338,21 @@ public class ReportMonth_DB
                 left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
                 left join ReportCheck f on b.RM_ReportGuid = f.RC_ReportGuid and RC_Status<>'D'
                 where P_ParentId=@I_Guid and P_Period=@P_Period and (b.RM_Status<>'D' or b.RM_Status is null) and RM_ReportType=@RM_ReportType
-                order by P_ItemName asc
+                
         ");
+        if (RM_ReportType == "01")
+        {
+            sb.Append(@"
+                and P_Type<>'04'
+            ");
+        }
+        else {
+            sb.Append(@"
+                and P_Type='04'
+            ");
+        }
+        
+        sb.Append(@"order by P_ItemName asc");
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
@@ -388,7 +401,7 @@ public class ReportMonth_DB
                                 g.I_Finish_item3_1,g.I_Finish_item3_2,g.I_Finish_item3_3,g.I_Finish_item4_1,g.I_Finish_item4_2,g.I_Finish_item4_3,
                                 g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3
                         from PushItem a
-                        left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid  and a.P_ItemName=b.RM_CPType and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null)
+                        left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid  and a.P_ItemName=b.RM_CPType and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and b.RM_ReportType='01'
                         left join CodeTable c on c.C_Group='07' and a.P_ItemName = c.C_Item
                         left join Member d on d.M_ID=@M_ID
                         left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
@@ -412,7 +425,7 @@ public class ReportMonth_DB
                                 g.I_Finish_item3_1,g.I_Finish_item3_2,g.I_Finish_item3_3,g.I_Finish_item4_1,g.I_Finish_item4_2,g.I_Finish_item4_3,
                                 g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3
                         from PushItem a
-                        left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid and a.P_ItemName=b.RM_CPType and a.P_Guid=b.RM_PGuid and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null)
+                        left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid and a.P_ItemName=b.RM_CPType and a.P_Guid=b.RM_PGuid and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and b.RM_ReportType='01'
                         left join CodeTable c on c.C_Group='07' and a.P_ItemName = c.C_Item
                         left join Member d on d.M_ID=@M_ID
                         left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
@@ -467,7 +480,7 @@ public class ReportMonth_DB
                 ,RM_Type4Value1=@RM_Type4Value1,RM_Type4Value2=@RM_Type4Value2,RM_Type4Value3=@RM_Type4Value3,RM_Type4ValueSum=@RM_Type4ValueSum
                 ,RM_PreVal=@RM_PreVal,RM_ChkVal=@RM_ChkVal,RM_NotChkVal=@RM_NotChkVal,RM_Remark=@RM_Remark
                 ,RM_ModId=@RM_ModId,RM_ModDate=@RM_ModDate,RM_Status='A',RM_Formula=@RM_Formula
-                where RM_ProjectGuid=@RM_ProjectGuid and RM_Stage=@RM_Stage and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_CPType=@RM_CPType and RM_P_ExType=@RM_P_ExType and RM_P_ExDeviceType=@RM_P_ExDeviceType and RM_ReportType=@RM_ReportType and RM_PGuid=@RM_PGuid
+                where RM_ProjectGuid=@RM_ProjectGuid and RM_Stage=@RM_Stage and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_CPType=@RM_CPType and RM_P_ExType=@RM_P_ExType and RM_ReportType=@RM_ReportType and RM_PGuid=@RM_PGuid -- and RM_P_ExDeviceType=@RM_P_ExDeviceType
             ";
             
         }
@@ -505,8 +518,8 @@ public class ReportMonth_DB
         oCmd.Parameters.AddWithValue("@RM_ModDate", DateTime.Now);
         oCmd.Parameters.AddWithValue("@RM_ModId", RM_ModId);
         oCmd.Parameters.AddWithValue("@RM_ReportType", RM_ReportType);
-        oCmd.Parameters.AddWithValue("@RM_P_ExType", RM_P_ExType);
-        oCmd.Parameters.AddWithValue("@RM_P_ExDeviceType", RM_P_ExDeviceType);
+        oCmd.Parameters.AddWithValue("@RM_P_ExType", "");
+        oCmd.Parameters.AddWithValue("@RM_P_ExDeviceType", "");
         oCmd.Parameters.AddWithValue("@RM_Formula", RM_Formula);
 
         oCmd.Connection.Open();
@@ -522,7 +535,7 @@ public class ReportMonth_DB
         StringBuilder sb = new StringBuilder();
 
         sb.Append(@"
-            select * from ReportMonth where RM_ProjectGuid=@RM_ProjectGuid and RM_Stage=@RM_Stage and RM_Year=@RM_Year and RM_Month=@RM_Month
+            select * from ReportMonth where RM_ProjectGuid=@RM_ProjectGuid and RM_Stage=@RM_Stage and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_ReportType=@RM_ReportType and RM_Status='A'
         ");
         if (RM_CPType!="") {
             sb.Append(@"
@@ -530,27 +543,27 @@ public class ReportMonth_DB
             ");
             oCmd.Parameters.AddWithValue("@RM_CPType", RM_CPType);
         }
-        if (RM_ReportType != "")
-        {
-            sb.Append(@"
-                 and RM_ReportType=@RM_ReportType
-            ");
-            oCmd.Parameters.AddWithValue("@RM_ReportType", RM_ReportType);
-        }
-        if (RM_P_ExType != null)
-        {
-            sb.Append(@"
-                 and RM_P_ExType=@RM_P_ExType
-            ");
-            oCmd.Parameters.AddWithValue("@RM_P_ExType", RM_P_ExType);
-        }
-        if (RM_P_ExDeviceType != null)
-        {
-            sb.Append(@"
-                 and RM_P_ExDeviceType=@RM_P_ExDeviceType
-            ");
-            oCmd.Parameters.AddWithValue("@RM_P_ExDeviceType", RM_P_ExDeviceType);
-        }
+        //if (RM_ReportType != "")
+        //{
+        //    sb.Append(@"
+        //         and RM_ReportType=@RM_ReportType
+        //    ");
+        //    oCmd.Parameters.AddWithValue("@RM_ReportType", RM_ReportType);
+        //}
+        //if (RM_P_ExType != null)
+        //{
+        //    sb.Append(@"
+        //         and RM_P_ExType=@RM_P_ExType
+        //    ");
+        //    oCmd.Parameters.AddWithValue("@RM_P_ExType", RM_P_ExType);
+        //}
+        //if (RM_P_ExDeviceType != null)
+        //{
+        //    sb.Append(@"
+        //         and RM_P_ExDeviceType=@RM_P_ExDeviceType
+        //    ");
+        //    oCmd.Parameters.AddWithValue("@RM_P_ExDeviceType", RM_P_ExDeviceType);
+        //}
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
@@ -560,7 +573,8 @@ public class ReportMonth_DB
         oCmd.Parameters.AddWithValue("@RM_Stage", RM_Stage);
         oCmd.Parameters.AddWithValue("@RM_Year", RM_Year);
         oCmd.Parameters.AddWithValue("@RM_Month", RM_Month);
-        
+        oCmd.Parameters.AddWithValue("@RM_ReportType", RM_ReportType);
+
         oda.Fill(dt);
         return dt;
     }
@@ -897,7 +911,7 @@ if @checkflag<>'Y' or @checkflag is null
                     --case a.P_ExDeviceType when '01' then '空調' when '02' then '照明' when '03' then '非照明' else '' end as P_ExDeviceType_c
             from PushItem a
             --left join Check_Point cp on a.P_Type='04' and a.P_Guid = cp.CP_ParentId and cp.CP_ProjectId=@I_Guid and cp.CP_Status='A'
-			left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid  and a.P_ItemName=b.RM_CPType and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and a.P_Type='04' and a.P_Guid=b.RM_PGuid and a.P_Type='04'
+			left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid  and a.P_ItemName=b.RM_CPType and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and a.P_Type='04' and a.P_Guid=b.RM_PGuid and a.P_Type='04' and b.RM_ReportType='02'
             left join CodeTable c on c.C_Group='04' and a.P_Type = c.C_Item
             left join Member d on d.M_ID=@M_ID
             left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
@@ -950,7 +964,7 @@ else
                     --case a.P_ExDeviceType when '01' then '空調' when '02' then '照明' when '03' then '非照明' else '' end as P_ExDeviceType_c
             from PushItem a
 			--left join Check_Point cp on a.P_Type='04' and a.P_Guid = cp.CP_ParentId and cp.CP_ProjectId=@I_Guid and cp.CP_Status='A'
-            left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid and a.P_ItemName=b.RM_CPType and a.P_Guid=b.RM_PGuid and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and a.P_Type='04'  and a.P_Guid=b.RM_PGuid
+            left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid and a.P_ItemName=b.RM_CPType and a.P_Guid=b.RM_PGuid and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and a.P_Type='04'  and a.P_Guid=b.RM_PGuid and b.RM_ReportType='02'
             left join CodeTable c on c.C_Group='04' and a.P_Type = c.C_Item
             left join Member d on d.M_ID=@M_ID
             left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
