@@ -386,17 +386,17 @@
                                             //    splitRM_Finish01 = $(this).children("countFinish02").text().trim().split('.');
                                             //}
                                             //累計的全部用算的出來，而且是不包含本月份的，且只有審核過的月報才列入累計
-                                            splitRM_Finish = $(this).children("countFinishKW").text().trim().split('.');
+                                            //splitRM_Finish = $(this).children("countFinishKW").text().trim().split('.');
                                             splitRM_Finish01 = $(this).children("countFinish02").text().trim().split('.');
                                             strRM_Planning = splitRM_Planning[0];
-                                            strRM_Finish = splitRM_Finish[0];
+                                            strRM_Finish = $(this).children("countFinishKW").text().trim();
                                             strRM_Finish01 = splitRM_Finish01[0];
-                                            //本期規劃數
-                                            if ($.getParamValue('stage') == "1" && (strRM_Planning == "" || strRM_Planning == null))
+                                            //本期規劃數  && (strRM_Planning == "" || strRM_Planning == null)
+                                            if ($.getParamValue('stage') == "1")
                                                 strRM_Planning = $(this).children("I_Finish_item1_1").text().trim();
-                                            if ($.getParamValue('stage') == "2" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "2")
                                                 strRM_Planning = $(this).children("I_Finish_item1_2").text().trim();
-                                            if ($.getParamValue('stage') == "3" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "3")
                                                 strRM_Planning = $(this).children("I_Finish_item1_3").text().trim();
 
                                         }
@@ -422,11 +422,11 @@
                                             strRM_Finish = splitRM_Finish[0];
                                             strIntFloat = "strint";
                                             //本期規劃數
-                                            if ($.getParamValue('stage') == "1" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "1")
                                                 strRM_Planning = $(this).children("I_Finish_item2_1").text().trim();
-                                            if ($.getParamValue('stage') == "2" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "2")
                                                 strRM_Planning = $(this).children("I_Finish_item2_2").text().trim();
-                                            if ($.getParamValue('stage') == "3" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "3")
                                                 strRM_Planning = $(this).children("I_Finish_item2_3").text().trim();
                                         }
                                         if ($(this).children("P_ItemName").text().trim() == '03') {
@@ -451,11 +451,11 @@
                                             strRM_Finish = splitRM_Finish[0];
                                             strIntFloat = "strint";
                                             //本期規劃數
-                                            if ($.getParamValue('stage') == "1" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "1")
                                                 strRM_Planning = $(this).children("I_Finish_item3_1").text().trim();
-                                            if ($.getParamValue('stage') == "2" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "2")
                                                 strRM_Planning = $(this).children("I_Finish_item3_2").text().trim();
-                                            if ($.getParamValue('stage') == "3" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "3")
                                                 strRM_Planning = $(this).children("I_Finish_item3_3").text().trim();
                                         }
                                         strHtml += '<div class="OchiRow">';
@@ -565,21 +565,21 @@
                                     } else {
                                         if ($(this).children("P_ItemName").text().trim() == '04') {
                                             //本期規劃數
-                                            if ($.getParamValue('stage') == "1" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "1")
                                                 strRM_Planning = $(this).children("I_Finish_item4_1").text().trim();
-                                            if ($.getParamValue('stage') == "2" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "2" )
                                                 strRM_Planning = $(this).children("I_Finish_item4_2").text().trim();
-                                            if ($.getParamValue('stage') == "3" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "3")
                                                 strRM_Planning = $(this).children("I_Finish_item4_3").text().trim();
 
                                         }
                                         if ($(this).children("P_ItemName").text().trim() == '05') {
                                             //本期規劃數
-                                            if ($.getParamValue('stage') == "1" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "1")
                                                 strRM_Planning = $(this).children("I_Finish_item5_1").text().trim();
-                                            if ($.getParamValue('stage') == "2" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "2")
                                                 strRM_Planning = $(this).children("I_Finish_item5_2").text().trim();
-                                            if ($.getParamValue('stage') == "3" && (strRM_Planning == "" || strRM_Planning == null))
+                                            if ($.getParamValue('stage') == "3")
                                                 strRM_Planning = $(this).children("I_Finish_item5_3").text().trim();
 
                                         }
