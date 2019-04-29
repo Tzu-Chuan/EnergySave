@@ -358,6 +358,10 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
             {
                 if (strItem != "14")
                 {
+                    strUnit = "KW";
+                }
+                else if (strItem != "14")
+                {
                     strUnit = "台";
                 }
                 else

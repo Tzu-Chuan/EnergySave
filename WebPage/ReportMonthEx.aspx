@@ -363,7 +363,7 @@
             var type1 = xmlData.children("P_ExType").text().trim();
             var type2 = xmlData.children("P_ExDeviceType").text().trim();
             var ItemCname = xmlData.children("P_ItemName_c").text().trim();
-            var str = "",strUnit="";
+            var str = "", strUnit = "", strFo = "每單位年節電量(度)";
             var splitRM_Finish, splitRM_Finish01, P_ExFinish;
             var ptno = xmlData.children("P_ItemName").text().trim();
 
@@ -383,7 +383,7 @@
             //}
 
             if (strItem == "01" ) {
-
+                strFo = "每單位年節電量(度/kW)";
                 str += '<div class="OchiRow">';
                 str += '<div class="OchiCell OchiTitle TitleSetWidth">' + ItemCname + '</div>';
                 str += '<div class="OchiCell width100">';
@@ -491,7 +491,7 @@
                 str += '</tr>';
                 str += '<tr>';
                 //if ($.getParamValue('month') == "01" || xmlData.children("RM_Formula").text().trim() == "") {
-                    str += '<td colspan="2" style="text-align:right;">年節電量(度)：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" /></td>';
+                str += '<td colspan="2" style="text-align:right;">' + strFo + '：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" /></td>';
                 //} else {
                     //str += '<td colspan="2" style="text-align:right;">年節電量(度)：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" readonly="readonly" style="background-color:#DDDDDD;" /></td>';
                 //}
@@ -608,7 +608,7 @@
                 str += '</tr>';
                 str += '<tr>';
                 //if ($.getParamValue('month') == "01" || xmlData.children("RM_Formula").text().trim() == "") {
-                    str += '<td colspan="2" style="text-align:right;">年節電量(度)：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" /></td>';
+                    str += '<td colspan="2" style="text-align:right;">'+strFo+'：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" /></td>';
                 //} else {
                     //str += '<td colspan="2" style="text-align:right;">年節電量(度)：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" readonly="readonly" style="background-color:#DDDDDD;" /></td>';
                 //}
@@ -628,7 +628,10 @@
                 str += '<div><input type="hidden" name="report_Guid" value="' + xmlData.children("RM_ReportGuid").text().trim() + '" /></div>';
             }
             else {
-                if (strItem != "14") {
+                if (strItem == "05") {
+                    strUnit = "KW";
+                    strFo = "每單位年節電量(度/kW)";
+                }else if (strItem != "14") {
                     strUnit = "台";
                 } else {
                     strUnit = "組";
@@ -719,7 +722,7 @@
                 str += '</tr>';
                 str += '<tr>';
                 //if ($.getParamValue('month') == "01" || xmlData.children("RM_Formula").text().trim() == "") {
-                    str += '<td colspan="2" style="text-align:right;">年節電量(度)：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" /></td>';
+                    str += '<td colspan="2" style="text-align:right;">'+strFo+'：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" /></td>';
                 //} else {
                     //str += '<td colspan="2" style="text-align:right;">年節電量(度)：</td><td colspan="10"><input type="text" value="' + xmlData.children("RM_Formula").text().trim() + '" class="inputex width15" id="' + ptno + 'RM_Formula" name="' + ptno + 'RM_Formula" tp="f" readonly="readonly" style="background-color:#DDDDDD;" /></td>';
                 //}

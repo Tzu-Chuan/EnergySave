@@ -102,18 +102,6 @@ public class saveReportMonthEx : IHttpHandler,IRequiresSessionState {
                 rm._RM_CPType = report_type[i].ToString().Trim();
                 rm._RM_P_ExType = "";
                 rm._RM_P_ExDeviceType = "";
-                //if (report_type[i].ToString().Trim().Length > 2)
-                //{
-                //    rm._RM_CPType = report_type[i].ToString().Trim().Substring(0,2);
-                //    rm._RM_P_ExType = report_type[i].ToString().Trim().Substring(2,2);
-                //    rm._RM_P_ExDeviceType = report_type[i].ToString().Trim().Substring(4,2);
-                //}
-                //else
-                //{
-                //    rm._RM_CPType = report_type[i].ToString().Trim();
-                //    rm._RM_P_ExType = "";
-                //    rm._RM_P_ExDeviceType = "";
-                //}
 
                 rm._RM_ModId = LogInfo.mGuid;
                 rm._RM_Finish = (RM_Finish != null && RM_Finish != "") ? Convert.ToDecimal(RM_Finish):0;
