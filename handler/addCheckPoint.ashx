@@ -30,15 +30,14 @@ public class addCheckPoint : IHttpHandler,IRequiresSessionState {
             string[] pgid = null;
             string[] pushitem = null;
             string[] exfinish = null;
-            //string[] extype = null;
-            //string[] exdevicetype = null;
+
             //CheckPoint
             string[] del_cpguid = null;
             string[] cpgid = null;
             string[] cp_no = null;
             string[] cp_year = null;
             string[] cp_month = null;
-            string[] cp_desc = null;
+            //string[] cp_desc = null;
             string[] lastitem = null;
 
             switch (category)
@@ -54,7 +53,7 @@ public class addCheckPoint : IHttpHandler,IRequiresSessionState {
                     cp_no = (context.Request["cp_no"] != null) ? context.Request["cp_no"].ToString().Split(',') : null;
                     cp_year = (context.Request["cp_year"] != null) ? context.Request["cp_year"].ToString().Split(',') : null;
                     cp_month = (context.Request["cp_month"] != null) ? context.Request["cp_month"].ToString().Split(',') : null;
-                    cp_desc = (context.Request["cp_desc"] != null) ? context.Request["cp_desc"].ToString().Split(',') : null;
+                    //cp_desc = (context.Request["cp_desc"] != null) ? context.Request["cp_desc"].ToString().Split(',') : null;
                     lastitem = (context.Request["lastitem"] != null) ? context.Request["lastitem"].ToString().Split(',') : null;
                     break;
                 //因地制宜
@@ -68,7 +67,7 @@ public class addCheckPoint : IHttpHandler,IRequiresSessionState {
                     cp_no = (context.Request["p_cp_no"] != null) ? context.Request["p_cp_no"].ToString().Split(',') : null;
                     cp_year = (context.Request["p_cp_year"] != null) ? context.Request["p_cp_year"].ToString().Split(',') : null;
                     cp_month = (context.Request["p_cp_month"] != null) ? context.Request["p_cp_month"].ToString().Split(',') : null;
-                    cp_desc = (context.Request["p_cp_desc"] != null) ? context.Request["p_cp_desc"].ToString().Split(',') : null;
+                    //cp_desc = (context.Request["p_cp_desc"] != null) ? context.Request["p_cp_desc"].ToString().Split(',') : null;
                     lastitem = (context.Request["p_lastitem"] != null) ? context.Request["p_lastitem"].ToString().Split(',') : null;
                     break;
                 //設備汰換與智慧用電
@@ -82,7 +81,7 @@ public class addCheckPoint : IHttpHandler,IRequiresSessionState {
                     cp_no = (context.Request["s_cp_no"] != null) ? context.Request["s_cp_no"].ToString().Split(',') : null;
                     cp_year = (context.Request["s_cp_year"] != null) ? context.Request["s_cp_year"].ToString().Split(',') : null;
                     cp_month = (context.Request["s_cp_month"] != null) ? context.Request["s_cp_month"].ToString().Split(',') : null;
-                    cp_desc = (context.Request["s_cp_desc"] != null) ? context.Request["s_cp_desc"].ToString().Split(',') : null;
+                    //cp_desc = (context.Request["s_cp_desc"] != null) ? context.Request["s_cp_desc"].ToString().Split(',') : null;
                     lastitem = (context.Request["s_lastitem"] != null) ? context.Request["s_lastitem"].ToString().Split(',') : null;
                     break;
                 //擴大補助
@@ -91,15 +90,13 @@ public class addCheckPoint : IHttpHandler,IRequiresSessionState {
                     pgid = (context.Request["a_pgid"] != null) ? context.Request["a_pgid"].ToString().Split(',') : null;
                     pushitem = (context.Request["a_pushitem"] != null) ? context.Request["a_pushitem"].ToString().Split(',') : null;
                     exfinish = (context.Request["exFinish"] != null) ? context.Request["exFinish"].ToString().Split(',') : null;
-                    //extype = (context.Request["a_main"] != null) ? context.Request["a_main"].ToString().Split(',') : null;
-                    //exdevicetype = (context.Request["a_sub"] != null) ? context.Request["a_sub"].ToString().Split(',') : null;
 
                     del_cpguid = (context.Request["a_del_cpguid"] != null) ? context.Request["a_del_cpguid"].ToString().Split(',') : null;
                     cpgid = (context.Request["a_cpgid"] != null) ? context.Request["a_cpgid"].ToString().Split(',') : null;
                     cp_no = (context.Request["a_cp_no"] != null) ? context.Request["a_cp_no"].ToString().Split(',') : null;
                     cp_year = (context.Request["a_cp_year"] != null) ? context.Request["a_cp_year"].ToString().Split(',') : null;
                     cp_month = (context.Request["a_cp_month"] != null) ? context.Request["a_cp_month"].ToString().Split(',') : null;
-                    cp_desc = (context.Request["a_cp_desc"] != null) ? context.Request["a_cp_desc"].ToString().Split(',') : null;
+                    //cp_desc = (context.Request["a_cp_desc"] != null) ? context.Request["a_cp_desc"].ToString().Split(',') : null;
                     lastitem = (context.Request["a_lastitem"] != null) ? context.Request["a_lastitem"].ToString().Split(',') : null;
                     break;
             }
@@ -151,22 +148,12 @@ public class addCheckPoint : IHttpHandler,IRequiresSessionState {
                 cp_db._P_ItemName = pushitem[pnum].Trim();
                 if (category == "04")
                     cp_db._P_ExFinish = exfinish[pnum];
-                //if (category == "04" && pushitem[pnum].Trim() == "99")
-                //{
-                //    cp_db._P_ExType = extype[pnum];
-                //    cp_db._P_ExDeviceType = exdevicetype[pnum];
-                //}
                 cp_db._P_CreateId = LogInfo.mGuid;
                 cp_db._P_ModId = LogInfo.mGuid;
                 cp_db.addPushItem();
 
                 for (int i = BreakNo; i < noAry.Count; i++)
                 {
-                    //if (cp_no[i].Trim() == "" && cp_desc[i].Trim() == "")
-                    //{
-                    //    continue;
-                    //    BreakNo += 1;
-                    //}
                     cp_db._CP_Guid = (cpgid[i].Trim() == "") ? Guid.NewGuid().ToString("N") : cpgid[i].Trim();
                     cp_db._CP_ParentId = piGuid;
                     cp_db._CP_ProjectId = parentid;

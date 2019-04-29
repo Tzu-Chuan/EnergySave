@@ -65,12 +65,12 @@
           $(document).on("click", "#btnSave,#btnSubReview", function () {
               //辦理情形&進度差異說明 convert to XML post to backend
               var xmldoc = document.createElement("root");
-              $("textarea[name='CP_Summary']").each(function (i) {
-                  var xNode = document.createElement("cpItem");
+              $("textarea[name='PD_Summary']").each(function (i) {
+                  var xNode = document.createElement("pdItem");
                   var Node = document.createElement("summary");
                   Node.textContent = this.value;
                   var Node2 = document.createElement("backward");
-                  Node2.textContent = $("textarea[name='CP_BackwardDesc']")[i].value;
+                  Node2.textContent = $("textarea[name='PD_BackwardDesc']")[i].value;
                   xNode.appendChild(Node);
                   xNode.appendChild(Node2);
                   xmldoc.appendChild(xNode);
@@ -344,6 +344,8 @@
                           else if ($(this).prev().children("CP_ReserveYear").text().trim() != $(this).children("CP_ReserveYear").text().trim()) { //跨年時
                               year_str += '<th colspan="' + tmpCount + '" style="text-align:center;">' + $(this).prev().children("CP_ReserveYear").text().trim() + '年</th>';
                               tmpCount = 1; //跨年需重置
+                              if ($(this).parent().children().length == (i + 1)) //若為最後一筆資料需補上
+                                  year_str += '<th colspan="' + tmpCount + '" style="text-align:center;">' + $(this).children("CP_ReserveYear").text().trim() + '年</th></tr>';
                           }
                           else if ($(this).parent().children().length == (i + 1)) { //最後一筆資料
                               tmpCount += 1; //最後一筆也要算
@@ -352,8 +354,6 @@
                           else
                               tmpCount += 1;
                       }
-
-
 
                       //月
                       month_str += '<th style="text-align:center;">' + $(this).children("CP_ReserveMonth").text().trim() + '月</th>';
@@ -1046,6 +1046,19 @@
         $(document).ready(function () {
             $(document).on("change", "input,textarea", function () {
                 if ($("#autoStatus").val() == "open") {
+                    //辦理情形&進度差異說明 convert to XML post to backend
+                    var xmldoc = document.createElement("root");
+                    $("textarea[name='PD_Summary']").each(function (i) {
+                        var xNode = document.createElement("pditem");
+                        var Node = document.createElement("summary");
+                        Node.textContent = this.value;
+                        var Node2 = document.createElement("backward");
+                        Node2.textContent = $("textarea[name='PD_BackwardDesc']")[i].value;
+                        xNode.appendChild(Node);
+                        xNode.appendChild(Node2);
+                        xmldoc.appendChild(xNode);
+                    });
+
                     var iframe = $('<iframe name="postiframe" id="postiframe" style="display: none" />');
                     var year = $('<input type="hidden" name="year" id="year" value="' + $.getParamValue('year') + '" />');
                     var season = $('<input type="hidden" name="season" id="season" value="' + $.getParamValue('season') + '" />');

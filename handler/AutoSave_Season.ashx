@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.SessionState;
 using System.Data;
 using System.Xml;
+using System.Collections.Generic;
 
 public class AutoSave_Season : IHttpHandler,IRequiresSessionState{
     ReportSeasonV2_DB rs_db = new ReportSeasonV2_DB();
@@ -13,6 +14,7 @@ public class AutoSave_Season : IHttpHandler,IRequiresSessionState{
     CheckPoint_DB cp_db = new CheckPoint_DB();
     Member_DB m_db = new Member_DB();
     CodeTable_DB ct_db = new CodeTable_DB();
+    ExpandFinish_DB ef_db = new ExpandFinish_DB();
     public void ProcessRequest(HttpContext context)
     {
 
@@ -68,13 +70,29 @@ public class AutoSave_Season : IHttpHandler,IRequiresSessionState{
             string RS_03Type03C = (context.Request["RS_03Type03C"] != null) ? context.Request["RS_03Type03C"].ToString().Trim() : "";
             string RS_03Type04C = (context.Request["RS_03Type04C"] != null) ? context.Request["RS_03Type04C"].ToString().Trim() : "";
             string RS_03Type05C = (context.Request["RS_03Type05C"] != null) ? context.Request["RS_03Type05C"].ToString().Trim() : "";
-
+            /// 推動項目預計完成數
+            string[] exGuid = (context.Request["exGuid"] != null) ? context.Request["exGuid"].ToString().Trim().Split(',') : null;
+            string[] exRealFinish = (context.Request["exRealFinish"] != null) ? context.Request["exRealFinish"].ToString().Trim().Split(',') : null;
+            /// 辦理情形&進度差異說明
             string[] piGuid = (context.Request["pi_guid"] != null) ? context.Request["pi_guid"].ToString().Trim().Split(',') : null;
             string[] PD_Summary = (context.Request["PD_Summary"] != null) ? context.Request["PD_Summary"].ToString().Trim().Split(',') : null;
             string[] PD_BackwardDesc = (context.Request["PD_BackwardDesc"] != null) ? context.Request["PD_BackwardDesc"].ToString().Trim().Split(',') : null;
 
             m_db._M_ID = LogInfo.id;
             string ProjectGuid = m_db.getProgectGuidByPersonId();
+
+            //先解出XML放到Array再一併處理
+            List<string> summaryAry = new List<string>();
+            List<string> backwardAry = new List<string>();
+            string tmpXML = (context.Request["tmpXML"] != null) ? context.Server.UrlDecode(context.Request["tmpXML"]) : "<?xml version='1.0' encoding='utf-8'?><root></root>";
+            XmlDocument tmpXDoc = new XmlDocument();
+            tmpXDoc.LoadXml(tmpXML);
+            XmlNodeList xNode = tmpXDoc.SelectNodes("/root/pditem");
+            for (int i = 0; i < xNode.Count; i++)
+            {
+                summaryAry.Add(xNode[i].SelectSingleNode("summary").InnerText);
+                backwardAry.Add(xNode[i].SelectSingleNode("backward").InnerText);
+            }
 
             //辦理情形&進度差異說明
             if (piGuid != null)
@@ -87,13 +105,25 @@ public class AutoSave_Season : IHttpHandler,IRequiresSessionState{
                     pd_db._PD_Stage = stage;
                     pd_db._PD_Year = year;
                     pd_db._PD_Season = season;
-                    pd_db._PD_Summary = PD_Summary[i];
-                    pd_db._PD_BackwardDesc = PD_BackwardDesc[i];
+                    pd_db._PD_Summary = summaryAry[i];
+                    pd_db._PD_BackwardDesc = backwardAry[i];
                     pd_db.setPushitemDesc();
                 }
             }
 
-            //update 查核點 (累計實際進度、辦理情形、進度差異說明)
+            //擴大補助累計完成數
+            if (exGuid != null)
+            {
+                for (int i = 0; i < exGuid.Length; i++)
+                {
+                    ef_db._EF_ReportId = rs_guid;
+                    ef_db._EF_PushitemId = exGuid[i];
+                    ef_db._EF_Finish = exRealFinish[i];
+                    ef_db.SaveExFinish();
+                }
+            }
+
+            //update 查核點 (累計實際進度)
             if (cpGuid != null)
             {
                 for (int i = 0; i < cpGuid.Length; i++)

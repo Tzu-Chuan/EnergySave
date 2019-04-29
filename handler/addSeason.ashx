@@ -82,11 +82,24 @@ public class addSeason : IHttpHandler,IRequiresSessionState {
             string[] exRealFinish = (context.Request["exRealFinish"] != null) ? context.Request["exRealFinish"].ToString().Trim().Split(',') : null;
             /// 辦理情形&進度差異說明
             string[] piGuid = (context.Request["pi_guid"] != null) ? context.Request["pi_guid"].ToString().Trim().Split(',') : null;
-            string[] PD_Summary = (context.Request["PD_Summary"] != null) ? context.Request["PD_Summary"].ToString().Trim().Split(',') : null;
-            string[] PD_BackwardDesc = (context.Request["PD_BackwardDesc"] != null) ? context.Request["PD_BackwardDesc"].ToString().Trim().Split(',') : null;
+            //string[] PD_Summary = (context.Request["PD_Summary"] != null) ? context.Request["PD_Summary"].ToString().Trim().Split(',') : null;
+            //string[] PD_BackwardDesc = (context.Request["PD_BackwardDesc"] != null) ? context.Request["PD_BackwardDesc"].ToString().Trim().Split(',') : null;
 
             m_db._M_ID = LogInfo.id;
             string ProjectGuid = m_db.getProgectGuidByPersonId();
+
+            //先解出XML放到Array再一併處理
+            List<string> summaryAry = new List<string>();
+            List<string> backwardAry = new List<string>();
+            string tmpXML = (context.Request["tmpXML"] != null) ? context.Server.UrlDecode(context.Request["tmpXML"]) : "<?xml version='1.0' encoding='utf-8'?><root></root>";
+            XmlDocument tmpXDoc = new XmlDocument();
+            tmpXDoc.LoadXml(tmpXML);
+            XmlNodeList xNode = tmpXDoc.SelectNodes("/root/pditem");
+            for (int i = 0; i < xNode.Count; i++)
+            {
+                summaryAry.Add(xNode[i].SelectSingleNode("summary").InnerText);
+                backwardAry.Add(xNode[i].SelectSingleNode("backward").InnerText);
+            }
 
             //辦理情形&進度差異說明
             if (piGuid != null)
@@ -99,24 +112,11 @@ public class addSeason : IHttpHandler,IRequiresSessionState {
                     pd_db._PD_Stage = stage;
                     pd_db._PD_Year = year;
                     pd_db._PD_Season = season;
-                    pd_db._PD_Summary = PD_Summary[i];
-                    pd_db._PD_BackwardDesc = PD_BackwardDesc[i];
+                    pd_db._PD_Summary = summaryAry[i];
+                    pd_db._PD_BackwardDesc = backwardAry[i];
                     pd_db.setPushitemDesc();
                 }
             }
-
-            //先解出XML放到Array再一併處理
-            //List<string> summaryAry = new List<string>();
-            //List<string> backwardAry = new List<string>();
-            //string tmpXML = (context.Request["tmpXML"] != null) ? context.Server.UrlDecode(context.Request["tmpXML"]) : "<?xml version='1.0' encoding='utf-8'?><root></root>";
-            //XmlDocument tmpXDoc = new XmlDocument();
-            //tmpXDoc.LoadXml(tmpXML);
-            //XmlNodeList xNode = tmpXDoc.SelectNodes("/root/cpitem");
-            //for (int i = 0; i < xNode.Count; i++)
-            //{
-            //    summaryAry.Add(xNode[i].SelectSingleNode("summary").InnerText);
-            //    backwardAry.Add(xNode[i].SelectSingleNode("backward").InnerText);
-            //}
 
             //擴大補助累計完成數
             if (exGuid != null)

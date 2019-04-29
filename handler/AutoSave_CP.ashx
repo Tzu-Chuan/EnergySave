@@ -3,6 +3,8 @@
 using System;
 using System.Web;
 using System.Web.SessionState;
+using System.Xml;
+using System.Collections.Generic;
 
 public class AutoSave_CP : IHttpHandler,IRequiresSessionState {
     CheckPoint_DB cp_db = new CheckPoint_DB();
@@ -33,7 +35,7 @@ public class AutoSave_CP : IHttpHandler,IRequiresSessionState {
             string[] bw_cp_no = (context.Request["cp_no"] != null) ? context.Request["cp_no"].ToString().Split(',') : null;
             string[] bw_cp_year = (context.Request["cp_year"] != null) ? context.Request["cp_year"].ToString().Split(',') : null;
             string[] bw_cp_month = (context.Request["cp_month"] != null) ? context.Request["cp_month"].ToString().Split(',') : null;
-            string[] bw_cp_desc = (context.Request["cp_desc"] != null) ? context.Request["cp_desc"].ToString().Split(',') : null;
+            //string[] bw_cp_desc = (context.Request["cp_desc"] != null) ? context.Request["cp_desc"].ToString().Split(',') : null;
             string[] bw_lastitem = (context.Request["lastitem"] != null) ? context.Request["lastitem"].ToString().Split(',') : null;
 
             //刪除 PushItem
@@ -52,6 +54,19 @@ public class AutoSave_CP : IHttpHandler,IRequiresSessionState {
                 cp_db.deleteCheckPoint();
             }
 
+            //先解出XML放到Array再一併處理
+            List<string> noAry = new List<string>();
+            List<string> descAry = new List<string>();
+            string tmpXML = (context.Request["tmpXML"] != null) ? context.Server.UrlDecode(context.Request["tmpXML"]) : "<?xml version='1.0' encoding='utf-8'?><root></root>";
+            XmlDocument tmpXDoc = new XmlDocument();
+            tmpXDoc.LoadXml(tmpXML);
+            XmlNodeList xNode = tmpXDoc.SelectNodes("/root/cpitem");
+            for (int i = 0; i < xNode.Count; i++)
+            {
+                noAry.Add(xNode[i].SelectSingleNode("no").InnerText);
+                descAry.Add(xNode[i].SelectSingleNode("desc").InnerText);
+            }
+
             for (int pnum = 0; pnum < bw_pushitem.Length; pnum++)
             {
                 if (bw_pushitem[pnum].Trim() == "")
@@ -67,15 +82,15 @@ public class AutoSave_CP : IHttpHandler,IRequiresSessionState {
                 cp_db._P_ModId = LoginPerson;
                 cp_db.addPushItem();
 
-                for (int i = BreakNo; i < bw_cp_no.Length; i++)
+                for (int i = BreakNo; i < noAry.Count; i++)
                 {
                     cp_db._CP_Guid = (bw_cpgid[i].Trim() == "") ? Guid.NewGuid().ToString("N") : bw_cpgid[i].Trim();
                     cp_db._CP_ParentId = piGuid;
                     cp_db._CP_ProjectId = parentid;
-                    cp_db._CP_Point = bw_cp_no[i].Trim();
+                    cp_db._CP_Point = noAry[i].Trim();
                     cp_db._CP_ReserveYear = bw_cp_year[i].Trim();
                     cp_db._CP_ReserveMonth = bw_cp_month[i].Trim();
-                    cp_db._CP_Desc = bw_cp_desc[i].Trim();
+                    cp_db._CP_Desc = descAry[i].Trim();
                     cp_db._CP_CreateId = LogInfo.mGuid;
                     cp_db._CP_ModId = LogInfo.mGuid;
                     cp_db.addCheckPoint();
