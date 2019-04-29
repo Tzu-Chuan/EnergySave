@@ -49,10 +49,10 @@
                             if ($(data).find("data_item").length > 0) {
                                 $(data).find("data_item").each(function (i) {
                                     tabstr += '<div>';
-                                    tabstr += '<div class="font-size3" style="margin:15px;padding:15px;background-color:#FFFFFF;border-radius:10px;word-break:break-all;"><a href="NewsDetail.aspx?v=' + $(this).children("N_ID").text().trim() + '" target="_blank">' + $(this).children("N_Date").text().trim() + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + $(this).children("N_Title").text().trim() + '</a></div>';
-                                    //tabstr += '<td align="center"><input type="button" class="genbtn" name="modbtn" aid="' + $(this).children("N_ID").text().trim() + '" agid="' + $(this).children("N_Guid").text().trim() + '" value="修改" />';
-                                    //tabstr += '<input type="button" class="genbtn" name= "delbtn" aid= "' + $(this).children("N_ID").text().trim() + '" value="刪除" /></td > ';
-                                    tabstr += '</div>';
+                                    tabstr += '<div class="font-size3" style="margin:15px;padding:15px;background-color:#FFFFFF;border-radius:10px;word-break:break-all;">';
+                                    tabstr += '<span>' + $(this).children("N_Date").text().trim() + '</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+                                    tabstr += '<span style="text-indent:4em;"><a href = "NewsDetail.aspx?v=' + $(this).children("N_ID").text().trim() + '" target="_blank">' + $(this).children("N_Title").text().trim() + '</a></span>';
+                                    tabstr += '</div></div>';
                                 });
                             }
                             else
