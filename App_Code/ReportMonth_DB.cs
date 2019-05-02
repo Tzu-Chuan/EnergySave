@@ -922,10 +922,14 @@ if @checkflag<>'Y' or @checkflag is null
         )#tmp
         
         -- and ((convert(int,RM_Year)+convert(int,RM_Month))<(convert(int,@RM_Year)+convert(int,@RM_Month)))
-		select @rcount =count(*) from ReportMonth where RM_ReportType='02' and RM_Stage=@P_Period and RM_Formula is not null and RM_ProjectGuid=@I_Guid and RM_Status='A'
+		select @rcount =count(*) from ReportMonth where RM_ReportType='02' and RM_Stage=@P_Period and RM_Formula is not null and RM_ProjectGuid=@I_Guid and RM_Status='A' and RM_Stage=@P_Period
 		if @rcount>0
 			begin
-				select @ifY=Min(RM_Year),@ifM=Min(RM_Month) from ReportMonth  where RM_ReportType='02' and RM_Stage=@P_Period and RM_Formula is not null and RM_ProjectGuid=@I_Guid and RM_Status='A'
+                select @ifYM=MAX(isnull(RM_Year,0)+isnull(RM_Month,0)) 
+				from ReportMonth where RM_ReportType='02' and RM_Stage=@P_Period and RM_Formula is not null and RM_ProjectGuid=@I_Guid and RM_Status='A' and RM_Stage=@P_Period
+				select @ifY=SUBSTRING(@ifYM,1,4),@ifM=SUBSTRING(@ifYM,5,2)
+
+				select @ifY=MAX(RM_Year),@ifM=MAX(RM_Month) from ReportMonth  where RM_ReportType='02' and RM_Stage=@P_Period and RM_Formula is not null and RM_ProjectGuid=@I_Guid and RM_Status='A'
 				select * into #tmpTemp from ReportMonth where RM_ReportType='02' and RM_Stage=@P_Period and RM_Year=@ifY and RM_Month=@ifM and RM_ProjectGuid=@I_Guid and RM_Status='A'
 				update #tmpAll set #tmpAll.RM_Formula=b.RM_Formula from #tmpTemp b where #tmpAll.P_Guid=b.RM_PGuid
                 drop table #tmpTemp
