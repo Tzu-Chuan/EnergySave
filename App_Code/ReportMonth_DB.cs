@@ -854,7 +854,7 @@ drop table #tmpAll
             select * from ReportMonth 
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RM_ProjectGuid=@ProjectID
             where RM_Stage=@RM_Stage and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_ProjectGuid=@ProjectID
-            and ((RC_Status='A' and RC_CheckType='Y') or ((RC_Status='A' and RC_CheckType='Y') or (RC_Status='A' and RC_CheckType is null)))
+            and ((RC_Status='A' and RC_CheckType='Y') or ((RC_Status='A' and RC_CheckType='Y') or (RC_Status='A' and RC_CheckType is null))) and RM_ReportType='01'
         ");
         
 
