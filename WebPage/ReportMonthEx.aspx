@@ -366,6 +366,7 @@
             var str = "", strUnit = "", strFo = "每單位年節電量(度)";
             var splitRM_Finish, splitRM_Finish01, P_ExFinish;
             var ptno = xmlData.children("P_ItemName").text().trim();
+            var intflort = "";
 
             P_ExFinish = xmlData.children("P_ExFinish").text().trim().split('.');
             splitRM_Finish = xmlData.children("countFinishKW").text().trim().split('.');
@@ -628,17 +629,25 @@
                 str += '<div><input type="hidden" name="report_Guid" value="' + xmlData.children("RM_ReportGuid").text().trim() + '" /></div>';
             }
             else {
+                var splitcountFinish03 = "", countFinish03 = "";
                 if (strItem == "05") {
                     strUnit = "KW";
                     strFo = "每單位年節電量(度/kW)";
+                    intflort = "strflot";
+                    countFinish03 = xmlData.children("countFinish03").text().trim();
                 }else if (strItem != "14") {
                     strUnit = "台";
+                    intflort = "strint";
+                    splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
+                    countFinish03 = splitcountFinish03[0];
                 } else {
                     strUnit = "組";
+                    intflort = "strint";
+                    splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
+                    countFinish03 = splitcountFinish03[0];
                 }
-                var splitcountFinish03 = "", countFinish03 = "";
-                splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
-                countFinish03 = splitcountFinish03[0];
+                
+                
                 str += '<div class="OchiRow">';
                 str += '<div class="OchiCell OchiTitle TitleSetWidth">' + ItemCname + '</div>';
                 str += '<div class="OchiCell width100">';
@@ -646,14 +655,14 @@
                 str += '<div class="OchiCellInner nowrap textcenter">本期累計完成數:</div>';
                 str += '<div class="OchiCellInner width33">';
                 str += '<span>' + (countFinish03 == "" ? "0" : countFinish03) + '&nbsp;(' + strUnit + ')</span>';
-                str += '<input type="text" class="inputex" size="12" name="' + ptno + 'RM_Finish" value="' + countFinish03 + '" t="strint" readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
+                str += '<input type="text" class="inputex" size="12" name="' + ptno + 'RM_Finish" value="' + countFinish03 + '" t="' + intflort + '" readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
                 str += '</div>';
                 str += '<div class="OchiCellInner nowrap textcenter">本期累計申請數:</div>';
-                str += '<div class="OchiCellInner width33"><span>' + strcountApply01 + '&nbsp;(' + strUnit + ')</span><input type="text" class="inputex" size="12" name="' + ptno + 'RM_Finish" value="' + strcountApply01 + '" t="strint" readonly="readonly" style="background-color:#DDDDDD;display:none;" /></div>';
+                str += '<div class="OchiCellInner width33"><span>' + strcountApply01 + '&nbsp;(' + strUnit + ')</span><input type="text" class="inputex" size="12" name="' + ptno + 'RM_Apply01" value="' + strcountApply01 + '" t="' + intflort + '" readonly="readonly" style="background-color:#DDDDDD;display:none;" /></div>';
                 str += '<div class="OchiCellInner nowrap textcenter">本期規劃數:</div>';
                 str += '<div class="OchiCellInner width33">';
                 str += '<span>' + (strP_ExFinish == "" ? "0" : strP_ExFinish) + '&nbsp;(' + strUnit + ')</span>';
-                str += '<input type="text" class="inputex" size="12" name="' + ptno + 'RM_Planning" value="' + strP_ExFinish + '" t="strint" readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
+                str += '<input type="text" class="inputex" size="12" name="' + ptno + 'RM_Planning" value="' + strP_ExFinish + '" t="' + intflort + '" readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
                 str += '</div>';
                 str += '</div>';
                 str += '<div class="OchiTableInner width100">';
@@ -676,31 +685,31 @@
                 str += '<td align="center">住宅</td>';
                 str += '</tr>';
                 str += '<tr>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type1Value1" id="' + ptno + 'RM_Type1Value1" value="' + xmlData.children("RM_Type1Value1").text().trim() + '" t="strint" /></td>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type1Value2" id="' + ptno + 'RM_Type1Value2" value="' + xmlData.children("RM_Type1Value2").text().trim() + '" t="strint" /></td>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type1Value3" id="' + ptno + 'RM_Type1Value3" value="' + xmlData.children("RM_Type1Value3").text().trim() + '" t="strint" /></td>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type2Value1" id="' + ptno + 'RM_Type2Value1" value="' + xmlData.children("RM_Type2Value1").text().trim() + '" t="strint" /></td>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type2Value2" id="' + ptno + 'RM_Type2Value2" value="' + xmlData.children("RM_Type2Value2").text().trim() + '" t="strint" /></td>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type2Value3" id="' + ptno + 'RM_Type2Value3" value="' + xmlData.children("RM_Type2Value3").text().trim() + '" t="strint" /></td>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type3Value1" id="' + ptno + 'RM_Type3Value1" value="' + xmlData.children("RM_Type3Value1").text().trim().replace(".0","") + '" t="strint" /></td>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type3Value2" id="' + ptno + 'RM_Type3Value2" value="' + xmlData.children("RM_Type3Value2").text().trim().replace(".0","") + '" t="strint" /></td>';
-                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type3Value3" id="' + ptno + 'RM_Type3Value3" value="' + xmlData.children("RM_Type3Value3").text().trim().replace(".0","") + '" t="strint" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type1Value1" id="' + ptno + 'RM_Type1Value1" value="' + xmlData.children("RM_Type1Value1").text().trim() + '" t="' + intflort + '" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type1Value2" id="' + ptno + 'RM_Type1Value2" value="' + xmlData.children("RM_Type1Value2").text().trim() + '" t="' + intflort + '" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type1Value3" id="' + ptno + 'RM_Type1Value3" value="' + xmlData.children("RM_Type1Value3").text().trim() + '" t="' + intflort + '" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type2Value1" id="' + ptno + 'RM_Type2Value1" value="' + xmlData.children("RM_Type2Value1").text().trim() + '" t="' + intflort + '" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type2Value2" id="' + ptno + 'RM_Type2Value2" value="' + xmlData.children("RM_Type2Value2").text().trim() + '" t="' + intflort + '" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type2Value3" id="' + ptno + 'RM_Type2Value3" value="' + xmlData.children("RM_Type2Value3").text().trim() + '" t="' + intflort + '" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type3Value1" id="' + ptno + 'RM_Type3Value1" value="' + xmlData.children("RM_Type3Value1").text().trim().replace(".0","") + '" t="' + intflort + '" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type3Value2" id="' + ptno + 'RM_Type3Value2" value="' + xmlData.children("RM_Type3Value2").text().trim().replace(".0","") + '" t="' + intflort + '" /></td>';
+                str += '<td><input type="text" class="inputex width100" name="' + ptno + 'RM_Type3Value3" id="' + ptno + 'RM_Type3Value3" value="' + xmlData.children("RM_Type3Value3").text().trim().replace(".0","") + '" t="' + intflort + '" /></td>';
                 str += '</tr>';
                 str += '<tr>';
                 str += '<td align="right">合計</td>';
                 str += '<td colspan="2" style="text-align:right; background-color:#FEFBC2;">';
                 str += '<span id="' + ptno + 'RM_Type1ValueSum_span">' + (xmlData.children("RM_Type1ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type1ValueSum").text().trim()) + '</span>';
-                str += '<input type="text" class="inputex width100" name="' + ptno + 'RM_Type1ValueSum" id="' + ptno + 'RM_Type1ValueSum" value="' + (xmlData.children("RM_Type1ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type1ValueSum").text().trim()) + '" t="strint"  readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
+                str += '<input type="text" class="inputex width100" name="' + ptno + 'RM_Type1ValueSum" id="' + ptno + 'RM_Type1ValueSum" value="' + (xmlData.children("RM_Type1ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type1ValueSum").text().trim()) + '" t="' + intflort + '"  readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
                 str += '</td>';
                 str += '<td align="right">合計</td>';
                 str += '<td colspan="2" style="text-align:right; background-color:#FEFBC2;">';
                 str += '<span id="' + ptno + 'RM_Type2ValueSum_span">' + (xmlData.children("RM_Type2ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type2ValueSum").text().trim()) + '</span>';
-                str += '<input type="text" class="inputex width100" name="' + ptno + 'RM_Type2ValueSum" id="' + ptno + 'RM_Type2ValueSum" value="' + (xmlData.children("RM_Type2ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type2ValueSum").text().trim()) + '" t="strint"  readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
+                str += '<input type="text" class="inputex width100" name="' + ptno + 'RM_Type2ValueSum" id="' + ptno + 'RM_Type2ValueSum" value="' + (xmlData.children("RM_Type2ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type2ValueSum").text().trim()) + '" t="' + intflort + '"  readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
                 str += '</td>';
                 str += '<td align="right">合計</td>';
                 str += '<td colspan="2" style="text-align:right; background-color:#FEFBC2;">';
                 str += '<span id="' + ptno + 'RM_Type3ValueSum_span">' + (xmlData.children("RM_Type3ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type3ValueSum").text().trim().replace(".0","")) + '</span>';
-                str += '<input type="text" class="inputex width100" name="' + ptno + 'RM_Type3ValueSum" id="' + ptno + 'RM_Type3ValueSum" value="' + (xmlData.children("RM_Type3ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type3ValueSum").text().trim().replace(".0","")) + '" t="strint" readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
+                str += '<input type="text" class="inputex width100" name="' + ptno + 'RM_Type3ValueSum" id="' + ptno + 'RM_Type3ValueSum" value="' + (xmlData.children("RM_Type3ValueSum").text().trim() == "" ? "0" : xmlData.children("RM_Type3ValueSum").text().trim().replace(".0","")) + '" t="' + intflort + '" readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
                 str += '</td>';
                 str += '</tr>';
                 str += '<tr>';

@@ -568,15 +568,18 @@
           var R02 = ($("#RS_Type02Real").val() == "") ? 0 : parseFloat($("#RS_Type02Real").val());
           var R03 = ($("#RS_Type03Real").val() == "") ? 0 : parseFloat($("#RS_Type03Real").val());
           var R04 = ($("#RS_Type04Real").val() == "") ? 0 : parseFloat($("#RS_Type04Real").val());
-          
+
           var tmpCount = (R01 / parseFloat($("#rsMoney1").html())) * 100;
-          $("#rsMoneyRatio1").html(tmpCount.toFixed(0) + "%");
+          var tmp_MoneyRatio1 = ($("#rsMoney1").html() == "" || Number($("#rsMoney1").html()) == 0) ? "0" : tmpCount.toFixed(0);
+          $("#rsMoneyRatio1").html(tmp_MoneyRatio1 + "%");
           var tmpCount2 = (R02 / parseFloat($("#rsMoney2").html())) * 100;
-          $("#rsMoneyRatio2").html(tmpCount2.toFixed(0) + "%");
+          var tmp_MoneyRatio2 = ($("#rsMoney2").html() == "" || Number($("#rsMoney2").html()) == 0) ? "0" : tmpCount2.toFixed(0);
+          $("#rsMoneyRatio2").html(tmp_MoneyRatio2 + "%");
           var tmpCount3 = (R03 / parseFloat($("#rsMoney3").html())) * 100;
-          $("#rsMoneyRatio3").html(tmpCount3.toFixed(0) + "%");
+          var tmp_MoneyRatio3 = ($("#rsMoney3").html() == "" || Number($("#rsMoney3").html()) == 0) ? "0" : tmpCount3.toFixed(0);
+          $("#rsMoneyRatio3").html(tmp_MoneyRatio3 + "%");
           var tmpCount4 = (R04 / parseFloat($("#rsMoney4").html())) * 100;
-          var tmp_MoneyRatio4 = ($("#rsMoney4").html() == "") ? "0" : tmpCount4.toFixed(0);
+          var tmp_MoneyRatio4 = ($("#rsMoney4").html() == "" || Number($("#rsMoney4").html()) == 0) ? "0" : tmpCount4.toFixed(0);
           $("#rsMoneyRatio4").html(tmp_MoneyRatio4 + "%");
 
           //整體實支數

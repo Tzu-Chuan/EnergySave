@@ -107,14 +107,14 @@ public class saveReportMonthEx : IHttpHandler,IRequiresSessionState {
                 rm._RM_Finish = (RM_Finish != null && RM_Finish != "") ? Convert.ToDecimal(RM_Finish):0;
                 rm._RM_Finish01 = (RM_Finish01 != null && RM_Finish01 != "") ? Convert.ToInt32(RM_Finish01):0;//無風管的累計完成數(台)
                 rm._RM_Planning =(RM_Planning != null && RM_Planning != "") ? Convert.ToDecimal(RM_Planning):0;
-                rm._RM_Type1Value1 =(RM_Type1Value1 != null && RM_Type1Value1 != "") ? Convert.ToInt32(RM_Type1Value1):0;
-                rm._RM_Type1Value2 =(RM_Type1Value2 != null && RM_Type1Value2 != "") ? Convert.ToInt32(RM_Type1Value2):0;
-                rm._RM_Type1Value3 =(RM_Type1Value3 != null && RM_Type1Value3 != "") ? Convert.ToInt32(RM_Type1Value3):0;
-                rm._RM_Type1ValueSum =(RM_Type1ValueSum != null && RM_Type1ValueSum != "") ? Convert.ToInt32(RM_Type1ValueSum):0;
-                rm._RM_Type2Value1 =(RM_Type2Value1 != null && RM_Type2Value1 != "") ? Convert.ToInt32(RM_Type2Value1):0;
-                rm._RM_Type2Value2 =(RM_Type2Value2 != null && RM_Type2Value2 != "") ? Convert.ToInt32(RM_Type2Value2):0;
-                rm._RM_Type2Value3 =(RM_Type2Value3 != null && RM_Type2Value3 != "") ? Convert.ToInt32(RM_Type2Value3):0;
-                rm._RM_Type2ValueSum =(RM_Type2ValueSum != null && RM_Type2ValueSum != "") ? Convert.ToInt32(RM_Type2ValueSum):0;
+                rm._RM_Type1Value1 =(RM_Type1Value1 != null && RM_Type1Value1 != "") ? Convert.ToDecimal(RM_Type1Value1):0;
+                rm._RM_Type1Value2 =(RM_Type1Value2 != null && RM_Type1Value2 != "") ? Convert.ToDecimal(RM_Type1Value2):0;
+                rm._RM_Type1Value3 =(RM_Type1Value3 != null && RM_Type1Value3 != "") ? Convert.ToDecimal(RM_Type1Value3):0;
+                rm._RM_Type1ValueSum =(RM_Type1ValueSum != null && RM_Type1ValueSum != "") ? Convert.ToDecimal(RM_Type1ValueSum):0;
+                rm._RM_Type2Value1 =(RM_Type2Value1 != null && RM_Type2Value1 != "") ? Convert.ToDecimal(RM_Type2Value1):0;
+                rm._RM_Type2Value2 =(RM_Type2Value2 != null && RM_Type2Value2 != "") ? Convert.ToDecimal(RM_Type2Value2):0;
+                rm._RM_Type2Value3 =(RM_Type2Value3 != null && RM_Type2Value3 != "") ? Convert.ToDecimal(RM_Type2Value3):0;
+                rm._RM_Type2ValueSum =(RM_Type2ValueSum != null && RM_Type2ValueSum != "") ? Convert.ToDecimal(RM_Type2ValueSum):0;
                 rm._RM_Type3Value1 =(RM_Type3Value1 != null && RM_Type3Value1 != "") ? Convert.ToDecimal(RM_Type3Value1):0;
                 rm._RM_Type3Value2 =(RM_Type3Value2 != null && RM_Type3Value2 != "") ? Convert.ToDecimal(RM_Type3Value2):0;
                 rm._RM_Type3Value3 =(RM_Type3Value3 != null && RM_Type3Value3 != "") ? Convert.ToDecimal(RM_Type3Value3):0;

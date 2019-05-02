@@ -57,14 +57,14 @@ public class ReportMonth_DB
     Decimal RM_Finish;
     Int32 RM_Finish01;//無風管的累計完成數(台)
     Decimal RM_Planning;
-    Int32 RM_Type1Value1;
-    Int32 RM_Type1Value2;
-    Int32 RM_Type1Value3;
-    Int32 RM_Type1ValueSum;
-    Int32 RM_Type2Value1;
-    Int32 RM_Type2Value2;
-    Int32 RM_Type2Value3;
-    Int32 RM_Type2ValueSum;
+    Decimal RM_Type1Value1;
+    Decimal RM_Type1Value2;
+    Decimal RM_Type1Value3;
+    Decimal RM_Type1ValueSum;
+    Decimal RM_Type2Value1;
+    Decimal RM_Type2Value2;
+    Decimal RM_Type2Value3;
+    Decimal RM_Type2ValueSum;
     Decimal RM_Type3Value1;
     Decimal RM_Type3Value2;
     Decimal RM_Type3Value3;
@@ -136,35 +136,35 @@ public class ReportMonth_DB
     {
         set { RM_Planning = value; }
     }
-    public Int32 _RM_Type1Value1
+    public Decimal _RM_Type1Value1
     {
         set { RM_Type1Value1 = value; }
     }
-    public Int32 _RM_Type1Value2
+    public Decimal _RM_Type1Value2
     {
         set { RM_Type1Value2 = value; }
     }
-    public Int32 _RM_Type1Value3
+    public Decimal _RM_Type1Value3
     {
         set { RM_Type1Value3 = value; }
     }
-    public Int32 _RM_Type1ValueSum
+    public Decimal _RM_Type1ValueSum
     {
         set { RM_Type1ValueSum = value; }
     }
-    public Int32 _RM_Type2Value1
+    public Decimal _RM_Type2Value1
     {
         set { RM_Type2Value1 = value; }
     }
-    public Int32 _RM_Type2Value2
+    public Decimal _RM_Type2Value2
     {
         set { RM_Type2Value2 = value; }
     }
-    public Int32 _RM_Type2Value3
+    public Decimal _RM_Type2Value3
     {
         set { RM_Type2Value3 = value; }
     }
-    public Int32 _RM_Type2ValueSum
+    public Decimal _RM_Type2ValueSum
     {
         set { RM_Type2ValueSum = value; }
     }
