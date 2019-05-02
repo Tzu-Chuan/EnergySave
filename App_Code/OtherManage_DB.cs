@@ -12,7 +12,7 @@ using System.Configuration;
 /// </summary>
 public class OtherManage_DB
 {
-    public DataSet MonthList(string pStart, string pEnd,string city)
+    public DataSet MonthList(string pStart, string pEnd,string city,string rc_type)
     {
         SqlCommand oCmd = new SqlCommand();
         oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
@@ -21,8 +21,14 @@ public class OtherManage_DB
         sb.Append(@"
     select count(*) total from ReportCheck 
     left join ProjectInfo on I_Guid=(select top 1 RM_ProjectGuid from ReportMonth where RC_ReportGuid=RM_ReportGuid) 
-    where RC_Status='A' and RC_ReportType='01' ");
+    where RC_Status='A' ");
 
+        /// 類別
+        if (rc_type != "")
+            sb.Append(@"and RC_ReportType=@RC_ReportType ");
+        else
+            sb.Append(@"and (RC_ReportType='01' or RC_ReportType='03') ");
+        /// 縣市
         if (city != "")
             sb.Append(@"and I_City=@I_City");
 
@@ -33,6 +39,7 @@ public class OtherManage_DB
             I_Office,
             M_Name,
             RC_Guid,
+            RC_ReportType,
             RC_ReportGuid,
 	        RC_Stage,
 	        RC_Year,
@@ -42,9 +49,15 @@ public class OtherManage_DB
             left join ProjectInfo on I_Guid=(select top 1 RM_ProjectGuid from ReportMonth where RC_ReportGuid=RM_ReportGuid)
             left join Member on RC_PeopleGuid=M_Guid
             left Join CodeTable as City on I_City=City.C_Item and City.C_Group='02'
-            where RC_Status='A' and RC_ReportType='01' 
+            where RC_Status='A'
  ");
 
+        /// 類別
+        if (rc_type != "")
+            sb.Append(@"and RC_ReportType=@RC_ReportType ");
+        else
+            sb.Append(@"and (RC_ReportType='01' or RC_ReportType='03') ");
+        /// 縣市
         if (city != "")
             sb.Append(@"and I_City=@I_City");
 
@@ -57,6 +70,7 @@ public class OtherManage_DB
         oCmd.Parameters.AddWithValue("@pStart", pStart);
         oCmd.Parameters.AddWithValue("@pEnd", pEnd);
         oCmd.Parameters.AddWithValue("@I_City", city);
+        oCmd.Parameters.AddWithValue("@RC_ReportType", rc_type);
         oda.Fill(ds);
         return ds;
     }

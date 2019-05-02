@@ -6,7 +6,7 @@
             getddl("02", "#ddlCity");
             getData(0);
 
-            $(document).on("change", "#ddlCity", function () {
+            $(document).on("change", "#ddlCity,#ddlRcType", function () {
                 getData(0);
             });
 
@@ -45,7 +45,8 @@
                  url: "../handler/getMonthManageList.aspx",
                  data: {
                      PageNo: p,
-                     city: $("#ddlCity").val()
+                     city: $("#ddlCity").val(),
+                     rcType: $("#ddlRcType").val()
                  },
                  error: function (xhr) {
                      alert("Error " + xhr.status);
@@ -62,6 +63,9 @@
                              $(data).find("data_item").each(function (i) {
                                  tabstr += '<tr>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + (i + 1) + '</td>';
+                                 var rcType = "設備汰換";
+                                 if ($(this).children("RC_ReportType").text().trim() == "03") rcType = "擴大補助";
+                                 tabstr += '<td align="center" nowrap="nowrap">' + rcType + '</td>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("City").text().trim() + '</td>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("I_Office").text().trim() + '</td>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + (parseInt($(this).children("RC_Year").text().trim()) - 1911) + '</td>';
@@ -74,7 +78,7 @@
                              });
                          }
                          else
-                             tabstr += "<tr><td colspan='8'>查詢無資料</td></tr>";
+                             tabstr += "<tr><td colspan='9'>查詢無資料</td></tr>";
                          $("#tablist tbody").append(tabstr);
                          $(".stripeMe tr").mouseover(function () { $(this).addClass("spe"); }).mouseout(function () { $(this).removeClass("spe"); });
                          $(".stripeMe table:not(td > table) > tbody > tr:not('.spe'):even").addClass("alt");
@@ -135,7 +139,15 @@
         </div><!-- twocol -->
 
         <div class="twocol" style="margin-top:20px;">
-	        <div class="left">執行機關：<select id="ddlCity" class="inputex"></select></div><!-- left -->
+	        <div class="left">執行機關：
+                <select id="ddlCity" class="inputex"></select> &nbsp;
+                類別：
+                <select id="ddlRcType" class="inputex">
+                    <option value="">全部</option>
+                    <option value="01">設備汰換</option>
+                    <option value="03">擴大補助</option>
+                </select>
+	        </div><!-- left -->
             <div class="right"></div><!-- right -->
         </div><!-- twocol -->
         <br />
@@ -144,6 +156,7 @@
                 <thead>
                     <tr>
                         <th nowrap="nowrap" style="width:40px;">項次</th>
+                        <th nowrap="nowrap">類別</th>
                         <th nowrap="nowrap">執行機關</th>
                         <th nowrap="nowrap">承辦局處</th>
                         <th nowrap="nowrap">年</th>
