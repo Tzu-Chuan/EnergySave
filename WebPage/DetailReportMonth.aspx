@@ -571,10 +571,10 @@
                                 if ($(this).children("competence").text().trim() != "02") {
                                     $("#btn_ok").hide();
                                     $("#btn_notok").hide();
-                                    if (chk_type == "Y") {
+                                    //if (chk_type == "Y") {
                                         $("#exbtn").show();
                                         $("#exbtnPDF").show();
-                                    }
+                                    //}
                                 } else {
                                     if (chk_type!="Y") {
                                         $("#btn_ok").show();

@@ -195,7 +195,8 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 strPeopleName = dt.Rows[0]["M_Name"].ToString().Trim();
                 stePeoplePhone = dt.Rows[0]["M_Tel"].ToString().Trim();
                 strManager = dt.Rows[0]["bossname"].ToString().Trim();
-                strChkDate = Convert.ToDateTime(dt.Rows[0]["RC_CheckDate"].ToString()).ToString("yyyy/MM/dd");
+                if (dt.Rows[0]["RC_CheckDate"].ToString() != "")
+                    strChkDate = Convert.ToDateTime(dt.Rows[0]["RC_CheckDate"].ToString()).ToString("yyyy/MM/dd");
                 strCreateDate = Convert.ToDateTime(dt.Rows[0]["RM_ModDate"].ToString()).ToString("yyyy/MM/dd");
                 strHtml += "<td rowspan='" + rowSpan + "' align='center' width = '5%'>本<br>月<br>執<br>行<br>進<br>度</td>";
             }
