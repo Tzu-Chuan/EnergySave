@@ -202,7 +202,7 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
                     strHtml += "<tr><td rowspan='" + rowSpan + "' align='center' width = '5%'>本<br>月<br>執<br>行<br>進<br>度</td>";
                     strHtml += "<td rowspan='8' width='11%'>" + ItemCname + "</td>";
                     strHtml += "<td colspan='6'>本期累計核定數：" + strRM_Finish01 + "&nbsp;(台)</td>";
-                    strHtml += "<td colspan='6'>本期規劃數：" + strP_ExFinish + "&nbsp;(台)</td>";
+                    strHtml += "<td colspan='6'>本期規劃數：" + strP_ExFinish + "&nbsp;(KW)</td>";
                     strHtml += "</tr>";
                     //strHtml += "<td colspan='6'>本期累計申請數：" + strcountApplyKW + "</td>";
                     //strHtml += "<td>本期累計完成數："+ strRM_Finish + "&nbsp;(kW)</td>";
@@ -356,17 +356,17 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
             }
             else
             {
-                if (strItem != "14")
+                if (strItem == "05")
                 {
                     strUnit = "KW";
                 }
-                else if (strItem != "14")
+                else if (strItem == "14")
                 {
-                    strUnit = "台";
+                    strUnit = "組";
                 }
                 else
                 {
-                    strUnit = "組";
+                    strUnit = "台";
                 }
                 if (i == 0)
                 {

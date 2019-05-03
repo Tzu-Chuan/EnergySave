@@ -233,10 +233,10 @@
                                 if ($(this).children("competence").text().trim() != "02") {
                                     $("#btn_ok").hide();
                                     $("#btn_notok").hide();
-                                    if (chk_type == "Y") {
+                                    //if (chk_type == "Y") {
                                         $("#exbtn").show();
                                         $("#exbtnPDF").show();
-                                    }
+                                    //}
                                 } else {
                                     if (chk_type != "Y") {
                                         $("#btn_ok").show();
@@ -461,10 +461,13 @@
                 str += '</div>';
             }
             else {
-                if (strItem != "14") {
-                    strUnit = "台";
-                } else {
+                if (strItem == "05") {
+                    strUnit = "KW";
+                }
+                else if (strItem == "14") {
                     strUnit = "組";
+                } else {
+                    strUnit = "台";
                 }
                 var splitcountFinish03 = "", countFinish03 = "";
                 splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');

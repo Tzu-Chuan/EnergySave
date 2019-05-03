@@ -232,12 +232,15 @@
                                 var str = "";
                                 var sdate = $(this).children("sdate").text().trim();
                                 var edate = $(this).children("edate").text().trim();
-                                var splits = sdate.split("/");
-                                var splite = edate.split("/");
-                                //自107年1月1日起至 年 月 日止，計    個月
-                                str += "自" + (parseInt(splits[0]) - 1911) + "年" + splits[1] + "月" + splits[2] + "日起至";
-                                str += "自" + (parseInt(splite[0]) - 1911) + "年" + splite[1] + "月" + splite[2] + "日止，共計";
-                                str += monthDiff(new Date(sdate), new Date(edate)) + "個月";
+                                if (sdate != "" && edate != "") {
+                                    var splits = sdate.split("/");
+                                    var splite = edate.split("/");
+                                    //自107年1月1日起至 年 月 日止，計    個月
+                                    str += "自" + (parseInt(splits[0]) - 1911) + "年" + splits[1] + "月" + splits[2] + "日起至";
+                                    str += "自" + (parseInt(splite[0]) - 1911) + "年" + splite[1] + "月" + splite[2] + "日止，共計";
+                                    str += monthDiff(new Date(sdate), new Date(edate)) + "個月";
+                                }
+                                
                                 $("#txt_datesanddatee").empty().append(str);
                             });
                         }
@@ -280,7 +283,7 @@
                         if (data == null) {
                             //沒資料連button都不顯示
                             disabledInputandBtn();
-                            $("#div_data").empty().append("查無資料");
+                            $("#div_data").empty().append("<font size='5' color='red'>尚無查核點及預訂工作進度資料，請至計畫基本資料確認</font>");
                             return;
                         }
                         if ($(data).find("data_item").length > 0) {
@@ -646,13 +649,13 @@
                     strFo = "每單位年節電量(度/kW)";
                     intflort = "strflot";
                     countFinish03 = xmlData.children("countFinish03").text().trim();
-                }else if (strItem != "14") {
-                    strUnit = "台";
+                } else if (strItem == "14") {
+                    strUnit = "組";
                     intflort = "strint";
                     splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
                     countFinish03 = splitcountFinish03[0];
                 } else {
-                    strUnit = "組";
+                    strUnit = "台";
                     intflort = "strint";
                     splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
                     countFinish03 = splitcountFinish03[0];
