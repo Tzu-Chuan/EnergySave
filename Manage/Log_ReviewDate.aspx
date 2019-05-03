@@ -61,7 +61,8 @@
                                 $(data).find("data_item").each(function (i) {
                                     tabstr += '<tr>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + (i + 1) + '</td>';
-                                    tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("LType").text().trim().substr(0,2) + '</td>';
+                                    var tmpType = ($(this).children("L_Type").text().trim() == "06") ? $(this).children("LType").text().trim().substr(0, 2) + "-" + $(this).children("MTpye").text().trim() : $(this).children("LType").text().trim().substr(0, 2);
+                                    tabstr += '<td align="center" nowrap="nowrap">' + tmpType + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("City").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("M_Office").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("M_Name").text().trim() + '</td>';
@@ -80,7 +81,7 @@
                             $("#tablist tbody").append(tabstr);
                             $(".stripeMe tr").mouseover(function () { $(this).addClass("spe"); }).mouseout(function () { $(this).removeClass("spe"); });
                             $(".stripeMe table:not(td > table) > tbody > tr:not('.spe'):even").addClass("alt");
-                            PageFun(p, $("total", data).text());
+                            CreatePage(p, $("total", data).text());
                         }
                     }
                 }
@@ -96,20 +97,14 @@
             return yyyy + "/" + MM + "/" + dd + " " + time;
         }
 
-        var nowPage = 0; //當前頁
-        var listNum = 10; //每頁顯示個數
-        var PagesLen; //總頁數 
-        var PageNum = 4; //下方顯示分頁數(PageNum+1個)
-        function PageFun(PageNow, TotalItem) {
-            //Math.ceil -> 無條件進位
-            PagesLen = Math.ceil(TotalItem / listNum);
-            if (PagesLen <= 1)
-                $("#changpage").hide();
-            else {
-                $("#changpage").show();
-                upPage(PageNow, TotalItem);
-            }
-        }
+       //分頁設定
+        //ListNum: 每頁顯示資料筆數
+        //PageNum: 分頁頁籤顯示數
+        PageOption.Selector = "#changpage";
+        PageOption.ListNum = 10;
+        PageOption.PageNum = 10;
+        PageOption.PrevStep = false;
+        PageOption.NextStep = false;
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">

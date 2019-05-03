@@ -61,7 +61,8 @@
                                 $(data).find("data_item").each(function (i) {
                                     tabstr += '<tr>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + (i + 1) + '</td>';
-                                    tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("LType").text().trim().substr(0,2) + '</td>';
+                                    var tmpType = ($(this).children("L_Type").text().trim() == "08") ? $(this).children("LType").text().trim().substr(0, 2) + "-" + $(this).children("MTpye").text().trim() : $(this).children("LType").text().trim().substr(0, 2);
+                                    tabstr += '<td align="center" nowrap="nowrap">' + tmpType + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("City").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("M_Office").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("M_Name").text().trim() + '</td>';

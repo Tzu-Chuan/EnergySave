@@ -238,6 +238,7 @@ where 1=1 ");
 	city_type.C_Item_cn City,comp_type.C_Item_cn Comp,
 	(select top 1 RM_Year from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MYear,
 	(select top 1 RM_Month from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MMonth,
+	(select top 1 case RM_ReportType when '01' then '設備汰換' else '擴大補助' end from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MTpye,
 	(select RS_Year from ReportSeason where RS_Guid=L_ModItemGuid and RS_Status='A') SYear,
 	(select RS_Season from ReportSeason where RS_Guid=L_ModItemGuid and RS_Status='A') SSeason
 	from LogTable
@@ -320,6 +321,7 @@ where 1=1 ");
 	city_type.C_Item_cn City,comp_type.C_Item_cn Comp,
 	(select top 1 RM_Year from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MYear,
 	(select top 1 RM_Month from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MMonth,
+	(select top 1 case RM_ReportType when '01' then '設備汰換' else '擴大補助' end from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MTpye,
 	(select RS_Year from ReportSeason where RS_Guid=L_ModItemGuid and RS_Status='A') SYear,
 	(select RS_Season from ReportSeason where RS_Guid=L_ModItemGuid and RS_Status='A') SSeason
 	from LogTable
@@ -402,6 +404,7 @@ where 1=1 ");
 	city_type.C_Item_cn City,comp_type.C_Item_cn Comp,
 	(select top 1 RM_Year from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MYear,
 	(select top 1 RM_Month from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MMonth,
+	(select top 1 case RM_ReportType when '01' then '設備汰換' else '擴大補助' end from ReportMonth where RM_ReportGuid=L_ModItemGuid and RM_Status='A') MTpye,
 	(select RS_Year from ReportSeason where RS_Guid=L_ModItemGuid and RS_Status='A') SYear,
 	(select RS_Season from ReportSeason where RS_Guid=L_ModItemGuid and RS_Status='A') SSeason
 	from LogTable
@@ -425,7 +428,7 @@ where 1=1 ");
 
         if (KeyWord != "")
         {
-            sb.Append(@"and ((upper(M_Name) LIKE '%' + upper(@KeyWord) + '%') or (upper(L_IP) LIKE '%' + upper(@KeyWord) + '%') or 
+            sb.Append(@"and ((upper(M_Name) LIKE '%' + upper(@KeyWord) + '%') or (upper(L_IP) LIKE '%' + upper(@KeyWord) + '%') or
 (upper(city_type.C_Item_cn) LIKE '%' + upper(@KeyWord) + '%') or (upper(comp_type.C_Item_cn) LIKE '%' + upper(@KeyWord) + '%') or (upper(M_Office) LIKE '%' + upper(@KeyWord) + '%')) ");
         }
 
