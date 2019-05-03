@@ -337,7 +337,7 @@ public class ReportMonth_DB
                 left join Member d on d.M_ID=@M_ID
                 left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
                 left join ReportCheck f on b.RM_ReportGuid = f.RC_ReportGuid and RC_Status<>'D'
-                where P_ParentId=@I_Guid and P_Period=@P_Period and (b.RM_Status<>'D' or b.RM_Status is null) and RM_ReportType=@RM_ReportType
+                where P_ParentId=@I_Guid and P_Period=@P_Period and b.RM_Status='A' and RM_ReportType=@RM_ReportType
                 
         ");
         if (RM_ReportType == "01")
@@ -480,7 +480,7 @@ public class ReportMonth_DB
                 ,RM_Type4Value1=@RM_Type4Value1,RM_Type4Value2=@RM_Type4Value2,RM_Type4Value3=@RM_Type4Value3,RM_Type4ValueSum=@RM_Type4ValueSum
                 ,RM_PreVal=@RM_PreVal,RM_ChkVal=@RM_ChkVal,RM_NotChkVal=@RM_NotChkVal,RM_Remark=@RM_Remark
                 ,RM_ModId=@RM_ModId,RM_ModDate=@RM_ModDate,RM_Status='A',RM_Formula=@RM_Formula
-                where RM_ProjectGuid=@RM_ProjectGuid and RM_Stage=@RM_Stage and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_CPType=@RM_CPType and RM_P_ExType=@RM_P_ExType and RM_ReportType=@RM_ReportType and RM_PGuid=@RM_PGuid -- and RM_P_ExDeviceType=@RM_P_ExDeviceType
+                where RM_ProjectGuid=@RM_ProjectGuid and RM_Stage=@RM_Stage and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_CPType=@RM_CPType and RM_ReportType=@RM_ReportType and RM_PGuid=@RM_PGuid and RM_Status='A' -- and RM_P_ExDeviceType=@RM_P_ExDeviceType  and RM_P_ExType=@RM_P_ExType
             ";
             
         }
