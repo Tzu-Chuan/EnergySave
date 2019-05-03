@@ -64,7 +64,7 @@ public class saveReportMonthEx : IHttpHandler,IRequiresSessionState {
             report_type = (context.Request["report_type"] != null) ? context.Request["report_type"].ToString().Split(',') : null;
             report_P_Guid = (context.Request["report_P_Guid"] != null) ? context.Request["report_P_Guid"].ToString().Split(',') : null;
             report_Guid = (context.Request["report_Guid"] != null) ? context.Request["report_Guid"].ToString().Split(',') : null;
-            mod_RM_ReportGuid= (report_Guid[0] != null) ? report_Guid[0].ToString() : null;
+            mod_RM_ReportGuid= (report_Guid[0] != null) ? report_Guid[0].ToString() : "";
 
             for (int i=0;i<report_type.Length;i++) {
                 RM_Finish= (context.Request[""+report_type[i]+"RM_Finish"] != null) ? context.Request[""+report_type[i]+"RM_Finish"].ToString() : null;
@@ -138,7 +138,7 @@ public class saveReportMonthEx : IHttpHandler,IRequiresSessionState {
                 }
                 else {
                     //沒資料=>新增
-                    rm._RM_ReportGuid = RM_ReportGuid;
+                    rm._RM_ReportGuid = (mod_RM_ReportGuid != "") ? mod_RM_ReportGuid : RM_ReportGuid;
                     rm.modMonthReport("add");
                 }
 

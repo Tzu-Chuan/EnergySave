@@ -275,6 +275,7 @@
                         var chk_status;
                         var chk_type;
                         var chk_date;
+                        var strReportGuiud = "";
                         data = $.parseXML(data);
                         if (data == null) {
                             //沒資料連button都不顯示
@@ -285,6 +286,14 @@
                         if ($(data).find("data_item").length > 0) {
                             var strCreateDate;
                             var strChkDate;
+                            //防止ReportGuid不一致，有可能在儲存完月報之後再新增推動項目，
+                            //這樣新的項目的reportGuid就會是空，後端新增後就會變成新的reportGuid
+                            $(data).find("data_item").each(function (i) {
+                                if (strReportGuiud == "") {
+                                    strReportGuiud = $(this).children("RM_ReportGuid").text().trim()
+                                }
+                            });
+
                             $(data).find("data_item").each(function (i) {
                                 var strday = new Date();
                                 //如果不過濾掉，chk_status會變成空直，沒辦法判斷現在到底是不是送審中
@@ -300,7 +309,7 @@
                                         strCreateDate = strday.getFullYear() + "/" + (strday.getMonth() + 1) + "/" + strday.getDate();
                                     }
                                 }
-                                strHtml += getHtml($(this));
+                                strHtml += getHtml($(this),strReportGuiud);
                                 
                             });
                             //審核資料
@@ -358,7 +367,7 @@
         }
 
         //湊出各類別表格
-        function getHtml(xmlData) {
+        function getHtml(xmlData,strRGuiud) {
             var strItem = xmlData.children("P_ItemName").text().trim();
             var type1 = xmlData.children("P_ExType").text().trim();
             var type2 = xmlData.children("P_ExDeviceType").text().trim();
@@ -377,6 +386,8 @@
             
             var strcountApplyKW = xmlData.children("countApplyKW").text().trim();//累計申請數KW
             var strcountApply01 = xmlData.children("countApply01").text().trim();//累計申請數
+
+            
 
             //if (strItem == "99") {
             //    ptno = ptno + xmlData.children("P_ExType").text().trim() + xmlData.children("P_ExDeviceType").text().trim();
@@ -508,7 +519,7 @@
                 str += '</div>';
                 str += '<div><input type="hidden" name="report_type" value="' + ptno + '" /></div>';
                 str += '<div><input type="hidden" name="report_P_Guid" value="' + xmlData.children("P_Guid").text().trim() + '" /></div>';
-                str += '<div><input type="hidden" name="report_Guid" value="' + xmlData.children("RM_ReportGuid").text().trim() + '" /></div>';
+                str += '<div><input type="hidden" name="report_Guid" value="' + strRGuiud + '" /></div>';
             }
             else if (strItem == "02" || strItem == "03") {//type1 == "02" && type2 == "02" =>照明
                 str += '<div class="OchiRow">';
@@ -626,7 +637,7 @@
                 str += '</div>';
                 str += '<div><input type="hidden" name="report_type" value="' + ptno + '" /></div>';
                 str += '<div><input type="hidden" name="report_P_Guid" value="' + xmlData.children("P_Guid").text().trim() + '" /></div>';
-                str += '<div><input type="hidden" name="report_Guid" value="' + xmlData.children("RM_ReportGuid").text().trim() + '" /></div>';
+                str += '<div><input type="hidden" name="report_Guid" value="' + strRGuiud + '" /></div>';
             }
             else {
                 var splitcountFinish03 = "", countFinish03 = "";
@@ -745,7 +756,7 @@
                 str += '</div>';
                 str += '<div><input type="hidden" name="report_type" value="' + ptno + '" /></div>';
                 str += '<div><input type="hidden" name="report_P_Guid" value="' + xmlData.children("P_Guid").text().trim() + '" /></div>';
-                str += '<div><input type="hidden" name="report_Guid" value="' + xmlData.children("RM_ReportGuid").text().trim() + '" /></div>';
+                str += '<div><input type="hidden" name="report_Guid" value="' + strRGuiud + '" /></div>';
             }
             return str;
         }
