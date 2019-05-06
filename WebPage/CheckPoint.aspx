@@ -50,13 +50,6 @@
                     getData("04");
                 }
             });
-
-            //自動存檔參考
-            $(document).on("click", "#testbtn", function () {
-                $("#bw_savebtn").trigger("click");
-                $("#p_savebtn").trigger("click");
-                $("#s_savebtn").trigger("click");
-            });
         });
 
         function randomId() {
@@ -1011,26 +1004,6 @@
                 form.setAttribute("target", "postiframe");
                 form.submit();
             });
-
-            //推動項目 ddl change 類別
-            //$(document).on("change", "select[name='a_pushitem']", function () {
-            //    if (this.value == "99") {
-            //        $(this).closest("td").find("div[name='OtherPanel']").show();
-            //    }
-            //    else {
-            //        $(this).closest("td").find("div[name='OtherPanel']").hide();
-            //    }
-            //});
-
-            //推動項目 ddl change 設備子分類
-            //$(document).on("change", "select[name='a_main']", function () {
-            //    if (this.value == "02") {
-            //        $(this).closest("td").find("div[name='aSubPanel']").show();
-            //    }
-            //    else {
-            //        $(this).closest("td").find("div[name='aSubPanel']").hide();
-            //    }
-            //});
         });//js end
     </script>
 </asp:Content>
