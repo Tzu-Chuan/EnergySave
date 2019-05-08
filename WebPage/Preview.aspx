@@ -344,13 +344,6 @@
                     type: tp,
                     person_id: $.getParamValue('v')
                 },
-                beforeSend: function () {
-                    $('body').loading({ theme: 'dark' });
-                },
-                complete: function () {
-                    if (tp == "04")
-                        $('body').loading("stop");
-                },
                 error: function (xhr) {
                     alert(xhr.responseText);
                 },
@@ -1061,78 +1054,54 @@
 
         function getCP_TypeCn(tp) {
             var str = "";
-            switch (tp) {
-                case "01":
-                    str = "無風管空氣調節機";
-                    break;
-                case "02":
-                    str = "老舊辦公室照明";
-                    break;
-                case "03":
-                    str = "室內停車場智慧照明";
-                    break;
-                case "04":
-                    str = "中型服務業、機關及學校導入能源管理系統";
-                    break;
-                case "05":
-                    str = "大型服務業、機關及學校導入能源管理系統";
-                    break;
-                case "99":
-                    str = "其他";
-                    break;
-            }
+            $.ajax({
+                type: "POST",
+                async: false, //在沒有返回值之前,不會執行下一步動作
+                url: "../handler/GetDDL.aspx",
+                data: {
+                    group: "07",
+                    item: tp
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                },
+                success: function (data) {
+                    if ($(data).find("Error").length > 0) {
+                        alert($(data).find("Error").attr("Message"));
+                    }
+                    else {
+                        if ($(data).find("data_item").length > 0) {
+                            str = $(data).find("data_item").children("C_Item_cn").text().trim();
+                        }
+                    }
+                }
+            });
             return str;
         }
 
          function getExTypeCn(tp) {
-            var str = "";
-            switch (tp) {
-                case "01":
-                    str = "(接)風管空氣調節機(4KW/台)";
-                    break;
-                case "02":
-                    str = "老舊辦公室照明燈具(T5螢光燈具)";
-                    break;
-                case "03":
-                    str = "室內停車照明";
-                    break;
-                case "04":
-                    str = "51KW以下能管系統";
-                    break;
-                case "05":
-                    str = "家庭(冷氣670度/3.2KW)";
-                    break;
-                case "06":
-                    str = "電冰箱";
-                    break;
-                case "07":
-                    str = "電視";
-                    break;
-                case "08":
-                    str = "電熱水瓶";
-                    break;
-                case "09":
-                    str = "電熱水器(儲備型)";
-                    break;
-                case "10":
-                    str = "電子鍋";
-                    break;
-                case "11":
-                    str = "溫熱型開飲機";
-                    break;
-                case "12":
-                    str = "電鍋";
-                    break;
-                case "13":
-                    str = "吹風機";
-                    break;
-                case "14":
-                    str = "公設LED照明(10顆)";
-                    break;
-                case "99":
-                    str = "其他";
-                    break;
-            }
+             $.ajax({
+                 type: "POST",
+                 async: false, //在沒有返回值之前,不會執行下一步動作
+                 url: "../handler/GetDDL.aspx",
+                 data: {
+                     group: "09",
+                     item: tp
+                 },
+                 error: function (xhr) {
+                     alert(xhr.responseText);
+                 },
+                 success: function (data) {
+                     if ($(data).find("Error").length > 0) {
+                         alert($(data).find("Error").attr("Message"));
+                     }
+                     else {
+                         if ($(data).find("data_item").length > 0) {
+                             str = $(data).find("data_item").children("C_Item_cn").text().trim();
+                         }
+                     }
+                 }
+             });
             return str;
         }
 

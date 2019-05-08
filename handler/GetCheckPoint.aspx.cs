@@ -116,8 +116,8 @@ public partial class handler_GetCheckPoint : System.Web.UI.Page
                     PushItem.SetAttribute("P_ItemNameCode", dv[i]["P_ItemName"].ToString());
                     PushItem.SetAttribute("P_WorkRatio", dv[i]["P_WorkRatio"].ToString());
                     PushItem.SetAttribute("P_ExFinish", dv[i]["P_ExFinish"].ToString());
-                    PushItem.SetAttribute("P_ExType", dv[i]["P_ExType"].ToString());
-                    PushItem.SetAttribute("P_ExDeviceType", dv[i]["P_ExDeviceType"].ToString());
+                    //PushItem.SetAttribute("P_ExType", dv[i]["P_ExType"].ToString());
+                    //PushItem.SetAttribute("P_ExDeviceType", dv[i]["P_ExDeviceType"].ToString());
                     cpList.AppendChild(PushItem);
                 }
 

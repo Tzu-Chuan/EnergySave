@@ -79,12 +79,17 @@ public class CodeTable_DB
 
         sb.Append(@"SELECT C_Item_cn,C_Item from CodeTable where C_Group=@group ");
 
+        if(C_Item!="")
+            sb.Append(@"and C_Item=@C_Item ");
+
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
         SqlDataAdapter oda = new SqlDataAdapter(oCmd);
         DataTable ds = new DataTable();
 
         oCmd.Parameters.AddWithValue("@group", group);
+        oCmd.Parameters.AddWithValue("@C_Item", C_Item);
+
         oda.Fill(ds);
         return ds;
     }

@@ -479,6 +479,8 @@
               });
               return divstr;
           }
+          else
+              return '<span style="color:red; font-size:12pt;">' + $.getParamValue('year') + '年 第' + $.getParamValue('stage') + '期 查核點無資料</span>';
       }
 
        //擴大補助預計(累計)完成數
