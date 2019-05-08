@@ -78,8 +78,8 @@ public partial class handler_getSeasonDetail : System.Web.UI.Page
             XmlElement PushItem = doc.DocumentElement;
             for (int i = 0; i < dv.Count; i++)
             {
-                if ((dv[i]["P_Type"].ToString() == "03" || dv[i]["P_Type"].ToString() == "04") && dv[i]["P_ItemName"].ToString() == "99")
-                    continue;
+                //if ((dv[i]["P_Type"].ToString() == "03" || dv[i]["P_Type"].ToString() == "04") && dv[i]["P_ItemName"].ToString() == "99")
+                //    continue;
                 if (i == 0)
                 {
                     /// Node - PushItem 
