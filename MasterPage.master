@@ -27,7 +27,6 @@
 <link href="<%= ResolveUrl("~/App_Themes/css/style.css") %>" rel="stylesheet" type="text/css" />
 <link href="<%= ResolveUrl("~/App_Themes/css/jquery-ui.css") %>" rel="stylesheet" type="text/css" />
 <link href="<%= ResolveUrl("~/js/fancybox/jquery.fancybox.css") %>" rel="stylesheet" type="text/css"  />
-<link href="<%= ResolveUrl("~/App_Themes/css/loading.css") %>" rel="stylesheet" type="text/css"  />
 <script type="text/javascript" src="<%= ResolveUrl("~/js/jquery-1.11.2.min.js") %>"></script>
 <script type="text/javascript" src="<%= ResolveUrl("~/js/jquery-ui-1.10.2.custom.min.js") %>"></script>
 <script type="text/javascript" src="<%= ResolveUrl("~/js/jquery.blockUI.js") %>"></script>
