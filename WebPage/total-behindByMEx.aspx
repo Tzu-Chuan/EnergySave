@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="total-behindEx.aspx.cs" Inherits="WebPage_total_behindEx" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="total-behindByMEx.aspx.cs" Inherits="WebPage_total_behindByMEx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <script type="text/javascript">
@@ -10,7 +10,7 @@
             });
             //匯出按鈕
             $("#btn_export").click(function () {
-                window.location = "../handler/ExportTotalBehindEx.aspx?s=" + encodeURIComponent($("#ddlStage").val()) + "&t=" + encodeURIComponent($("#ddlType").val()) + "";
+                window.location = "../handler/ExportTotalBehindByMEx.aspx?s=" + encodeURIComponent($("#ddlStage").val()) + "&t=" + encodeURIComponent($("#ddlType").val()) + "";
             });
         });
 
@@ -20,7 +20,7 @@
                 async: true, //在沒有返回值之前,不會執行下一步動作
                 url: "../handler/accReport.ashx",
                 data: {
-                    func: "load_reportTotalBehindForEx",
+                    func: "load_reportTotalBehindByMForEx",
                     strStage: $("#ddlStage").val(),
                     strClass: $("#ddlType").val()
                 },
@@ -53,7 +53,7 @@
                                 if ($(data).find("dataHead").length > 0) {
                                     strHtml += '<tr>';
                                     strHtml += '<th rowspan="2">縣市</th>';
-                                    strHtml += '<th rowspan="2">季</th>';
+                                    strHtml += '<th rowspan="2">月</th>';
                                     $(data).find("dataHead").each(function (i) {
                                         strHtml += '<th colspan="3">' + $(this).children("C_Item_cn").text().trim() + '</th>';
                                     });
@@ -77,7 +77,11 @@
                                 $(data).find("City").each(function (i) {
                                     tabstr += '<tr>';
                                     tabstr += '<td>' + $(this).attr("city_Item_cn") + '</td>';
-                                    tabstr += '<td>' + $(this).attr("city_Year") + '年第' + $(this).attr("city_Season") + '季</td>';
+                                    if ($(this).attr("city_Year")!="" && $(this).attr("city_Month")!="") {
+                                        tabstr += '<td>' + $(this).attr("city_Year") + '年' + $(this).attr("city_Month") + '月</td>';
+                                    } else {
+                                        tabstr += '<td></td>';
+                                    }
                                     objCity = $(this);
                                     $(data).find("dataHead").each(function (i) {
                                         var tmpChildData = "";
@@ -117,8 +121,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <div style="padding-left:10px; padding-right:10px;">
         <div class="twocol filetitlewrapper">
-            <div class="left"><span class="filetitle font-size5">擴大補助 - 各縣市申請數</span></div>
-            <div class="right">附加圖表 / 管理員總覽表 / 擴大補助 - 各縣市申請數</div>
+            <div class="left"><span class="filetitle font-size5">擴大補助 - 各縣市申請數(月累計)</span></div>
+            <div class="right">附加圖表 / 管理員總覽表 / 擴大補助 - 各縣市申請數(月累計)</div>
         </div>
         期別：
         <select id="ddlStage" class="inputex" style="margin-top:10px;">
@@ -141,5 +145,4 @@
         </div>
     </div><br />
 </asp:Content>
-
 

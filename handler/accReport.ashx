@@ -28,6 +28,7 @@ public class accReport : IHttpHandler,IRequiresSessionState
             string strStage = string.Empty;
             string strYear = string.Empty;
             string strMonth = string.Empty;
+            string strClass = string.Empty;
             string xmlStr = string.Empty;
             string xmlStr1 = string.Empty;
             string xmlStr2 = string.Empty;
@@ -133,12 +134,30 @@ public class accReport : IHttpHandler,IRequiresSessionState
                 //撈"各縣市申請數" 擴大補助 資料
                 case "load_reportTotalBehindForEx":
                     strStage = string.IsNullOrEmpty(context.Request.Form["strStage"]) ? "" :  context.Request.Form["strStage"].ToString().Trim();
+                    strClass = string.IsNullOrEmpty(context.Request.Form["strClass"]) ? "" :  context.Request.Form["strClass"].ToString().Trim();
                     ch_db._strStage = strStage;
+                    ch_db._strExType= strClass;
                     ds = ch_db.getReportTotalBehindgForEx();
                     if (ds.Tables[0].Rows.Count>0) {
                         xmlStr1 = DataTableToXml.ConvertDatatableToXML(ds.Tables[0], "dataList", "dataHead");
                         //xmlStr2 = DataTableToXml.ConvertDatatableToXML(ds.Tables[1], "dataList", "data_item");
                         xmlStr2 = DataXML(ds.Tables[1]);
+                        xmlStr = "<root>" + xmlStr1 + xmlStr2 + "</root>";
+                        context.Response.Write(xmlStr);
+                    }
+                    break;
+
+                //撈"各縣市申請數" 擴大補助 資料
+                case "load_reportTotalBehindByMForEx":
+                    strStage = string.IsNullOrEmpty(context.Request.Form["strStage"]) ? "" :  context.Request.Form["strStage"].ToString().Trim();
+                    strClass = string.IsNullOrEmpty(context.Request.Form["strClass"]) ? "" :  context.Request.Form["strClass"].ToString().Trim();
+                    ch_db._strStage = strStage;
+                    ch_db._strExType= strClass;
+                    ds = ch_db.getReportTotalBehindByMForEx();
+                    if (ds.Tables[0].Rows.Count>0) {
+                        xmlStr1 = DataTableToXml.ConvertDatatableToXML(ds.Tables[0], "dataList", "dataHead");
+                        //xmlStr2 = DataTableToXml.ConvertDatatableToXML(ds.Tables[1], "dataList", "data_item");
+                        xmlStr2 = DataXMLByM(ds.Tables[1]);
                         xmlStr = "<root>" + xmlStr1 + xmlStr2 + "</root>";
                         context.Response.Write(xmlStr);
                     }
@@ -150,6 +169,7 @@ public class accReport : IHttpHandler,IRequiresSessionState
         }
     }
 
+    //擴大補助 各縣市申請數
     private string DataXML(DataTable dt)
     {
         string rVal = string.Empty;
@@ -191,6 +211,68 @@ public class accReport : IHttpHandler,IRequiresSessionState
                 XmlElement RM_Season = doc.CreateElement("RM_Season");
                 RM_Season.InnerText = VerificationString(dv[i]["RM_Season"].ToString());
                 data_item.AppendChild(RM_Season);
+                XmlElement RM_Planning = doc.CreateElement("RM_Planning");
+                RM_Planning.InnerText = VerificationString(dv[i]["RM_Planning"].ToString());
+                data_item.AppendChild(RM_Planning);
+                XmlElement sumFinsh = doc.CreateElement("sumFinsh");
+                sumFinsh.InnerText = VerificationString(dv[i]["sumFinsh"].ToString());
+                data_item.AppendChild(sumFinsh);
+                XmlElement sumFinsh01 = doc.CreateElement("sumFinsh01");
+                sumFinsh01.InnerText = VerificationString(dv[i]["sumFinsh01"].ToString());
+                data_item.AppendChild(sumFinsh01);
+                XmlElement RM_CPType = doc.CreateElement("RM_CPType");
+                RM_CPType.InnerText = VerificationString(dv[i]["RM_CPType"].ToString());
+                data_item.AppendChild(RM_CPType);
+                XmlElement sum1 = doc.CreateElement("sum1");
+                sum1.InnerText = VerificationString(dv[i]["sum1"].ToString());
+                data_item.AppendChild(sum1);
+                XmlElement sum2 = doc.CreateElement("sum2");
+                sum2.InnerText = VerificationString(dv[i]["sum2"].ToString());
+                data_item.AppendChild(sum2);
+                XmlElement sum3 = doc.CreateElement("sum3");
+                sum3.InnerText = VerificationString(dv[i]["sum3"].ToString());
+                data_item.AppendChild(sum3);
+                XmlElement sum4 = doc.CreateElement("sum4");
+                sum4.InnerText = VerificationString(dv[i]["sum4"].ToString());
+                data_item.AppendChild(sum4);
+                City.AppendChild(data_item);
+
+            }
+            rVal = doc.OuterXml.ToString();
+        }
+        return rVal;
+    }
+
+    //擴大補助 各縣市申請數 月累計
+    private string DataXMLByM(DataTable dt)
+    {
+        string rVal = string.Empty;
+        DataView dv = dt.DefaultView;
+        if (dv.Count > 0)
+        {
+            XmlDocument doc = new XmlDocument();
+            /// 根節點
+            XmlElement dataList = doc.CreateElement("dataList");
+            doc.AppendChild(dataList);
+            XmlElement City = doc.DocumentElement;
+            for (int i = 0; i < dv.Count; i++)
+            {
+                /// Node - City 
+                if (!(i != 0 && dv[i - 1]["city_I_Guid"].ToString() == dv[i]["city_I_Guid"].ToString() && dv[i - 1]["city_Year"].ToString() == dv[i]["city_Year"].ToString() && dv[i - 1]["city_Month"].ToString() == dv[i]["city_Month"].ToString()))
+                {
+                    City = doc.CreateElement("City");
+                    City.SetAttribute("city_Item", dv[i]["city_Item"].ToString());
+                    City.SetAttribute("city_Item_cn", dv[i]["city_Item_cn"].ToString());
+                    City.SetAttribute("city_I_Guid", dv[i]["city_I_Guid"].ToString());
+                    City.SetAttribute("city_Stage", dv[i]["city_Stage"].ToString());
+                    City.SetAttribute("city_Year", dv[i]["city_Year"].ToString());
+                    City.SetAttribute("city_Month", dv[i]["city_Month"].ToString());
+                    dataList.AppendChild(City);
+                }
+
+                /// Node - Data Item 
+                XmlElement data_item = doc.CreateElement("data_item");
+                /// CheckPoint各欄位
                 XmlElement RM_Planning = doc.CreateElement("RM_Planning");
                 RM_Planning.InnerText = VerificationString(dv[i]["RM_Planning"].ToString());
                 data_item.AppendChild(RM_Planning);

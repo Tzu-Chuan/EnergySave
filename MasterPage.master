@@ -102,10 +102,10 @@
                                 <ul>
                                     <li><a href="<%= ResolveUrl("~/WebPage/total-real.aspx") %>">工作經費狀態及實支率</a></li>
                                     <li><a href="<%= ResolveUrl("~/WebPage/total-process.aspx") %>">當期累計執行進度</a></li>
-                                    <li><a href="<%= ResolveUrl("~/WebPage/total-behind.aspx") %>">各縣市申請數</a></li>
-                                    <li><a href="<%= ResolveUrl("~/WebPage/total-behindEx.aspx") %>">各縣市申請數(擴大補助)</a></li>
+                                    <li><a href="<%= ResolveUrl("~/WebPage/total-behind.aspx") %>">設備汰換 - 各縣市申請數</a></li>
+                                    <li><a href="<%= ResolveUrl("~/WebPage/total-behindEx.aspx") %>">擴大補助 - 各縣市申請數</a></li>
                                     <li><a href="<%= ResolveUrl("~/WebPage/total-behindByM.aspx") %>">設備汰換 - 各縣市申請數 (月累計)</a></li>
-                                    <li><a href="<%= ResolveUrl("~/WebPage/total-behindByMEx.aspx") %>">設備汰換 - 各縣市申請數 (月累計)(擴大補助)</a></li>
+                                    <li><a href="<%= ResolveUrl("~/WebPage/total-behindByMEx.aspx") %>">擴大補助 各縣市申請數 (月累計)</a></li>
                                     <!--<li><a href="~/WebPage/total-AllCityByM.aspx")">各月份全縣市申請數</a></li>-->
                                     <li><a href="<%= ResolveUrl("~/WebPage/total-lag.aspx") %>">計畫執行進度遭遇困難</a></li>
                                     <li><a href="<%= ResolveUrl("~/WebPage/total-apply.aspx") %>">節電基礎及因地制宜工作進度摘要</a></li>
