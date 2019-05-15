@@ -457,8 +457,13 @@ public class addSeason : IHttpHandler,IRequiresSessionState {
         string tmpMoney = (Money == "") ? "0" : Money;
         double m = double.Parse(tmpMoney);
         double rm = double.Parse(tmpReal);
-        ratio = Math.Round(((rm / m) * 100), 0).ToString();
-        return ratio;
+        if (m == 0)
+            return "0";
+        else
+        {
+            ratio = Math.Round(((rm / m) * 100), 0).ToString();
+            return ratio;
+        }
     }
 
 
