@@ -16,6 +16,7 @@ public class Chart_DB
     string strCity = string.Empty;
     string strStage = string.Empty;
     string strLType = string.Empty;
+    string strExType = string.Empty;
     #endregion
     #region 公用
     public string _strCity
@@ -29,6 +30,10 @@ public class Chart_DB
     public string _strLType
     {
         set { strLType = value; }
+    }
+    public string _strExType
+    {
+        set { strExType = value; }
     }
     #endregion
 
@@ -2802,9 +2807,9 @@ insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Year,cit
 select C_Item,C_Item_cn,I_Guid,'','','',''
 from CodeTable 
 left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
-left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='01'
+--left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='01'
 where C_Group='02'
-group by C_Item,C_Item_cn,I_Guid,RM_Stage
+--group by C_Item,C_Item_cn,I_Guid--,RM_Stage
 --select * from #tmpcity
 
 --根據計畫GUID撈出該期底下已審核通過的月報最大的年月份
@@ -3133,28 +3138,89 @@ create table #tmpcity(
 
 ---------------- Table 1 撈出codeTable裡面的擴大補助項目----------------
 
-select C_Group,C_Item_cn,C_Item from CodeTable where C_Group='09' and C_Item<>'99' order by C_Item
+if @strExType =''--全部
+    begin
+        select C_Group,C_Item_cn,C_Item from CodeTable where C_Group='09' and C_Item<>'99' order by C_Item
+    end
+if @strExType ='1'--服務業(機關、學校)
+    begin
+        select C_Group,C_Item_cn,C_Item from CodeTable 
+        where C_Group='09' and C_Item<>'99' 
+            and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
+        order by C_Item
+    end
+if @strExType ='2'--住宅
+    begin
+        select C_Group,C_Item_cn,C_Item from CodeTable 
+        where C_Group='09' and C_Item<>'99' 
+            and C_Item in ('03','04','05','06','08','09','10','12','13','14','15','16','17','19','22','25')
+        order by C_Item
+    end
+
 
 -------------------------END---------------------------------------
 
 
 ------------------撈出當期底下有季報紀錄的縣市 insert到#tmpcity----------------
-insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Year,city_Season)
-select C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
-from(
-select C_Item,C_Item_cn,I_Guid,@strStage as RM_Stage,RM_Year
-,case RM_Month when '01' then '1' when '02' then '1' when '03' then '1'
-	when '04' then '2' when '05' then '2' when '06' then '2'  
-	when '07' then '3' when '08' then '3' when '09' then '3'  
-	when '10' then '4' when '11' then '4' when '12' then '4'  
-	end as RM_Season
-from CodeTable 
-left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
-left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='01'
-left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
-where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
-)#tmp
-group by C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
+if @strExType =''--全部
+    begin
+        insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Year,city_Season)
+        select C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
+        from(
+            select C_Item,C_Item_cn,I_Guid,@strStage as RM_Stage,RM_Year
+            ,case RM_Month when '01' then '1' when '02' then '1' when '03' then '1'
+	            when '04' then '2' when '05' then '2' when '06' then '2'  
+	            when '07' then '3' when '08' then '3' when '09' then '3'  
+	            when '10' then '4' when '11' then '4' when '12' then '4'  
+	            end as RM_Season
+            from CodeTable 
+            left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
+            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='01'
+            left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
+            where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
+        )#tmp
+        group by C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
+    end
+if @strExType ='1'--服務業(機關、學校)
+    begin
+        insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Year,city_Season)
+        select C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
+        from(
+            select C_Item,C_Item_cn,I_Guid,@strStage as RM_Stage,RM_Year
+            ,case RM_Month when '01' then '1' when '02' then '1' when '03' then '1'
+	            when '04' then '2' when '05' then '2' when '06' then '2'  
+	            when '07' then '3' when '08' then '3' when '09' then '3'  
+	            when '10' then '4' when '11' then '4' when '12' then '4'  
+	            end as RM_Season
+            from CodeTable 
+            left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
+            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='01'
+            left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
+            where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
+                    and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
+        )#tmp
+        group by C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
+    end
+if @strExType ='2'--住宅
+    begin
+        insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Year,city_Season)
+        select C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
+        from(
+            select C_Item,C_Item_cn,I_Guid,@strStage as RM_Stage,RM_Year
+            ,case RM_Month when '01' then '1' when '02' then '1' when '03' then '1'
+	            when '04' then '2' when '05' then '2' when '06' then '2'  
+	            when '07' then '3' when '08' then '3' when '09' then '3'  
+	            when '10' then '4' when '11' then '4' when '12' then '4'  
+	            end as RM_Season
+            from CodeTable 
+            left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
+            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='01'
+            left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
+            where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
+                and C_Item in ('03','04','05','06','08','09','10','12','13','14','15','16','17','19','22','25')
+        )#tmp
+        group by C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
+    end
 -------------------------END---------------------------------------
 
 
@@ -3194,6 +3260,193 @@ drop table #tmpVal
         DataSet ds = new DataSet();
 
         oCmd.Parameters.AddWithValue("@strStage", strStage);
+        oCmd.Parameters.AddWithValue("@strExType", strExType);
+        oda.Fill(ds);
+        return ds;
+    }
+
+    //管理員總表 - 各縣市申請數 月累計(擴大補助)
+    public DataSet getReportTotalBehindByMForEx()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+        StringBuilder sb = new StringBuilder();
+
+        #region 201808新code
+        sb.Append(@"
+create table #tmpcity(
+	city_Item nvarchar(50),
+	city_Item_cn nvarchar(50),
+	city_I_Guid nvarchar(50),
+	city_Stage nvarchar(5),
+	city_Year nvarchar(5),
+	city_Month nvarchar(5),
+	city_maxmonth nvarchar(6)
+);
+
+---------------- Table 1 撈出codeTable裡面的擴大補助項目----------------
+
+if @strExType =''--全部
+    begin
+        select C_Group,C_Item_cn,C_Item from CodeTable where C_Group='09' and C_Item<>'99' order by C_Item
+    end
+if @strExType ='1'--服務業(機關、學校)
+    begin
+        select C_Group,C_Item_cn,C_Item from CodeTable 
+        where C_Group='09' and C_Item<>'99' 
+            and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
+        order by C_Item
+    end
+if @strExType ='2'--住宅
+    begin
+        select C_Group,C_Item_cn,C_Item from CodeTable 
+        where C_Group='09' and C_Item<>'99' 
+            and C_Item in ('03','04','05','06','08','09','10','12','13','14','15','16','17','19','22','25')
+        order by C_Item
+    end
+
+-------------------------END---------------------------------------
+
+
+------------------撈出當期底下有季報紀錄的縣市 insert到#tmpcity----------------
+
+--先撈出各縣市代碼 名稱 計畫GUID
+insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Year,city_Month,city_maxmonth)
+select C_Item,C_Item_cn,I_Guid,'','','',''
+from CodeTable 
+left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
+left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='01'
+where C_Group='02'  and RM_ProjectGuid is not null
+group by C_Item,C_Item_cn,I_Guid,RM_Stage
+
+
+--根據計畫GUID撈出該期底下已審核通過的月報最大的年月份
+select #tmp.RM_ProjectGuid,b.RM_ReportGuid,#tmp.maxmonth,b.RM_Stage,b.RM_Year,b.RM_Month into #tmptmp
+from(
+	select RM_ProjectGuid,MAX(CONVERT(int,isnull(RM_Year,'0')+isnull(RM_Month,'0'))) maxmonth 
+	from ReportMonth 
+	left join ReportCheck on RM_ReportGuid=RC_ReportGuid
+	where RM_Stage=@strStage and RC_CheckType ='Y' and RC_Status='A' and RM_ReportType='02'
+	group by RM_ProjectGuid
+)#tmp
+left join ReportMonth b on 
+#tmp.RM_ProjectGuid=b.RM_ProjectGuid and b.RM_Stage=@strStage and b.RM_ReportType='02'
+and #tmp.maxmonth=CONVERT(int,(isnull(b.RM_Year,'0')+isnull(b.RM_Month,'0')))
+where  b.RM_ReportType='02'
+group by #tmp.RM_ProjectGuid,b.RM_ReportGuid,#tmp.maxmonth,b.RM_Year,b.RM_Month,b.RM_Stage
+
+-- 將已審核最大年月資料update 回#tmpcity
+update #tmpcity set city_Year=b.RM_Year,city_Month=b.RM_Month,city_Stage=b.RM_Stage,city_maxmonth=b.maxmonth
+from
+(
+	select RM_ProjectGuid,RM_Year,RM_Month,RM_Stage,maxmonth from #tmptmp
+)b
+where city_I_Guid = b.RM_ProjectGuid
+-------------------------END---------------------------------------
+
+
+-------------------------撈出月報裡面當期各月的資料 insert 到#tmpVal-------------------------
+--1.先找出小於當期最大年月份的所有擴大補助月報
+--2.group by 算出總和
+--3.再根據當其最大年月抓出該最大年月份的個項目的規畫數(因為有可能隨時去更胎計畫資料 所以以最新的為主)
+
+if @strExType =''--全部
+    begin
+        select maxmonth,RM_ProjectGuid,RM_CPType,RM_Stage
+	        ,sum(isnull(RM_Type1ValueSum,0)) as sum1,sum(isnull(RM_Type2ValueSum,0)) as sum2
+	        ,sum(isnull(RM_Type3ValueSum,0)) as sum3,sum(isnull(RM_Type4ValueSum,0)) as sum4
+	        ,sum(isnull(RM_Finish,0)) as sumFinsh, sum(isnull(RM_Finish01,0)) as sumFinsh01
+	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth)) as RM_Planning
+        into #tmpVal
+        from 
+        (
+	        select a.maxmonth,b.RM_ProjectGuid,b.RM_ReportGuid,b.RM_CPType,b.RM_Stage,b.RM_Year,b.RM_Month
+		        ,b.RM_Type1ValueSum,b.RM_Type2ValueSum,b.RM_Type3ValueSum,b.RM_Type4ValueSum
+		        ,b.RM_Finish,b.RM_Finish01
+	        from #tmptmp a
+	        left join ReportMonth b on a.RM_ProjectGuid=b.RM_ProjectGuid and a.RM_Stage=b.RM_Stage  and a.RM_ReportGuid=b.RM_ReportGuid
+	        where CONVERT(int,(isnull(b.RM_Year,'0')+isnull(b.RM_Month,'0')))>=CONVERT(int,a.maxmonth) and b.RM_Stage=@strStage and b.RM_Status='A'
+        )tmp
+        group by maxmonth,RM_ProjectGuid,RM_CPType,RM_CPType,RM_Stage
+
+		-------------------------Table 2 把兩張表join起來---------------------------------------
+		select a.*,b.RM_CPType,b.sum1,b.sum2,b.sum3,b.sum4,b.sumFinsh,b.sumFinsh01,b.RM_Planning from #tmpcity a
+		left join #tmpVal b on a.city_I_Guid=b.RM_ProjectGuid and a.city_Stage=b.RM_Stage and a.city_maxmonth=b.maxmonth
+		order by city_Item asc
+
+		drop table #tmpVal
+	end
+
+if @strExType ='1'--服務業(機關、學校)
+    begin
+        select maxmonth,RM_ProjectGuid,RM_CPType,RM_Stage
+	        ,sum(isnull(RM_Type1ValueSum,0)) as sum1,sum(isnull(RM_Type2ValueSum,0)) as sum2
+	        ,sum(isnull(RM_Type3ValueSum,0)) as sum3,sum(isnull(RM_Type4ValueSum,0)) as sum4
+	        ,sum(isnull(RM_Finish,0)) as sumFinsh, sum(isnull(RM_Finish01,0)) as sumFinsh01
+	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth)) as RM_Planning
+        into #tmpVal_1
+        from 
+        (
+	        select a.maxmonth,b.RM_ProjectGuid,b.RM_ReportGuid,b.RM_CPType,b.RM_Stage,b.RM_Year,b.RM_Month
+		        ,b.RM_Type1ValueSum,b.RM_Type2ValueSum,b.RM_Type3ValueSum,b.RM_Type4ValueSum
+		        ,b.RM_Finish,b.RM_Finish01
+	        from #tmptmp a
+	        left join ReportMonth b on a.RM_ProjectGuid=b.RM_ProjectGuid and a.RM_Stage=b.RM_Stage  and a.RM_ReportGuid=b.RM_ReportGuid
+	        where CONVERT(int,(isnull(b.RM_Year,'0')+isnull(b.RM_Month,'0')))>=CONVERT(int,a.maxmonth) and b.RM_Stage=@strStage and b.RM_Status='A'
+                and b.RM_CPType in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
+        )tmp
+        group by maxmonth,RM_ProjectGuid,RM_CPType,RM_CPType,RM_Stage
+
+		-------------------------Table 2 把兩張表join起來---------------------------------------
+		select a.*,b.RM_CPType,b.sum1,b.sum2,b.sum3,b.sum4,b.sumFinsh,b.sumFinsh01,b.RM_Planning from #tmpcity a
+		left join #tmpVal_1 b on a.city_I_Guid=b.RM_ProjectGuid and a.city_Stage=b.RM_Stage and a.city_maxmonth=b.maxmonth
+		order by city_Item asc
+
+		drop table #tmpVal_1
+    end
+
+if @strExType ='2'--住宅
+    begin
+        select maxmonth,RM_ProjectGuid,RM_CPType,RM_Stage
+	        ,sum(isnull(RM_Type1ValueSum,0)) as sum1,sum(isnull(RM_Type2ValueSum,0)) as sum2
+	        ,sum(isnull(RM_Type3ValueSum,0)) as sum3,sum(isnull(RM_Type4ValueSum,0)) as sum4
+	        ,sum(isnull(RM_Finish,0)) as sumFinsh, sum(isnull(RM_Finish01,0)) as sumFinsh01
+	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth)) as RM_Planning
+        into #tmpVal_2
+        from 
+        (
+	        select a.maxmonth,b.RM_ProjectGuid,b.RM_ReportGuid,b.RM_CPType,b.RM_Stage,b.RM_Year,b.RM_Month
+		        ,b.RM_Type1ValueSum,b.RM_Type2ValueSum,b.RM_Type3ValueSum,b.RM_Type4ValueSum
+		        ,b.RM_Finish,b.RM_Finish01
+	        from #tmptmp a
+	        left join ReportMonth b on a.RM_ProjectGuid=b.RM_ProjectGuid and a.RM_Stage=b.RM_Stage  and a.RM_ReportGuid=b.RM_ReportGuid
+	        where CONVERT(int,(isnull(b.RM_Year,'0')+isnull(b.RM_Month,'0')))>=CONVERT(int,a.maxmonth) and b.RM_Stage=@strStage and b.RM_Status='A'
+                and b.RM_CPType in ('03','04','05','06','08','09','10','12','13','14','15','16','17','19','22','25')
+        )tmp
+        group by maxmonth,RM_ProjectGuid,RM_CPType,RM_CPType,RM_Stage
+
+		-------------------------Table 2 把兩張表join起來---------------------------------------
+		select a.*,b.RM_CPType,b.sum1,b.sum2,b.sum3,b.sum4,b.sumFinsh,b.sumFinsh01,b.RM_Planning from #tmpcity a
+		left join #tmpVal_2 b on a.city_I_Guid=b.RM_ProjectGuid and a.city_Stage=b.RM_Stage and a.city_maxmonth=b.maxmonth
+		order by city_Item asc
+
+		drop table #tmpVal_2
+
+    end
+-------------------------END-------------------------
+
+drop table #tmpcity
+drop table #tmptmp
+
+        ");
+        #endregion
+        oCmd.CommandText = sb.ToString();
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        DataSet ds = new DataSet();
+
+        oCmd.Parameters.AddWithValue("@strStage", strStage);
+        oCmd.Parameters.AddWithValue("@strExType", strExType);
         oda.Fill(ds);
         return ds;
     }
