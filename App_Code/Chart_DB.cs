@@ -3175,7 +3175,7 @@ if @strExType =''--全部
 	            end as RM_Season
             from CodeTable 
             left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
-            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='01'
+            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='02'
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
             where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
         )#tmp
@@ -3194,7 +3194,7 @@ if @strExType ='1'--服務業(機關、學校)
 	            end as RM_Season
             from CodeTable 
             left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
-            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='01'
+            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='02'
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
             where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
                     and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
@@ -3214,7 +3214,7 @@ if @strExType ='2'--住宅
 	            end as RM_Season
             from CodeTable 
             left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
-            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='01'
+            left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='02'
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
             where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
                 and C_Item in ('03','04','05','06','08','09','10','12','13','14','15','16','17','19','22','25')
@@ -3315,7 +3315,7 @@ insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Year,cit
 select C_Item,C_Item_cn,I_Guid,'','','',''
 from CodeTable 
 left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
-left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='01'
+left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='02'
 where C_Group='02'  and RM_ProjectGuid is not null
 group by C_Item,C_Item_cn,I_Guid,RM_Stage
 
@@ -3356,7 +3356,7 @@ if @strExType =''--全部
 	        ,sum(isnull(RM_Type1ValueSum,0)) as sum1,sum(isnull(RM_Type2ValueSum,0)) as sum2
 	        ,sum(isnull(RM_Type3ValueSum,0)) as sum3,sum(isnull(RM_Type4ValueSum,0)) as sum4
 	        ,sum(isnull(RM_Finish,0)) as sumFinsh, sum(isnull(RM_Finish01,0)) as sumFinsh01
-	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth)) as RM_Planning
+	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth) and c.RM_ProjectGuid=tmp.RM_ProjectGuid) as RM_Planning
         into #tmpVal
         from 
         (
@@ -3383,7 +3383,7 @@ if @strExType ='1'--服務業(機關、學校)
 	        ,sum(isnull(RM_Type1ValueSum,0)) as sum1,sum(isnull(RM_Type2ValueSum,0)) as sum2
 	        ,sum(isnull(RM_Type3ValueSum,0)) as sum3,sum(isnull(RM_Type4ValueSum,0)) as sum4
 	        ,sum(isnull(RM_Finish,0)) as sumFinsh, sum(isnull(RM_Finish01,0)) as sumFinsh01
-	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth)) as RM_Planning
+	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth) and c.RM_ProjectGuid=tmp.RM_ProjectGuid) as RM_Planning
         into #tmpVal_1
         from 
         (
@@ -3411,7 +3411,7 @@ if @strExType ='2'--住宅
 	        ,sum(isnull(RM_Type1ValueSum,0)) as sum1,sum(isnull(RM_Type2ValueSum,0)) as sum2
 	        ,sum(isnull(RM_Type3ValueSum,0)) as sum3,sum(isnull(RM_Type4ValueSum,0)) as sum4
 	        ,sum(isnull(RM_Finish,0)) as sumFinsh, sum(isnull(RM_Finish01,0)) as sumFinsh01
-	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth)) as RM_Planning
+	        ,(select TOP 1 c.RM_Planning from ReportMonth c where c.RM_Status='A' and c.RM_ReportType='02' and c.RM_CPType=tmp.RM_CPType and CONVERT(int,(isnull(c.RM_Year,'0')+isnull(c.RM_Month,'0')))=CONVERT(int,tmp.maxmonth) and c.RM_ProjectGuid=tmp.RM_ProjectGuid) as RM_Planning
         into #tmpVal_2
         from 
         (

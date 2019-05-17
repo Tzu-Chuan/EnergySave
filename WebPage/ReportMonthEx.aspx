@@ -397,6 +397,36 @@
             //    ItemCname += "<br />" + xmlData.children("P_ExType_c").text().trim() + "-" + xmlData.children("P_ExDeviceType_c").text().trim();
             //}
 
+            
+            if (strItem == "01" || strItem == "23") {
+                strUnit = "KW";
+            }
+            if (strItem == "02" || strItem == "21") {
+                strUnit = "具";
+            }
+            if (strItem == "03" || strItem == "22" || strItem == "29") {
+                strUnit = "盞";
+            }
+            if (strItem == "04" || strItem == "26" || strItem == "30" || strItem == "31") {
+                strUnit = "套";
+            }
+            if (strItem == "05" || strItem == "06" || strItem == "07" || strItem == "08" || strItem == "09" || strItem == "10" || strItem == "11" || strItem == "12" || strItem == "13" || strItem == "14" || strItem == "15" || strItem == "19" || strItem == "20") {
+                strUnit = "台";
+            }
+            if (strItem == "17" || strItem == "18" || strItem == "24" || strItem == "28" || strItem == "32") {
+                strUnit = "顆";
+            }
+            if (strItem == "27") {
+                strUnit = "噸";
+            }
+            if (strItem == "25") {
+                strUnit = "個";
+            }
+            if (strItem=="16") {
+                strUnit = "10顆一單位";
+            }
+
+
             if (strItem == "01" ) {
                 strFo = "每單位年節電量(度/kW)";
                 str += '<div class="OchiRow">';
@@ -549,8 +579,8 @@
                 str += '<div class="stripeMepure font-normal margin5T">';
                 str += '<table border="0" cellspacing="0" cellpadding="0" width="100%">';
                 str += '<tr>';
-                str += '<th colspan="3">本月申請數量(盞)</th>';
-                str += '<th colspan="3">本月核定數量(盞)</th>';
+                str += '<th colspan="3">本月申請數量(' + strUnit + ')</th>';
+                str += '<th colspan="3">本月核定數量(' + strUnit + ')</th>';
                 str += '<th colspan="3">本月申請更換照明瓦數(W) </th>';
                 str += '<th colspan="3">本月完成更換照明瓦數(W)</th>';
                 str += '</tr>';
@@ -645,17 +675,17 @@
             else {
                 var splitcountFinish03 = "", countFinish03 = "";
                 if (strItem == "05") {
-                    strUnit = "KW";
+                    //strUnit = "KW";
                     strFo = "每單位年節電量(度/kW)";
                     intflort = "strflot";
                     countFinish03 = xmlData.children("countFinish03").text().trim();
                 } else if (strItem == "14") {
-                    strUnit = "組";
+                    //strUnit = "組";
                     intflort = "strint";
                     splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
                     countFinish03 = splitcountFinish03[0];
                 } else {
-                    strUnit = "台";
+                    //strUnit = "台";
                     intflort = "strint";
                     splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
                     countFinish03 = splitcountFinish03[0];

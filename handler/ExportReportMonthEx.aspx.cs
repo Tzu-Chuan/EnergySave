@@ -94,7 +94,7 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
     private string getHtml(DataTable dt)
     {
         string strHtml = "";
-        string strItem, type1, type2, ItemCname, ptno, strUnit;
+        string strItem, type1, type2, ItemCname, ptno, strUnit="";
         string[] P_ExFinish, splitRM_Finish, splitRM_Finish01;
         string strP_ExFinish, strRM_Finish, strRM_Finish01;
         string strcountApplyKW, strcountApply01;
@@ -193,6 +193,45 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
                 ptno = ptno + dt.Rows[i]["P_ExType"].ToString().Trim() + dt.Rows[i]["P_ExDeviceType"].ToString().Trim();
                 ItemCname += "<br />" + dt.Rows[i]["P_ExType_c"].ToString().Trim() + "-" + dt.Rows[i]["P_ExDeviceType_c"].ToString().Trim();
             }
+
+
+            if (strItem == "01" || strItem == "23")
+            {
+                strUnit = "KW";
+            }
+            if (strItem == "02" || strItem == "21")
+            {
+                strUnit = "具";
+            }
+            if (strItem == "03" || strItem == "22" || strItem == "29")
+            {
+                strUnit = "盞";
+            }
+            if (strItem == "04" || strItem == "26" || strItem == "30" || strItem == "31")
+            {
+                strUnit = "套";
+            }
+            if (strItem == "05" || strItem == "06" || strItem == "07" || strItem == "08" || strItem == "09" || strItem == "10" || strItem == "11" || strItem == "12" || strItem == "13" || strItem == "14" || strItem == "15" || strItem == "19" || strItem == "20")
+            {
+                strUnit = "台";
+            }
+            if (strItem == "17" || strItem == "18" || strItem == "24" || strItem == "28" || strItem == "32")
+            {
+                strUnit = "顆";
+            }
+            if (strItem == "27")
+            {
+                strUnit = "噸";
+            }
+            if (strItem == "25")
+            {
+                strUnit = "個";
+            }
+            if (strItem == "16")
+            {
+                strUnit = "10顆一單位";
+            }
+
 
             if (strItem == "01")
             {//type1 == "02" && type2 == "01" =>空調
@@ -296,8 +335,8 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
                 }
                 
                 strHtml += "<tr>";
-                strHtml += "<th colspan='3' width='21%'>本月申請數量(台)</th>";
-                strHtml += "<th colspan='3' width='21%'>本月核定數量(台)</th>";
+                strHtml += "<th colspan='3' width='21%'>本月申請數量(" + strUnit + ")</th>";
+                strHtml += "<th colspan='3' width='21%'>本月核定數量(" + strUnit + ")</th>";
                 strHtml += "<th colspan='3' width='21%'>本月申請總冷氣能力(kW)</th>";
                 strHtml += "<th colspan='3' width='21%'>本月完成總冷氣能力(kW)</th>";
                 strHtml += "</tr>";
@@ -356,18 +395,18 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
             }
             else
             {
-                if (strItem == "05")
-                {
-                    strUnit = "KW";
-                }
-                else if (strItem == "14")
-                {
-                    strUnit = "組";
-                }
-                else
-                {
-                    strUnit = "台";
-                }
+                //if (strItem == "05")
+                //{
+                //    strUnit = "KW";
+                //}
+                //else if (strItem == "14")
+                //{
+                //    strUnit = "組";
+                //}
+                //else
+                //{
+                //    strUnit = "台";
+                //}
                 if (i == 0)
                 {
                     strHtml += "<tr><td rowspan='" + rowSpan + "' align='center' width = '5%'>本<br>月<br>執<br>行<br>進<br>度</td>";
