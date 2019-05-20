@@ -284,7 +284,7 @@
             //    ItemCname += "<br />" + xmlData.children("P_ExType_c").text().trim() + "-" + xmlData.children("P_ExDeviceType_c").text().trim();
             //}
 
-            if (strItem == "01" || strItem == "23") {
+            if (strItem == "01" || strItem == "23" || strItem == "33") {
                 strUnit = "KW";
             }
             if (strItem == "02" || strItem == "21") {
@@ -312,7 +312,7 @@
                 strUnit = "10顆一單位";
             }
 
-            if (strItem == "01") {//type1 == "02" && type2 == "01" =>空調
+            if (strItem == "01" || strItem == "33") {//type1 == "02" && type2 == "01" =>空調
 
                 str += '<div class="OchiRow">';
                 str += '<div class="OchiCell OchiTitle TitleSetWidth">' + ItemCname + '</div>';

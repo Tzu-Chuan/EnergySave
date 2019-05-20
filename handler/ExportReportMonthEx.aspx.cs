@@ -195,7 +195,7 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
             }
 
 
-            if (strItem == "01" || strItem == "23")
+            if (strItem == "01" || strItem == "23" || strItem == "33")
             {
                 strUnit = "KW";
             }
@@ -233,7 +233,7 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
             }
 
 
-            if (strItem == "01")
+            if (strItem == "01" || strItem == "33")
             {//type1 == "02" && type2 == "01" =>空調
 
                 if (i == 0)

@@ -398,7 +398,7 @@
             //}
 
             
-            if (strItem == "01" || strItem == "23") {
+            if (strItem == "01" || strItem == "23" || strItem == "33") {
                 strUnit = "KW";
             }
             if (strItem == "02" || strItem == "21") {
@@ -427,7 +427,7 @@
             }
 
 
-            if (strItem == "01" ) {
+            if (strItem == "01" || strItem == "33" ) {
                 strFo = "每單位年節電量(度/kW)";
                 str += '<div class="OchiRow">';
                 str += '<div class="OchiCell OchiTitle TitleSetWidth">' + ItemCname + '</div>';
