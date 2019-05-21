@@ -3,35 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <%--common--%>
     <script type="text/javascript">
-        //AutoSave Function - Auto run every 20 minutes
-        //setInterval(function () {
-            //var breakStatus = false;
-            //var tmpary = [];
-            //$("#basicworkTab tbody").find("tr").each(function () {
-            //    var str = $(this).attr("class") + $(this).find("select[name='cp_year']").val() + $(this).find("select[name='cp_month']").val();
-            //    if ($.inArray(str, tmpary) == -1)
-            //        tmpary.push(str);
-            //    else
-            //        breakStatus = true;
-            //});
-
-            //if (breakStatus == true || $("#autoStatus").val() == "true")
-            //    return;
-
-            //var iframe = $('<iframe name="postiframe" id="postiframe" style="display: none" />');
-            //var form = $("form")[0];
-
-            //$("#postiframe").remove();
-
-            //form.appendChild(iframe[0]);
-
-            //form.setAttribute("action", "../handler/AutoSave_CP.ashx");
-            //form.setAttribute("method", "post");
-            //form.setAttribute("enctype", "multipart/form-data");
-            //form.setAttribute("encoding", "multipart/form-data");
-            //form.setAttribute("target", "postiframe");
-            //form.submit();
-        //}, 1200000);//20 minutes
+       
 
         $(document).ready(function () {
             $("#loadimg").show();
@@ -1117,5 +1089,38 @@
             <input id="nextpage" type="button" class="genbtn" value="下一頁" style="display:none;" />
         </div>
     </div>
+    <script type="text/javascript">
+        //AutoSave Function - Auto run every 20 minutes
+        //$(document).ready(function () {
+        //    setInterval(function () {
+        //        var breakStatus = false;
+        //        var tmpary = [];
+        //        $("#basicworkTab tbody").find("tr").each(function () {
+        //            var str = $(this).attr("class") + $(this).find("select[name='cp_year']").val() + $(this).find("select[name='cp_month']").val();
+        //            if ($.inArray(str, tmpary) == -1)
+        //                tmpary.push(str);
+        //            else
+        //                breakStatus = true;
+        //        });
+
+        //        if (breakStatus == true || $("#autoStatus").val() == "true")
+        //            return;
+
+        //        var iframe = $('<iframe name="postiframe" id="postiframe" style="display: none" />');
+        //        var form = $("form")[0];
+
+        //        $("#postiframe").remove();
+
+        //        form.appendChild(iframe[0]);
+
+        //        form.setAttribute("action", "../handler/AutoSave_CP.ashx");
+        //        form.setAttribute("method", "post");
+        //        form.setAttribute("enctype", "multipart/form-data");
+        //        form.setAttribute("encoding", "multipart/form-data");
+        //        form.setAttribute("target", "postiframe");
+        //        form.submit();
+        //    }, 1200000);//20 minutes
+        //});
+    </script>
 </asp:Content>
 
