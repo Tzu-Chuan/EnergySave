@@ -147,15 +147,15 @@ public partial class handler_ExportTotalBehindByMEx : System.Web.UI.Page
                                 }
 
                             }
-                            else
-                            {
-                                u_row.CreateCell(nowColumn).SetCellValue(0);
-                                u_row.CreateCell(nowColumn + 1).SetCellValue(0);
-                                u_row.CreateCell(nowColumn + 2).SetCellValue(0);
-                            }
-                            u_row.GetCell(nowColumn).CellStyle = cs_num1;
-                            u_row.GetCell(nowColumn + 1).CellStyle = cs_num1;
-                            u_row.GetCell(nowColumn + 2).CellStyle = cs_num1;
+                            //else
+                            //{
+                            //    u_row.CreateCell(nowColumn).SetCellValue(0);
+                            //    u_row.CreateCell(nowColumn + 1).SetCellValue(0);
+                            //    u_row.CreateCell(nowColumn + 2).SetCellValue(0);
+                            //}
+                            //u_row.GetCell(nowColumn).CellStyle = cs_num1;
+                            //u_row.GetCell(nowColumn + 1).CellStyle = cs_num1;
+                            //u_row.GetCell(nowColumn + 2).CellStyle = cs_num1;
                             nowColumn = nowColumn + 3;
                         }
                     }
