@@ -784,6 +784,8 @@
                             else if ($(this).prev().children("CP_ReserveYear").text().trim() != $(this).children("CP_ReserveYear").text().trim()) { //跨年時
                                 year_str += '<th colspan="' + tmpCount + '" style="text-align:center;">' + $(this).prev().children("CP_ReserveYear").text().trim() + '年</th>';
                                 tmpCount = 1; //跨年需重置
+                                if ($(this).parent().children().length == (i + 1)) //若為最後一筆資料需補上
+                                  year_str += '<th colspan="' + tmpCount + '" style="text-align:center;">' + $(this).children("CP_ReserveYear").text().trim() + '年</th></tr>';
                             }
                             else if ($(this).parent().children().length == (i + 1)) { //最後一筆資料
                                 tmpCount += 1; //最後一筆也要算
