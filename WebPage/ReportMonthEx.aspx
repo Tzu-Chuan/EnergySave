@@ -674,7 +674,7 @@
             }
             else {
                 var splitcountFinish03 = "", countFinish03 = "";
-                if (strItem == "05") {
+                if (strItem == "05" || strItem == "23") {
                     //strUnit = "KW";
                     strFo = "每單位年節電量(度/kW)";
                     intflort = "strflot";
