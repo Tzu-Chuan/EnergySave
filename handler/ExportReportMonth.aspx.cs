@@ -443,7 +443,7 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
             if (i == 0)
             {
                 strPeopleName = dt.Rows[0]["M_Name"].ToString().Trim();
-                stePeoplePhone = dt.Rows[0]["M_Phone"].ToString().Trim();
+                stePeoplePhone = dt.Rows[0]["M_Tel"].ToString().Trim();
                 strManager = dt.Rows[0]["bossname"].ToString().Trim();
                 strChkDate = Convert.ToDateTime(dt.Rows[0]["RC_CheckDate"].ToString()).ToString("yyyy/MM/dd");
                 strCreateDate = Convert.ToDateTime(dt.Rows[0]["RM_ModDate"].ToString()).ToString("yyyy/MM/dd");
