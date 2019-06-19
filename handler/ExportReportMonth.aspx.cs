@@ -423,8 +423,8 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
         strHtml += "<td colspan='2' align='center'>提報月份</td><td colspan='12'>" + (Convert.ToInt32(strYear) - 1911).ToString() + "年" + dt.Rows[0]["RM_Month"].ToString().Trim() + "月</td>";
         strHtml += "</tr>";
 
-        //for (int i = 0; i < dt.Rows.Count; i++)
-        for (int i = 0; i < 1; i++)
+        //for (int i = 0; i < 1; i++)
+        for (int i = 0; i < dt.Rows.Count; i++)
         {
 
             if (dt.Rows[i]["RM_CPType"].ToString().Trim() != "03")
