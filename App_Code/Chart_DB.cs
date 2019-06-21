@@ -309,7 +309,8 @@ public class Chart_DB
                         from Member left join ProjectInfo on M_City=@City and M_Guid=I_People and M_Status='A' and I_Status='A' and I_Flag='Y'
                         where I_Guid is not null
                         --根據計畫GUID & 期數 月報資料
-                        select RM_ProjectGuid,RM_Stage,RM_Year as RS_Year,RM_CPType,RM_Season as RS_Season,SUM(RM_Type1ValueSum) as RM_SUM1,SUM(RM_Type2ValueSum) as RM_SUM2,SUM(RM_Type3ValueSum) as RM_SUM3,SUM(RM_Type4ValueSum) as RM_SUM4 into #tmpRM 
+                        select RM_ProjectGuid,RM_Stage,RM_Year as RS_Year,RM_CPType,RM_Season as RS_Season,SUM(RM_Type1ValueSum) as RM_SUM1,SUM(RM_Type2ValueSum) as RM_SUM2,SUM(RM_Type3ValueSum) as RM_SUM3,SUM(RM_Type4ValueSum) as RM_SUM4 
+                        into #tmpRM 
                         from
                         (
 	                        select RM_ProjectGuid,RM_Stage,RM_Year,RM_Month,RM_CPType,RM_Type2ValueSum,RM_Type3ValueSum,RM_Type1ValueSum,RM_Type4ValueSum,
@@ -321,7 +322,7 @@ public class Chart_DB
 	                        --
 	                        from ReportMonth 
                             left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_Status='A'
-                            where RM_Stage=@Stage and RM_ProjectGuid=@PJGuid and RM_Status='A'
+                            where RM_Stage=@Stage and RM_ProjectGuid=@PJGuid and RM_Status='A' and RM_ReportType='01'
                         )#tmp
                         where RC_CheckType='Y'
                         group by RM_ProjectGuid,RM_Stage,RM_Year,RM_CPType,RM_Season
@@ -408,7 +409,8 @@ public class Chart_DB
                 else
                     begin
                         --根據期數 月報資料 指撈有審核過的
-                        select RM_ProjectGuid,RM_Stage,RM_Year as RS_Year,RM_CPType,RM_Season as RS_Season,SUM(RM_Type1ValueSum) as RM_SUM1,SUM(RM_Type2ValueSum) as RM_SUM2,SUM(RM_Type3ValueSum) as RM_SUM3,SUM(RM_Type3ValueSum) as RM_SUM4 into #tmpRMall
+                        select RM_ProjectGuid,RM_Stage,RM_Year as RS_Year,RM_CPType,RM_Season as RS_Season,SUM(RM_Type1ValueSum) as RM_SUM1,SUM(RM_Type2ValueSum) as RM_SUM2,SUM(RM_Type3ValueSum) as RM_SUM3,SUM(RM_Type3ValueSum) as RM_SUM4 
+                        into #tmpRMall
                         from
                         (
 	                        select RM_ProjectGuid,RM_Stage,RM_Year,RM_Month,RM_CPType,RM_Type1ValueSum,RM_Type2ValueSum,RM_Type3ValueSum,RM_Type4ValueSum,
@@ -420,7 +422,7 @@ public class Chart_DB
 	                        --
 	                        from ReportMonth 
 	                        left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_Status='A'
-	                        where RM_Stage=@Stage and RM_Status='A'
+	                        where RM_Stage=@Stage and RM_Status='A' and RM_ReportType='01'
                         )#tmp
                         where RC_CheckType='Y'
                         group by RM_ProjectGuid,RM_Stage,RM_Year,RM_CPType,RM_Season
@@ -3177,7 +3179,7 @@ if @strExType =''--全部
             left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
             left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='02'
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
-            where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
+            where C_Group='02' --and RC_Status='A' and RC_CheckType='Y'
         )#tmp
         group by C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
     end
@@ -3196,7 +3198,7 @@ if @strExType ='1'--服務業(機關、學校)
             left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
             left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='02'
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
-            where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
+            where C_Group='02' --and RC_Status='A' and RC_CheckType='Y'
                     and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
         )#tmp
         group by C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
@@ -3216,7 +3218,7 @@ if @strExType ='2'--住宅
             left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
             left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='02'
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
-            where C_Group='02' and RC_Status='A' and RC_CheckType='Y'
+            where C_Group='02' --and RC_Status='A' and RC_CheckType='Y'
                 and C_Item in ('03','04','05','06','08','09','10','12','13','14','15','16','17','19','22','25')
         )#tmp
         group by C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
@@ -3316,7 +3318,7 @@ select C_Item,C_Item_cn,I_Guid,'','','',''
 from CodeTable 
 left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
 left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='02'
-where C_Group='02'  and RM_ProjectGuid is not null
+where C_Group='02'  --and RM_ProjectGuid is not null
 group by C_Item,C_Item_cn,I_Guid,RM_Stage
 
 
