@@ -836,7 +836,7 @@ public class Chart_DB
 	                        --
 	                        from ReportMonth 
                             left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_Status='A'
-                            where RM_Stage=@Stage and RM_ProjectGuid=@PJGuid and RM_Status='A'
+                            where RM_Stage=@Stage and RM_ProjectGuid=@PJGuid and RM_Status='A' and RM_ReportType='01'
                         )#tmp
                         where RC_CheckType='Y'
                         group by RM_Stage,RM_Year,RM_CPType,RM_Season
@@ -964,7 +964,7 @@ public class Chart_DB
 	                        end as RM_Season,RC_CheckType
 	                        from ReportMonth
 	                        left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_Status='A'
-                            where RM_Stage=@Stage and RM_Status='A'
+                            where RM_Stage=@Stage and RM_Status='A' and RM_ReportType='01'
                         )#tmp
                         where RC_CheckType='Y'
                         group by RM_ProjectGuid,RM_Stage,RM_Year,RM_CPType,RM_Season
@@ -1131,7 +1131,7 @@ begin
 		        --
 		        from ReportMonth 
                 left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_Status='A'
-                where RM_Stage=@Stage and RM_ProjectGuid=@PJGuid and RM_Status='A'
+                where RM_Stage=@Stage and RM_ProjectGuid=@PJGuid and RM_Status='A' and RM_ReportType='01'
 	        )#tmp
             where RC_CheckType='Y'
 	        group by RM_Stage,RM_CPType
@@ -1216,7 +1216,7 @@ begin
 	            --
 	            from ReportMonth 
                 left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_Status='A'
-                where RM_Stage=@Stage and RM_Status='A'
+                where RM_Stage=@Stage and RM_Status='A' and RM_ReportType='01'
             )#tmp
             where RC_CheckType='Y'
             group by RM_Stage,RM_CPType
