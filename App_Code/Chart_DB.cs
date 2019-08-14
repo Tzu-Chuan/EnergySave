@@ -17,6 +17,8 @@ public class Chart_DB
     string strStage = string.Empty;
     string strLType = string.Empty;
     string strExType = string.Empty;
+    string strSdate = string.Empty;
+    string strEdate = string.Empty;
     #endregion
     #region 公用
     public string _strCity
@@ -34,6 +36,14 @@ public class Chart_DB
     public string _strExType
     {
         set { strExType = value; }
+    }
+    public string _strSdate
+    {
+        set { strSdate = value; }
+    }
+    public string _strEdate
+    {
+        set { strEdate = value; }
     }
     #endregion
 
@@ -3453,4 +3463,220 @@ drop table #tmptmp
         return ds;
     }
 
+
+
+    //管理員總表 - 設備汰換 - 月報統計表
+    public DataSet getReportGrandTotal()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+        StringBuilder sb = new StringBuilder();
+
+
+        sb.Append(@"
+--declare @strStage nvarchar(1)='1'--期
+--declare @strSdate nvarchar(6)='201906'--開始年月
+--declare @strEdate nvarchar(6)='201906'--結束年月
+
+create table #tmpcity(
+	city_Item nvarchar(50),
+	city_Item_cn nvarchar(50),
+	city_I_Guid nvarchar(50),
+	city_Stage nvarchar(5),
+	city_Sdate nvarchar(6),
+	city_Edate nvarchar(6)
+);
+
+--先撈出各縣市代碼 名稱 計畫GUID
+insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Sdate,city_Edate)
+select C_Item,C_Item_cn,I_Guid,@strStage,@strSdate,@strEdate
+from CodeTable 
+left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
+where C_Group='02'
+
+select * into #tmpRM from ReportMonth a
+left join ReportCheck b on a.RM_ReportGuid=b.RC_ReportGuid
+where a.RM_Stage=@strStage and b.RC_CheckType ='Y' and b.RC_Status='A' and a.RM_ReportType='01'
+and (RM_Year+RM_Month) between @strSdate and @strEdate
+and a.RM_Status='A'
+
+
+--用#tmpcity去撈出累計值
+declare @stage_item1_col nvarchar(50)='I_Finish_item1_'+@strStage --無風館冷氣第X期規劃數
+declare @stage_item2_col nvarchar(50)='I_Finish_item2_'+@strStage --老舊辦公室照明第X期規劃數
+declare @stage_item3_col nvarchar(50)='I_Finish_item3_'+@strStage --室內停車場智慧照明第X期規劃數
+declare @stage_item4_col nvarchar(50)='I_Finish_item4_'+@strStage --中型能管系統第X期規劃數
+declare @stage_item5_col nvarchar(50)='I_Finish_item5_'+@strStage --大型能管系統第X期規劃數
+declare @sql nvarchar(max)='';
+
+set @sql='
+select a.city_Item_cn,a.city_I_Guid,a.city_Stage-- a.city_Item,a.city_Year,a.city_Month
+,(select '+@stage_item1_col+' from ProjectInfo where I_Guid=a.city_I_Guid and a.city_I_Guid is not null) as I_Finish_item1
+,(select SUM(isnull(b.RM_Type3ValueSum,0)) from #tmpRM b where a.city_I_Guid=b.RM_ProjectGuid and b.RM_CPType=''01'' ) sumC_item1  
+,(select SUM(isnull(c.RM_Type4ValueSum,0)) from #tmpRM c where a.city_I_Guid=c.RM_ProjectGuid and c.RM_CPType=''01'' ) sumF_item1
+,(select '+@stage_item2_col+' from ProjectInfo where I_Guid=a.city_I_Guid and a.city_I_Guid is not null) as I_Finish_item2
+,(select SUM(isnull(b.RM_Type1ValueSum,0)) from #tmpRM b where a.city_I_Guid=b.RM_ProjectGuid and RM_CPType=''02'' ) sumC_item2
+,(select SUM(isnull(c.RM_Type2ValueSum,0)) from #tmpRM c where a.city_I_Guid=c.RM_ProjectGuid and RM_CPType=''02'' ) sumF_item2
+,(select '+@stage_item3_col+' from ProjectInfo where I_Guid=a.city_I_Guid and a.city_I_Guid is not null) as I_Finish_item3
+,(select SUM(isnull(b.RM_Type1ValueSum,0)) from #tmpRM b where a.city_I_Guid=b.RM_ProjectGuid and RM_CPType=''03'' ) sumC_item3
+,(select SUM(isnull(c.RM_Type2ValueSum,0)) from #tmpRM c where a.city_I_Guid=c.RM_ProjectGuid and RM_CPType=''03'' ) sumF_item3
+,(select '+@stage_item4_col+' from ProjectInfo where I_Guid=a.city_I_Guid and a.city_I_Guid is not null) as I_Finish_item4
+,(select SUM(isnull(b.RM_Type1ValueSum,0)) from #tmpRM b where a.city_I_Guid=b.RM_ProjectGuid and RM_CPType=''04'' ) sumC_item4
+,(select SUM(isnull(c.RM_Type3ValueSum,0)) from #tmpRM c where a.city_I_Guid=c.RM_ProjectGuid and RM_CPType=''04'' ) sumF_item4
+,(select '+@stage_item5_col+' from ProjectInfo where I_Guid=a.city_I_Guid and a.city_I_Guid is not null) as I_Finish_item5
+,(select SUM(isnull(b.RM_Type1ValueSum,0)) from #tmpRM b where a.city_I_Guid=b.RM_ProjectGuid and RM_CPType=''05'' ) sumC_item5
+,(select SUM(isnull(c.RM_Type3ValueSum,0)) from #tmpRM c where a.city_I_Guid=c.RM_ProjectGuid and RM_CPType=''05'' ) sumF_item5
+into #tmpAll
+from #tmpcity a
+
+select city_Item_cn
+,isnull(I_Finish_item1,''0'') as I_Finish_item1,isnull(sumC_item1,''0'') as sumC_item1,isnull(sumF_item1 ,''0'') as 	sumF_item1
+,isnull(I_Finish_item2,''0'') as I_Finish_item2,isnull(sumC_item2,''0'') as sumC_item2,isnull(sumF_item2 ,''0'') as 	sumF_item2
+,isnull(I_Finish_item3,''0'') as I_Finish_item3,isnull(sumC_item3,''0'') as sumC_item3,isnull(sumF_item3 ,''0'') as 	sumF_item3
+,isnull(I_Finish_item4,''0'') as I_Finish_item4,isnull(sumC_item4,''0'') as sumC_item4,isnull(sumF_item4 ,''0'') as 	sumF_item4
+,isnull(I_Finish_item5,''0'') as I_Finish_item5,isnull(sumC_item5,''0'') as sumC_item5,isnull(sumF_item5 ,''0'') as 	sumF_item5
+from 
+(
+select a.*,b.I_ID
+	from #tmpAll a left join ProjectInfo b on a.city_I_Guid = b.I_Guid and b.I_Flag=''Y'' and a.city_Stage<>''''
+)#tmpR
+';
+
+--Table[0] 查詢日期區間  SUBSTRING(str,從第幾個開始(第1個是1(不是0)),取幾個)
+select SUBSTRING(@strSdate,1,4)+'/'+SUBSTRING(@strSdate,5,2) as strSdate,
+		SUBSTRING(@strEdate,1,4)+'/'+SUBSTRING(@strEdate,5,2) as strEdate
+
+--Table[1] 資料
+--print @sql;
+--EXECUTE sp_executesql @sql;
+exec (@sql);         
+
+drop table #tmpRM
+drop table #tmpcity
+
+        ");
+
+        oCmd.CommandText = sb.ToString();
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        DataSet ds = new DataSet();
+
+        oCmd.Parameters.AddWithValue("@strStage", strStage);
+        oCmd.Parameters.AddWithValue("@strSdate", strSdate);
+        oCmd.Parameters.AddWithValue("@strEdate", strEdate);
+        oda.Fill(ds);
+        return ds;
+    }
+
+    //管理員總表 - 擴大補助 - 月報統計表
+    public DataSet getReportGrandTotalEx()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+        StringBuilder sb = new StringBuilder();
+
+        
+        sb.Append(@"
+--declare @strStage nvarchar(1)='1'--期
+--declare @strSdate nvarchar(6)='201906'--開始年月
+--declare @strEdate nvarchar(6)='201906'--結束年月
+
+create table #tmpcity(
+	city_Item nvarchar(50),
+	city_Item_cn nvarchar(50),
+	city_I_Guid nvarchar(50),
+	city_Stage nvarchar(5),
+	city_Sdate nvarchar(6),
+	city_Edate nvarchar(6)
+);
+
+
+------------------撈出當期底下有季報紀錄的縣市 insert到#tmpcity----------------
+
+--先撈出各縣市代碼 名稱 計畫GUID
+insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Sdate,city_Edate)
+select C_Item,C_Item_cn,I_Guid,@strStage,@strSdate,@strEdate
+from CodeTable 
+left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
+left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='02'
+where C_Group='02'  --and RM_ProjectGuid is not null
+group by C_Item,C_Item_cn,I_Guid,RM_Stage
+
+
+select a.* into #tmpRM from ReportMonth a
+left join ReportCheck b on a.RM_ReportGuid=b.RC_ReportGuid
+where a.RM_Stage=@strStage and b.RC_CheckType ='Y' and b.RC_Status='A' and a.RM_ReportType='02'
+and (RM_Year+RM_Month) between @strSdate and @strEdate
+and a.RM_Status='A'
+
+
+-------------------------END---------------------------------------
+
+--Table[0] 查詢日期區間  SUBSTRING(str,從第幾個開始(第1個是1(不是0)),取幾個)
+select SUBSTRING(@strSdate,1,4)+'/'+SUBSTRING(@strSdate,5,2) as strSdate,
+		SUBSTRING(@strEdate,1,4)+'/'+SUBSTRING(@strEdate,5,2) as strEdate
+
+--Table[1] 擴大補助的所有推動項目
+select * from CodeTable where C_Group='09' and C_Item<>'99'
+
+--Table[2] 資料
+declare @strsql nvarchar(max)='';
+set @strsql+='
+	select a.city_Item_cn
+';
+
+select * into #tmpWhileC from CodeTable where C_Group='09' and C_Item <>'99';
+declare @whRow int=0;
+declare @whCPType nvarchar(5);
+select @whRow=count(*) from #tmpWhileC;
+
+while @whRow>0
+	begin
+		select top 1 @whCPType = C_Item from #tmpWhileC order by C_Item asc;
+
+		if @whCPType='01' or @whCPType='03'
+			begin
+				set @strsql+=' ,isnull((select TOP 1 b.RM_Planning from #tmpRM b where a.city_I_Guid=b.RM_ProjectGuid  and b.RM_CPType='''+@whCPType+''' and b.RM_Planning is not null and b.RM_Planning <>0  order by b.RM_Year desc,b.RM_Month desc ),0) as I_Finish_item'+@whCPType+' 
+,isnull((select SUM(isnull(RM_Type3ValueSum,0)) from #tmpRM c  where a.city_I_Guid=c.RM_ProjectGuid  and c.RM_CPType='''+@whCPType+'''),0) as sumC_item'+@whCPType+'
+,isnull((select SUM(isnull(RM_Type4ValueSum,0)) from #tmpRM d  where a.city_I_Guid=d.RM_ProjectGuid  and d.RM_CPType='''+@whCPType+'''),0) as sumF_item'+@whCPType+'
+				';
+			end
+		else
+			begin
+				set @strsql+=' ,isnull((select TOP 1 b.RM_Planning from #tmpRM b where a.city_I_Guid=b.RM_ProjectGuid  and b.RM_CPType='''+@whCPType+''' and b.RM_Planning is not null and b.RM_Planning <>0  order by b.RM_Year desc,b.RM_Month desc ),0) as I_Finish_item'+@whCPType+' 
+,isnull((select SUM(isnull(RM_Type1ValueSum,0)) from #tmpRM c  where a.city_I_Guid=c.RM_ProjectGuid  and c.RM_CPType='''+@whCPType+'''),0) as sumC_item'+@whCPType+'
+,isnull((select SUM(isnull(RM_Type2ValueSum,0)) from #tmpRM d  where a.city_I_Guid=d.RM_ProjectGuid  and d.RM_CPType='''+@whCPType+'''),0) as sumF_item'+@whCPType+'
+				';
+			end
+		
+
+		delete from #tmpWhileC where C_Item=@whCPType;
+		select @whRow=@whRow-1;
+	end
+set @strsql+='
+	from #tmpcity a
+order by a.city_Item asc
+';
+exec (@strsql);
+
+
+-------------------------END-------------------------
+
+drop table #tmpcity
+drop table #tmpRM
+drop table #tmpWhileC
+
+        ");
+
+        oCmd.CommandText = sb.ToString();
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        DataSet ds = new DataSet();
+
+        oCmd.Parameters.AddWithValue("@strStage", strStage);
+        oCmd.Parameters.AddWithValue("@strSdate", strSdate);
+        oCmd.Parameters.AddWithValue("@strEdate", strEdate);
+        oda.Fill(ds);
+        return ds;
+    }
 }

@@ -3,6 +3,9 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
      <script type="text/javascript">
          $(document).ready(function () {
+             if ($("#SA").val() == "Y") {
+                $("#exportExcelbtn").show();
+            }
              getddl("02", "#ddlCity");
             getData(0);
 
@@ -24,6 +27,11 @@
                 }
 
                 getData(0);
+             });
+
+             ////20190801新增 匯出列表全部資料
+             $(document).on("click", "#exportExcelbtn", function () {
+                window.location = "../handler/ExportHistoryMonthList.aspx";
             });
         });
 
@@ -64,6 +72,7 @@
                                 $(data).find("data_item").each(function (i) {
                                     tabstr += '<tr>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + (i + 1) + '</td>';
+                                    tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("City").text().trim() + '</td>';//20190801新增縣市欄位
                                     if ($(this).children("RC_ReportType").text().trim() == "01")
                                         tabstr += '<td align="center" nowrap="nowrap">設備汰換</td>';
                                     else if ($(this).children("RC_ReportType").text().trim() == "03")
@@ -150,6 +159,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <input id="SA" type="hidden" value="<%= showcity %>" />
     <div class="container">
         <div class="twocol filetitlewrapper">
             <div class="left"><span class="filetitle font-size5">月報歷史資料</span></div>
@@ -185,13 +195,19 @@
                 <option value="12">12</option>
             </select>
         </div>
-	    <div style="margin-top:5px;">關鍵字：<input type="text" id="SearchStr" class="inputex" />&nbsp;<input type="button" id="searchbtn" value="查詢" class="genbtn" /></div>
+	    <div style="margin-top:5px;">
+            關鍵字：<input type="text" id="SearchStr" class="inputex" />&nbsp;
+            <input type="button" id="searchbtn" value="查詢" class="genbtn" />
+            <input type="button" id="exportExcelbtn" value="匯出全部資料" class="genbtn" style="display:none;" /><!--20190801新增匯出列表全部資料-->
+
+	    </div>
         <br />
         <div class="stripeMe margin5T font-normal">
             <table id="tablist" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <thead>
                     <tr>
                         <th nowrap="nowrap" style="width:50px;">項次</th>
+                        <th nowrap="nowrap">縣市</th><!--20190801新增縣市欄位-->
                         <th nowrap="nowrap">類別</th>
                         <th nowrap="nowrap">年</th>
                         <th nowrap="nowrap">月</th>

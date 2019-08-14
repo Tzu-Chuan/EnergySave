@@ -638,4 +638,69 @@ and RC_Status='A' ");
         oda.Fill(ds);
         return ds;
     }
+
+    //20190801新增撈季報歷史資料列表所有資料
+    public DataTable getHistoryMonthList()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+        StringBuilder sb = new StringBuilder();
+
+        sb.Append(@"
+select ROW_NUMBER() over (order by RC_CheckType,RC_CreateDate desc,RC_ID desc) itemNo,
+city_type.C_Item_cn City,
+case ReportCheck.RC_ReportType when '01' then '設備汰換' when '03' then '擴大補助' else '' end as ReportType,
+ReportCheck.RC_Year,
+ReportCheck.RC_Month,
+mm.M_Name MbName,
+ReportCheck.RC_CheckDate,
+ad.M_Name AdName
+--ReportCheck.*,
+--mm.M_City,
+from ReportCheck
+left join Member mm on mm.M_Guid=RC_PeopleGuid
+left join Member ad on ad.M_Guid=RC_Boss
+left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=mm.M_City
+where  RC_Status='A' and RC_CheckType='Y' and (RC_ReportType='01' or RC_ReportType='03')
+");
+
+        oCmd.CommandText = sb.ToString();
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        DataTable ds = new DataTable();
+        oda.Fill(ds);
+        return ds;
+    }
+    //20190801新增撈季報歷史資料列表所有資料
+    public DataTable getHistorySeasonList()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+        StringBuilder sb = new StringBuilder();
+
+        sb.Append(@"
+select ROW_NUMBER() over (order by RC_CheckType,RC_CreateDate desc,RC_ID desc) itemNo,
+city_type.C_Item_cn as City,
+ReportCheck.RC_Year,
+ReportCheck.RC_Season,
+mm.M_Name as MbName,
+ReportCheck.RC_CheckDate,
+ad.M_Name as AdName
+--ReportCheck.*,
+--mm.M_City,
+--(select RS_ID from ReportSeason where RC_ReportGuid=RS_Guid) as RS_ID
+from ReportCheck
+left join Member mm on mm.M_Guid=RC_PeopleGuid
+left join Member ad on ad.M_Guid=RC_Boss
+left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=mm.M_City
+where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y' 
+");
+
+        oCmd.CommandText = sb.ToString();
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        DataTable ds = new DataTable();
+        oda.Fill(ds);
+        return ds;
+    }
 }

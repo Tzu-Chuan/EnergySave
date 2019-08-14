@@ -1,12 +1,15 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="HistorySeason.aspx.cs" Inherits="WebPage_HistorySeason" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script type="text/javascript">
         $(document).ready(function () {
             getddl("02", "#ddlCity")
             $("#ddlCity").val($("#city").val());
-            if ($("#SA").val() == "Y")
+            if ($("#SA").val() == "Y") {
                 $("#cityspan").show();
+                $("#exportExcelbtn").show();
+            }
+                
 
             getData(0);
 
@@ -28,6 +31,11 @@
                 }
 
                 getData(0);
+            });
+
+            ////20190801新增 匯出列表全部資料
+            $(document).on("click", "#exportExcelbtn", function () {
+                window.location = "../handler/ExportHistorySeasonList.aspx";
             });
         });
 
@@ -67,6 +75,7 @@
                                 $(data).find("data_item").each(function (i) {
                                     tabstr += '<tr>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + (i + 1) + '</td>';
+                                    tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("City").text().trim() + '</td>';//20190801新增縣市欄位
                                     var year = parseInt($(this).children("RC_Year").text().trim()) - 1911;
                                     tabstr += '<td align="center" nowrap="nowrap">' + year + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + parseInt($(this).children("RC_Season").text().trim()) + '</td>';
@@ -87,7 +96,7 @@
                     }
                 }
             });
-        } 
+        }
 
         function getddl(gno, tagName) {
             $.ajax({
@@ -122,7 +131,7 @@
             });
         }
 
-         //分頁設定
+        //分頁設定
         //ListNum: 每頁顯示資料筆數
         //PageNum: 分頁頁籤顯示數
         PageOption.Selector = "#pageblock";
@@ -132,7 +141,7 @@
         PageOption.NextStep = false;
     </script>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <input id="SA" type="hidden" value="<%= showcity %>" />
     <input id="city" type="hidden" value="<%= city %>" />
     <div class="container">
@@ -141,9 +150,9 @@
             <div class="right">歷史資料 / 季報</div>
         </div>
 
-        <div style="margin-top:5px;">送審日期：<input type="text" id="startday" class="inputex Jdatepicker" />&nbsp;~&nbsp;<input type="text" id="endday" class="inputex Jdatepicker" /></div>
-        <div style="margin-top:5px;">
-            <span id="cityspan" style="display:none;">執行機關：<select id="ddlCity" class="inputex"></select></span>
+        <div style="margin-top: 5px;">送審日期：<input type="text" id="startday" class="inputex Jdatepicker" />&nbsp;~&nbsp;<input type="text" id="endday" class="inputex Jdatepicker" /></div>
+        <div style="margin-top: 5px;">
+            <span id="cityspan" style="display: none;">執行機關：<select id="ddlCity" class="inputex"></select></span>
             年：
             <select id="yearstr" class="inputex">
                 <option value="">--請選擇--</option>
@@ -160,17 +169,22 @@
                 <option value="4">第四季</option>
             </select>
         </div>
-	    <div style="margin-top:5px;">關鍵字：<input type="text" id="SearchStr" class="inputex" />&nbsp;<input type="button" id="searchbtn" value="查詢" class="genbtn" /></div>
+        <div style="margin-top: 5px;">
+            關鍵字：<input type="text" id="SearchStr" class="inputex" />&nbsp;
+            <input type="button" id="searchbtn" value="查詢" class="genbtn" />
+            <input type="button" id="exportExcelbtn" value="匯出全部資料" class="genbtn" style="display:none;" /><!--20190801新增匯出列表全部資料-->
+        </div>
         <br />
         <div class="stripeMe margin5T font-normal">
             <table id="tablist" width="100%" border="0" cellspacing="0" cellpadding="0">
                 <thead>
                     <tr>
-                        <th nowrap="nowrap" style="width:50px;">項次</th>
+                        <th nowrap="nowrap" style="width: 50px;">項次</th>
+                        <th nowrap="nowrap">縣市</th><!--20190801新增縣市欄位-->
                         <th nowrap="nowrap">年</th>
                         <th nowrap="nowrap">季</th>
                         <th nowrap="nowrap">承辦人</th>
-                        <th nowrap="nowrap" style="width:300px;">審核日期</th>
+                        <th nowrap="nowrap" style="width: 300px;">審核日期</th>
                         <th nowrap="nowrap">審核主管</th>
                         <th nowrap="nowrap">詳細資料</th>
                     </tr>

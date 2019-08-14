@@ -56,6 +56,7 @@ public class getHistory_M : IHttpHandler,IRequiresSessionState {
                     xmlStr2 += "<RC_CheckDate>" + dt.Rows[i]["RC_CheckDate"].ToString() + "</RC_CheckDate>";
                     xmlStr2 += "<AdName>" + dt.Rows[i]["AdName"].ToString() + "</AdName>";
                     xmlStr2 += "<RC_ReportType>" + dt.Rows[i]["RC_ReportType"].ToString() + "</RC_ReportType>";
+                    xmlStr2 += "<City>" + dt.Rows[i]["City"].ToString() + "</City>";//20190801新縣市名稱欄位
                     xmlStr2 += "</data_item>";
                 }
                 xmlStr2 += "</dataList>";

@@ -107,6 +107,7 @@
                                     <!--<li><a href="~/WebPage/total-AllCityByM.aspx")">各月份全縣市申請數</a></li>-->
                                     <li><a href="<%= ResolveUrl("~/WebPage/total-lag.aspx") %>">計畫執行進度遭遇困難</a></li>
                                     <li><a href="<%= ResolveUrl("~/WebPage/total-apply.aspx") %>">節電基礎及因地制宜工作進度摘要</a></li>
+                                    <li><a href="<%= ResolveUrl("~/WebPage/total_grandtotal.aspx") %>">月報統計表</a></li>
                                 </ul>
                             </li>
                         </ul>
