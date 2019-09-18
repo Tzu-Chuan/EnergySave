@@ -383,7 +383,7 @@ public class ReportMonth_DB
             declare @report_guid nvarchar(50);
             declare @checkflag nvarchar(2);
             set rowcount 1;
-            select @report_guid = RM_ReportGuid from ReportMonth where RM_ProjectGuid=@I_Guid and RM_Stage=@P_Period and RM_Year=@RM_Year and RM_Month=@RM_Month
+            select @report_guid = RM_ReportGuid from ReportMonth where RM_ProjectGuid=@I_Guid and RM_Stage=@P_Period and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_ReportType=@RM_ReportType
             set rowcount 0;
             select @checkflag = RC_CheckType from ReportCheck where RC_ReportGuid = @report_guid and RC_Status<>'D'
 
@@ -446,6 +446,7 @@ public class ReportMonth_DB
         oCmd.Parameters.AddWithValue("@P_Period", P_Period); 
         oCmd.Parameters.AddWithValue("@RM_Year", RM_Year);
         oCmd.Parameters.AddWithValue("@RM_Month", RM_Month);
+        oCmd.Parameters.AddWithValue("@RM_ReportType", RM_ReportType);
         oda.Fill(ds);
         return ds;
     }
