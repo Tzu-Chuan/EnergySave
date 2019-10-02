@@ -528,57 +528,33 @@ where  RC_Status='A' and RC_CheckType='Y' and (RC_ReportType='01' or RC_ReportTy
         return ds;
     }
 
-    public DataSet getHistorySeason(string pStart, string pEnd, string startDay, string endDay, string city, string year, string season)
+    public DataSet getHistorySeason(string pStart, string pEnd, string startDay, string endDay, string city, string year, string season,string stage)
     {
         SqlCommand oCmd = new SqlCommand();
         oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
         StringBuilder sb = new StringBuilder();
 
-        sb.Append(@"SELECT COUNT(*) total from ReportCheck 
-	left join Member mm on mm.M_Guid=RC_PeopleGuid --and mm.M_Status='A'
-	left join Member ad on ad.M_Guid=RC_Boss --and ad.M_Status='A'
-	left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=mm.M_City
-where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y' ");
-
-        if (city != "")
-            sb.Append(@"and mm.M_City=@city ");
-        if (year != "")
-            sb.Append(@"and RC_Year=@RC_Year ");
-        if (season != "")
-            sb.Append(@"and RC_Season=@RC_Season ");
-
-        if (startDay != "" && endDay != "")
-            sb.Append(@"and (RC_CheckDate between @startDay and @endDay) ");
-        else if (startDay != "")
-            sb.Append(@"and RC_CheckDate>@startDay ");
-        else if (endDay != "")
-            sb.Append(@"and RC_CheckDate<@endDay ");
-
-        if (strKeyword != "")
-        {
-            sb.Append(@"and ((upper(mm.M_Name) LIKE '%' + upper(@KeyWord) + '%') or (upper(ad.M_Name) LIKE '%' + upper(@KeyWord) + '%')) ");
-        }
-
-        sb.Append(@"select * from (
-	select ROW_NUMBER() over (order by RC_CheckType,RC_CreateDate desc,RC_ID desc) itemNo,
-	ReportCheck.*,
+        sb.Append(@"SELECT RC_db.*,	
 	mm.M_City,
 	mm.M_Name as MbName,
 	ad.M_Name as AdName,
 	city_type.C_Item_cn as City,
 	(select RS_ID from ReportSeason where RC_ReportGuid=RS_Guid) as RS_ID
-	from ReportCheck
-	left join Member mm on mm.M_Guid=RC_PeopleGuid
-	left join Member ad on ad.M_Guid=RC_Boss
+	into #tmpAll 
+	from ReportCheck RC_db
+	left join Member mm on mm.M_Guid=RC_PeopleGuid 
+	left join Member ad on ad.M_Guid=RC_Boss 
 	left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=mm.M_City
-	where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y' ");
-
+where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y' ");
+        
         if (city != "")
             sb.Append(@"and mm.M_City=@city ");
         if (year != "")
             sb.Append(@"and RC_Year=@RC_Year ");
         if (season != "")
             sb.Append(@"and RC_Season=@RC_Season ");
+        if (stage != "")
+            sb.Append(@"and RC_Stage=@RC_Stage ");
 
         if (startDay != "" && endDay != "")
             sb.Append(@"and (RC_CheckDate between @startDay and @endDay) ");
@@ -592,7 +568,16 @@ where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y' ");
             sb.Append(@"and ((upper(mm.M_Name) LIKE '%' + upper(@KeyWord) + '%') or (upper(ad.M_Name) LIKE '%' + upper(@KeyWord) + '%')) ");
         }
 
-        sb.Append(@")#tmp where itemNo between @pStart and @pEnd ");
+        sb.Append(@"
+--總筆數
+select count(*) as total from #tmpAll
+--分頁資料
+select * from (
+select ROW_NUMBER() over (order by RC_CheckType,RC_CreateDate desc,RC_ID desc) itemNo,#tmpAll.*
+from #tmpAll
+)#tmp where itemNo between @pStart and @pEnd
+
+drop table #tmpAll ");
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
@@ -609,6 +594,7 @@ where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y' ");
         oCmd.Parameters.AddWithValue("@pEnd", pEnd);
         oCmd.Parameters.AddWithValue("@RC_Year", year);
         oCmd.Parameters.AddWithValue("@RC_Season", season);
+        oCmd.Parameters.AddWithValue("@RC_Stage", stage);
         oda.Fill(ds);
         return ds;
     }

@@ -50,12 +50,12 @@
                     eday: $("#endday").val(),
                     year: $("#yearstr").val(),
                     season: $("#seasonstr").val(),
+                    stage: $("#stagestr").val(),
                     city: $("#ddlCity").val(),
                     SearchStr: $("#SearchStr").val()
                 },
                 error: function (xhr) {
-                    alert("Error " + xhr.status);
-                    console.log(xhr.responseText);
+                    alert(xhr.responseText);
                 },
                 success: function (data) {
                     if (data.indexOf("Error") > -1)
@@ -79,6 +79,7 @@
                                     var year = parseInt($(this).children("RC_Year").text().trim()) - 1911;
                                     tabstr += '<td align="center" nowrap="nowrap">' + year + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + parseInt($(this).children("RC_Season").text().trim()) + '</td>';
+                                    tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("RC_Stage").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("MbName").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("RC_CheckDate").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("AdName").text().trim() + '</td>';
@@ -87,7 +88,7 @@
                                 });
                             }
                             else
-                                tabstr += "<tr><td colspan='7'>查詢無資料</td></tr>";
+                                tabstr += "<tr><td colspan='9'>查詢無資料</td></tr>";
                             $("#tablist tbody").append(tabstr);
                             $(".stripeMe tr").mouseover(function () { $(this).addClass("spe"); }).mouseout(function () { $(this).removeClass("spe"); });
                             $(".stripeMe table:not(td > table) > tbody > tr:not('.spe'):even").addClass("alt");
@@ -168,6 +169,13 @@
                 <option value="3">第三季</option>
                 <option value="4">第四季</option>
             </select>
+            期：
+            <select id="stagestr" class="inputex">
+                <option value="">--請選擇--</option>
+                <option value="1">第一期</option>
+                <option value="2">第二期</option>
+                <option value="3">第三期</option>
+            </select>
         </div>
         <div style="margin-top: 5px;">
             關鍵字：<input type="text" id="SearchStr" class="inputex" />&nbsp;
@@ -190,6 +198,7 @@
                         <th nowrap="nowrap">縣市</th><!--20190801新增縣市欄位-->
                         <th nowrap="nowrap">年</th>
                         <th nowrap="nowrap">季</th>
+                        <th nowrap="nowrap">期</th>
                         <th nowrap="nowrap">承辦人</th>
                         <th nowrap="nowrap" style="width: 300px;">審核日期</th>
                         <th nowrap="nowrap">審核主管</th>
