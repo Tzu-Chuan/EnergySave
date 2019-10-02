@@ -34,7 +34,9 @@ public partial class handler_ExportHistorySeasonList : System.Web.UI.Page
             cs_center.VerticalAlignment = VerticalAlignment.Center;//垂直
             cs_center.Alignment = HorizontalAlignment.Center;//水平
 
+            string str_stage = string.IsNullOrEmpty(Request.QueryString["s"]) ? "" : Request.QueryString["s"].ToString().Trim();
             DataTable dt = new DataTable();
+            rc_db._RC_Stage = str_stage;
             dt = rc_db.getHistorySeasonList();
 
             #region 資料
@@ -55,7 +57,7 @@ public partial class handler_ExportHistorySeasonList : System.Web.UI.Page
             #endregion
 
             workbook.Write(ms);
-            string fileName = "月報歷史資料列表" + DateTime.Now.ToString("yyyyMMddHHmmss");// DateTime.Now.ToString("yyyyMMddHHmmss")
+            string fileName = "第" + str_stage + "期季報歷史資料列表" + DateTime.Now.ToString("yyyyMMddHHmmss");// DateTime.Now.ToString("yyyyMMddHHmmss")
             Response.AddHeader("Content-Disposition", "attachment;filename=\"" + HttpUtility.UrlEncode(fileName, System.Text.Encoding.UTF8) + ".xlsx\"");//設定utf8 防止中文檔名亂碼
             //Response.AddHeader("Content-Disposition", String.Format("attachment;filename=" + fileName));
             Response.BinaryWrite(ms.ToArray());

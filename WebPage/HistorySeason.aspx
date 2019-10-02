@@ -7,7 +7,7 @@
             $("#ddlCity").val($("#city").val());
             if ($("#SA").val() == "Y") {
                 $("#cityspan").show();
-                $("#exportExcelbtn").show();
+                $("#divExport").show();
             }
                 
 
@@ -35,7 +35,7 @@
 
             ////20190801新增 匯出列表全部資料
             $(document).on("click", "#exportExcelbtn", function () {
-                window.location = "../handler/ExportHistorySeasonList.aspx";
+                window.location = "../handler/ExportHistorySeasonList.aspx?s=" + $("#exportStage").val() + "";
             });
         });
 
@@ -172,7 +172,14 @@
         <div style="margin-top: 5px;">
             關鍵字：<input type="text" id="SearchStr" class="inputex" />&nbsp;
             <input type="button" id="searchbtn" value="查詢" class="genbtn" />
-            <input type="button" id="exportExcelbtn" value="匯出全部資料" class="genbtn" style="display:none;" /><!--20190801新增匯出列表全部資料-->
+        </div>
+        <div style="margin-top:5px;display:none;" id="divExport">
+            <select id="exportStage" class="inputex">
+                <option value="1" >第一期</option>
+                <option value="2" >第二期</option>
+                <option value="3" >第三期</option>
+            </select>
+            <input type="button" id="exportExcelbtn" value="匯出資料" class="genbtn" /><!--20190801新增匯出列表全部資料-->
         </div>
         <br />
         <div class="stripeMe margin5T font-normal">

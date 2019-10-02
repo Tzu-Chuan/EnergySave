@@ -4,7 +4,7 @@
      <script type="text/javascript">
          $(document).ready(function () {
              if ($("#SA").val() == "Y") {
-                $("#exportExcelbtn").show();
+                 $("#divExport").show();
             }
              getddl("02", "#ddlCity");
             getData(0);
@@ -31,7 +31,7 @@
 
              ////20190801新增 匯出列表全部資料
              $(document).on("click", "#exportExcelbtn", function () {
-                window.location = "../handler/ExportHistoryMonthList.aspx";
+                 window.location = "../handler/ExportHistoryMonthList.aspx?s=" + $("#exportStage").val() + "";
             });
         });
 
@@ -195,12 +195,18 @@
                 <option value="12">12</option>
             </select>
         </div>
-	    <div style="margin-top:5px;">
+	    <div>
             關鍵字：<input type="text" id="SearchStr" class="inputex" />&nbsp;
             <input type="button" id="searchbtn" value="查詢" class="genbtn" />
-            <input type="button" id="exportExcelbtn" value="匯出全部資料" class="genbtn" style="display:none;" /><!--20190801新增匯出列表全部資料-->
-
 	    </div>
+        <div style="margin-top:5px;display:none;" id="divExport">
+            <select id="exportStage" class="inputex">
+                <option value="1" >第一期</option>
+                <option value="2" >第二期</option>
+                <option value="3" >第三期</option>
+            </select>
+            <input type="button" id="exportExcelbtn" value="匯出資料" class="genbtn" /><!--20190801新增匯出列表全部資料-->
+        </div>
         <br />
         <div class="stripeMe margin5T font-normal">
             <table id="tablist" width="100%" border="0" cellspacing="0" cellpadding="0">

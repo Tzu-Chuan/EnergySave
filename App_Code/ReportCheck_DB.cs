@@ -661,11 +661,14 @@ from ReportCheck
 left join Member mm on mm.M_Guid=RC_PeopleGuid
 left join Member ad on ad.M_Guid=RC_Boss
 left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=mm.M_City
-where  RC_Status='A' and RC_CheckType='Y' and (RC_ReportType='01' or RC_ReportType='03')
+where  RC_Status='A' and RC_CheckType='Y' and (RC_ReportType='01' or RC_ReportType='03') and RC_Stage=@RC_Stage
 ");
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
+
+        oCmd.Parameters.AddWithValue("@RC_Stage", RC_Stage);
+
         SqlDataAdapter oda = new SqlDataAdapter(oCmd);
         DataTable ds = new DataTable();
         oda.Fill(ds);
@@ -693,11 +696,13 @@ from ReportCheck
 left join Member mm on mm.M_Guid=RC_PeopleGuid
 left join Member ad on ad.M_Guid=RC_Boss
 left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=mm.M_City
-where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y' 
+where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y'  and RC_Stage=@RC_Stage
 ");
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
+        oCmd.Parameters.AddWithValue("@RC_Stage", RC_Stage);
+
         SqlDataAdapter oda = new SqlDataAdapter(oCmd);
         DataTable ds = new DataTable();
         oda.Fill(ds);
