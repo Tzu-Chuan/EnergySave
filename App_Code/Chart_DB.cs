@@ -3599,7 +3599,7 @@ select C_Item,C_Item_cn,I_Guid,@strStage,@strSdate,@strEdate
 from CodeTable 
 left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
 left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='02'
-where C_Group='02'  --and RM_ProjectGuid is not null
+where C_Group='02' and RM_Stage=@strStage  --and RM_ProjectGuid is not null
 group by C_Item,C_Item_cn,I_Guid,RM_Stage
 
 
