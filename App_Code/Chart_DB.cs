@@ -3634,7 +3634,7 @@ while @whRow>0
 	begin
 		select top 1 @whCPType = C_Item from #tmpWhileC order by C_Item asc;
 
-		if @whCPType='01' or @whCPType='03'
+		if @whCPType='01' --or @whCPType='03'
 			begin
 				set @strsql+=' ,isnull((select TOP 1 b.RM_Planning from #tmpRM b where a.city_I_Guid=b.RM_ProjectGuid  and b.RM_CPType='''+@whCPType+''' and b.RM_Planning is not null and b.RM_Planning <>0  order by b.RM_Year desc,b.RM_Month desc ),0) as I_Finish_item'+@whCPType+' 
 ,isnull((select SUM(isnull(RM_Type3ValueSum,0)) from #tmpRM c  where a.city_I_Guid=c.RM_ProjectGuid  and c.RM_CPType='''+@whCPType+'''),0) as sumC_item'+@whCPType+'
