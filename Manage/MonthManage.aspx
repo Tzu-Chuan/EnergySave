@@ -70,6 +70,7 @@
                                  tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("I_Office").text().trim() + '</td>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + (parseInt($(this).children("RC_Year").text().trim()) - 1911) + '</td>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("RC_Month").text().trim() + '</td>';
+                                 tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("RC_Stage").text().trim() + '</td>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("M_Name").text().trim() + '</td>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + $.datepicker.formatDate('yy/mm/dd', new Date($(this).children("RC_CreateDate").text().trim())) + '</td>';
                                  tabstr += '<td align="center">';
@@ -161,6 +162,7 @@
                         <th nowrap="nowrap">承辦局處</th>
                         <th nowrap="nowrap">年</th>
                         <th nowrap="nowrap">月</th>
+                        <th nowrap="nowrap">期</th>
                         <th nowrap="nowrap">承辦人</th>
                         <th nowrap="nowrap" style="width:150px;">送審日期</th>
                         <th nowrap="nowrap" style="width:150px;">動作</th>
