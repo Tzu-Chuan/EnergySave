@@ -970,7 +970,7 @@
             var tmpCount3 = (R03 / parseFloat($("#rsMoney3")[0].innerText)) * 100;
             $("#rsMoneyRatio3").html(tmpCount3.toFixed(0) + "%");
             var tmpCount4 = (R04 / parseFloat($("#rsMoney4")[0].innerText)) * 100;
-            var tmp_MoneyRatio4 = ($("#rsMoney4")[0].innerText == "") ? "0" : tmpCount4.toFixed(0);
+            var tmp_MoneyRatio4 = ($("#rsMoney4")[0].innerText == "" || Number($("#rsMoney4").html()) == 0) ? "0" : tmpCount4.toFixed(0);
             $("#rsMoneyRatio4").html(tmp_MoneyRatio4 + "%");
 
             //整體實支數
