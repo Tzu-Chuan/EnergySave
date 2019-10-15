@@ -204,7 +204,7 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
             {
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "01")
                 {
-                    strU = "(台)";
+                    strU = "(KW)";
                 }
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "02")
                 {
