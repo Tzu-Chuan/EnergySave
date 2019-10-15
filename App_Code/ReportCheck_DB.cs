@@ -442,7 +442,7 @@ where RC_ReportType='02' and RC_Status='A' ");
         oCmd.Connection.Close();
     }
 
-    public DataSet getHistoryMonth(string pStart, string pEnd, string startDay, string endDay, string city, string year, string month, string reporttype)
+    public DataSet getHistoryMonth(string pStart, string pEnd, string startDay, string endDay, string city, string year, string month, string reporttype, string stage)
     {
         SqlCommand oCmd = new SqlCommand();
         oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
@@ -462,6 +462,8 @@ where  RC_Status='A' and RC_CheckType='Y' and (RC_ReportType='01' or RC_ReportTy
             sb.Append(@"and RC_Month=@RC_Month ");
         if (reporttype != "")
             sb.Append(@"and RC_ReportType=@RC_ReportType ");
+        if (stage != "")
+            sb.Append(@"and RC_Stage=@RC_Stage ");
 
         if (startDay != "" && endDay != "")
             sb.Append(@"and (RC_CheckDate between @startDay and @endDay) ");
@@ -493,6 +495,8 @@ where  RC_Status='A' and RC_CheckType='Y' and (RC_ReportType='01' or RC_ReportTy
             sb.Append(@"and RC_Month=@RC_Month ");
         if (reporttype != "")
             sb.Append(@"and RC_ReportType=@RC_ReportType ");
+        if (stage != "")
+            sb.Append(@"and RC_Stage=@RC_Stage ");
 
         if (startDay != "" && endDay != "")
             sb.Append(@"and (RC_CheckDate between @startDay and @endDay) ");
@@ -524,6 +528,7 @@ where  RC_Status='A' and RC_CheckType='Y' and (RC_ReportType='01' or RC_ReportTy
         oCmd.Parameters.AddWithValue("@RC_Year", year);
         oCmd.Parameters.AddWithValue("@RC_Month", month);
         oCmd.Parameters.AddWithValue("@RC_ReportType", reporttype);
+        oCmd.Parameters.AddWithValue("@RC_Stage", stage);
         oda.Fill(ds);
         return ds;
     }

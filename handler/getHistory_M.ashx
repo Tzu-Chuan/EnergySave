@@ -26,6 +26,7 @@ public class getHistory_M : IHttpHandler,IRequiresSessionState {
             string CityStr = (context.Request["city"] != null) ? context.Request["city"].ToString() : "";
             string SearchStr = (context.Request["SearchStr"] != null) ? context.Request["SearchStr"].ToString() : "";
             string CurrentPage = (context.Request.Form["CurrentPage"] == null) ? "" : context.Request.Form["CurrentPage"].ToString().Trim();
+            string stage = (context.Request["stage"] != null) ? context.Request["stage"].ToString() : "";
 
             int Paging = 10; //一頁幾筆
             int pageEnd = (int.Parse(CurrentPage) + 1) * Paging; // +1 是因為分頁從0開始算
@@ -37,7 +38,7 @@ public class getHistory_M : IHttpHandler,IRequiresSessionState {
             string city = (LogInfo.competence != "SA") ? LogInfo.city : CityStr;
 
             rc_db._strKeyword = SearchStr;
-            DataSet ds = rc_db.getHistoryMonth(pageStart.ToString(), pageEnd.ToString(), sday, eday, city, year.ToString(), month,reporttype);
+            DataSet ds = rc_db.getHistoryMonth(pageStart.ToString(), pageEnd.ToString(), sday, eday, city, year.ToString(), month,reporttype,stage);
             DataTable dt = ds.Tables[1];
 
             xmlStr = "<total>" + ds.Tables[0].Rows[0]["total"].ToString() + "</total>";
