@@ -3327,7 +3327,7 @@ insert into #tmpcity(city_Item,city_Item_cn,city_I_Guid,city_Stage,city_Year,cit
 select C_Item,C_Item_cn,I_Guid,'','','',''
 from CodeTable 
 left join ProjectInfo on C_Item=I_City and I_Status='A' and I_Flag='Y'
-left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='02'
+left join ReportMonth on I_Guid=RM_ProjectGuid and RM_ReportType='02' and RM_Stage=@strStage
 where C_Group='02'  --and RM_ProjectGuid is not null
 group by C_Item,C_Item_cn,I_Guid,RM_Stage
 

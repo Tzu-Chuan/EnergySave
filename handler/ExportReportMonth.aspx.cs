@@ -120,7 +120,7 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
     {
         string strPeopleName = "", stePeoplePhone = "", strManager = "", strChkDate = "", strCreateDate = "";
         string thName1 = "", thName2 = "", thName3 = "";
-        string strU = "";
+        string strU = "", strAppTitle = "", strFinishTitle = "";
         string strS = "", strE = "", strSY = "", strSM = "", strSD = "", strEY = "", strEM = "", strED = "";
 
         int CPTypeCount = 0;
@@ -205,14 +205,20 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "01")
                 {
                     strU = "(KW)";
+                    strAppTitle = "申請總冷<br>氣能力(KW)";
+                    strFinishTitle = "完成總冷<br>氣能力(kW)";
                 }
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "02")
                 {
                     strU = "(具)";
+                    strAppTitle = "申請更換<br>照明瓦數(W)";
+                    strFinishTitle = "完成更換<br>照明瓦數(W)";
                 }
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "03")
                 {
                     strU = "(盞)";
+                    strAppTitle = "申請更換<br>照明瓦數(W)";
+                    strFinishTitle = "完成更換<br>照明瓦數(W)";
                 }
 
                 strHtml += "<td rowspan='8' width='15%'>" + ItemLineBreak(dt.Rows[i]["C_Item_cn"].ToString().Trim()) + "</td>";
@@ -222,8 +228,8 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 strHtml += "<tr>";
                 strHtml += "<td colspan='3' align='center' width='20%'>申請數量" + strU + "</td>";
                 strHtml += "<td colspan='3' align='center' width='20%'>核定數量" + strU + "</td>";
-                strHtml += "<td colspan='3' align='center' width='20%'>申請總冷<br>氣能力(kW)</td>";
-                strHtml += "<td colspan='3' align='center' width='20%'>完成總冷<br>氣能力(kW)</td>";
+                strHtml += "<td colspan='3' align='center' width='20%'>" + strAppTitle + "</td>";
+                strHtml += "<td colspan='3' align='center' width='20%'>" + strFinishTitle + "</td>";
                 strHtml += "</tr>";
                 strHtml += "<tr>";
                 strHtml += "<td align='center'>" + thName1 + "</td>";
