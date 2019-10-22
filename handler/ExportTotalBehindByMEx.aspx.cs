@@ -131,8 +131,9 @@ public partial class handler_ExportTotalBehindByMEx : System.Web.UI.Page
                             {
                                 u_row.CreateCell(nowColumn).SetCellValue(Convert.ToDouble(ds.Tables[1].Rows[i]["RM_Planning"].ToString().Trim()));
                                 allKeys[strkey1] = allKeys[strkey1] + Convert.ToDouble(ds.Tables[1].Rows[i]["RM_Planning"].ToString().Trim());
-                                if (tmpType == "01" || tmpType == "03")
-                                {
+                                //if (tmpType == "01" || tmpType == "03")
+                                if (tmpType == "01")
+                                    {
                                     u_row.CreateCell(nowColumn + 1).SetCellValue(Convert.ToDouble(ds.Tables[1].Rows[i]["sum3"].ToString().Trim()));
                                     u_row.CreateCell(nowColumn + 2).SetCellValue(Convert.ToDouble(ds.Tables[1].Rows[i]["sum4"].ToString().Trim()));
                                     allKeys[strkey2] = allKeys[strkey2] + Convert.ToDouble(ds.Tables[1].Rows[i]["sum3"].ToString().Trim());
@@ -184,8 +185,9 @@ public partial class handler_ExportTotalBehindByMEx : System.Web.UI.Page
                             {
                                 u_row.CreateCell(nowColumn).SetCellValue(Convert.ToDouble(ds.Tables[1].Rows[i]["RM_Planning"].ToString().Trim()));
                                 allKeys[strkey1] = allKeys[strkey1] + Convert.ToDouble(ds.Tables[1].Rows[i]["RM_Planning"].ToString().Trim());
-                                if (tmpType == "01" || tmpType == "03")
-                                {
+                                //if (tmpType == "01" || tmpType == "03")
+                                if (tmpType == "01")
+                                    {
                                     u_row.CreateCell(nowColumn + 1).SetCellValue(Convert.ToDouble(ds.Tables[1].Rows[i]["sum3"].ToString().Trim()));
                                     u_row.CreateCell(nowColumn + 2).SetCellValue(Convert.ToDouble(ds.Tables[1].Rows[i]["sum4"].ToString().Trim()));
                                     allKeys[strkey2] = allKeys[strkey2] + Convert.ToDouble(ds.Tables[1].Rows[i]["sum3"].ToString().Trim());

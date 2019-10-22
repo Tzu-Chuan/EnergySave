@@ -90,7 +90,8 @@
                                             if (tmpType == $(this).children("RM_CPType").text().trim()) {
                                                 tmpChildData += '<td>' + $(this).children("RM_Planning").text().trim() + '</td>';
                                                 //01 & 03  申請、完成 抓 sum3、sum4  其他的申請、完成 抓 sum1、sum2
-                                                if (tmpType == "01" || tmpType == "03") {
+                                                //if (tmpType == "01" || tmpType == "03") {
+                                                if (tmpType == "01") {
                                                     tmpChildData += '<td>' + $(this).children("sum3").text().trim() + '</td>';
                                                     tmpChildData += '<td>' + $(this).children("sum4").text().trim() + '</td>';
                                                 }
