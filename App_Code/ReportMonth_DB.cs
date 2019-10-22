@@ -843,7 +843,7 @@ drop table #tmpAll
     }
 
     //新增月報前檢查有沒有新增過 (設備汰換)
-    public DataTable chkReportMonth(string mGuid, string year, string month, string stage)
+    public DataTable chkReportMonth(string mGuid, string year, string month, string stage,string reportType)
     {
         SqlCommand oCmd = new SqlCommand();
         oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
@@ -855,8 +855,9 @@ drop table #tmpAll
             select * from ReportMonth 
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RM_ProjectGuid=@ProjectID
             where RM_Stage=@RM_Stage and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_ProjectGuid=@ProjectID
-            and ((RC_Status='A' and RC_CheckType='Y') or ((RC_Status='A' and RC_CheckType='Y') or (RC_Status='A' and RC_CheckType is null))) and RM_ReportType='01'
-        ");
+            and ((RC_Status='A' and RC_CheckType='Y') or ((RC_Status='A' and RC_CheckType='Y') or (RC_Status='A' and RC_CheckType is null))) and RM_ReportType=@RM_ReportType
+                   
+");
         
 
         oCmd.CommandText = sb.ToString();
@@ -867,6 +868,7 @@ drop table #tmpAll
         oCmd.Parameters.AddWithValue("@RM_Stage", stage);
         oCmd.Parameters.AddWithValue("@RM_Year", year);
         oCmd.Parameters.AddWithValue("@RM_Month", month);
+        oCmd.Parameters.AddWithValue("@RM_ReportType", reportType);
 
         oda.Fill(dt);
         return dt;

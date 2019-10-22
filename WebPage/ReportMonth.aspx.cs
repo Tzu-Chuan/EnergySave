@@ -22,7 +22,7 @@ public partial class WebPage_ReportMonth : System.Web.UI.Page
                     if (!string.IsNullOrEmpty(Request["year"]) && !string.IsNullOrEmpty(Request["month"]) && !string.IsNullOrEmpty(Request["stage"]))
                     {
                         // 確認月報是不是送審中或審核通過
-                        DataTable checkDt = rmdb.chkReportMonth(LogInfo.mGuid, Request["year"].ToString(), Request["month"].ToString(), Request["stage"].ToString());
+                        DataTable checkDt = rmdb.chkReportMonth(LogInfo.mGuid, Request["year"].ToString(), Request["month"].ToString(), Request["stage"].ToString(),"01");
                         if (checkDt.Rows.Count > 0)
                             Response.Write("<script type='text/javascript'>alert('很抱歉，該月報已送審！');location.href='ReportMonthList.aspx';</script>");
                     }
