@@ -111,6 +111,12 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
                 strHtml += "<td style='text-align:right;'>" + dt.Rows[0]["RS_Type03RealRate"].ToString().Trim() + "%</td>";
                 strHtml += "</tr>";
                 strHtml += "<tr>";
+                strHtml += "<td style='text-align:center;'>擴大補助</td>";
+                strHtml += "<td style='text-align:right;'>" + dt.Rows[0]["RS_Type04Money"].ToString().Trim() + "</td>";
+                strHtml += "<td style='text-align:right;'>" + dt.Rows[0]["RS_Type04Real"].ToString().Trim() + "</td>";
+                strHtml += "<td style='text-align:right;'>" + dt.Rows[0]["RS_Type04RealRate"].ToString().Trim() + "%</td>";
+                strHtml += "</tr>";
+                strHtml += "<tr>";
                 strHtml += "<td style='text-align:center;'>整體工作</td>";
                 strHtml += "<td style='text-align:right;'>" + CountMoney(dt, "allMoney") + "</td>";
                 strHtml += "<td style='text-align:right;'>" + CountMoney(dt, "allReal") + "</td>";
@@ -548,8 +554,8 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
     private string CountMoney(DataTable dt,string item)
     {
         string rVal = string.Empty;
-        double totalMoney = double.Parse(dt.Rows[0]["RS_Type01Money"].ToString()) + double.Parse(dt.Rows[0]["RS_Type02Money"].ToString()) + double.Parse(dt.Rows[0]["RS_Type03Money"].ToString());
-        double totalReal = double.Parse(dt.Rows[0]["RS_Type01Real"].ToString()) + double.Parse(dt.Rows[0]["RS_Type02Real"].ToString()) + double.Parse(dt.Rows[0]["RS_Type03Real"].ToString()); ;
+        double totalMoney = double.Parse(dt.Rows[0]["RS_Type01Money"].ToString()) + double.Parse(dt.Rows[0]["RS_Type02Money"].ToString()) + double.Parse(dt.Rows[0]["RS_Type03Money"].ToString()) + double.Parse(dt.Rows[0]["RS_Type04Money"].ToString());
+        double totalReal = double.Parse(dt.Rows[0]["RS_Type01Real"].ToString()) + double.Parse(dt.Rows[0]["RS_Type02Real"].ToString()) + double.Parse(dt.Rows[0]["RS_Type03Real"].ToString()) + double.Parse(dt.Rows[0]["RS_Type04Real"].ToString());
         double RealRatio = (totalReal / totalMoney) * 100;
         switch (item)
         {
