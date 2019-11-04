@@ -229,7 +229,7 @@
             //刪除 button
             $(document).on("click", "input[name='delbtn']", function () {
                 var id = $(this).attr("aid");
-                if (confirm("確定刪除？")) {
+                if (confirm("!! 請注意 !! \n變更承辦人請勿刪除，請至【更換承辦人】做變更即可\n\n確定刪除？")) {
                     $.ajax({
                         type: "POST",
                         async: false, //在沒有返回值之前,不會執行下一步動作
