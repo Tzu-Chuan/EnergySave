@@ -200,7 +200,7 @@ public class CheckPoint_DB
 select * from PushItem
 left join Check_Point on CP_ParentId=P_Guid
 where CP_ProjectId=@CP_ProjectId and CP_Status='A' and P_Type=@P_Type and P_Period=@P_Period
-order by P_ID ");
+order by P_ID asc,convert(int,CP_ReserveYear) asc,convert(int,CP_ReserveMonth) asc ");//P_ID
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
