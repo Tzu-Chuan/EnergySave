@@ -20,12 +20,14 @@
             var stage = $('<input type="hidden" name="stage" id="stage" value="' + $.getParamValue('stage') + '" />');
             var year = $('<input type="hidden" name="year" id="year" value="' + $.getParamValue('year') + '" />');
             var month = $('<input type="hidden" name="month" id="month" value="' + $.getParamValue('month') + '" />');
+            var rmtype = $('<input type="hidden" name="rmtype" id="rmtype" value="' + $.getParamValue('rmtype') + '" />');
             var form = $("form")[0];
             $("#postiframe").remove();
             $("input[name='mid']").remove();
             $("input[name='stage']").remove();
             $("input[name='year']").remove();
             $("input[name='month']").remove();
+            $("input[name='rmtype']").remove();
             form.appendChild(iframe[0]);
             form.appendChild(mid[0]);
             form.appendChild(stage[0]);

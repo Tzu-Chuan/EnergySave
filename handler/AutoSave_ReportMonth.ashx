@@ -25,6 +25,7 @@ public class AutoSave_ReportMonth : IHttpHandler, IRequiresSessionState
             string stage = (context.Request["stage"] != null) ? context.Request["stage"].ToString() : "";
             string year = (context.Request["year"] != null) ? context.Request["year"].ToString() : "";
             string month = (context.Request["month"] != null) ? context.Request["month"].ToString() : "";
+            string rmtype = (context.Request["rmtype"] != null) ? context.Request["rmtype"].ToString() : "";
             mb._M_ID = mid;
             string iguid = mb.getProgectGuidByPersonId();
             if (iguid == "")
@@ -124,7 +125,7 @@ public class AutoSave_ReportMonth : IHttpHandler, IRequiresSessionState
                 rm._RM_ChkVal = (RM_ChkVal != null && RM_ChkVal != "") ? Convert.ToDecimal(RM_ChkVal) : 0;
                 rm._RM_NotChkVal = (RM_NotChkVal != null && RM_NotChkVal != "") ? Convert.ToDecimal(RM_NotChkVal) : 0;
                 rm._RM_Remark = RM_Remark;
-
+                rm._RM_ReportType = rmtype;
                 //檢查有沒有資料已經存在
                 DataTable chkMR = rm.selectMonthReportByPjno();
                 if (chkMR.Rows.Count > 0)
