@@ -87,7 +87,7 @@ public class ReportMonth : IHttpHandler,IRequiresSessionState
                             {
                                 //如果 P_Status='D' 表示是刪除掉的推動項目
                                 //要去看該推動項目是否有在月報裡面 如果有 就將月報該資料射程 RM_Status='D'
-                                if (dtc.Tables[1].Rows[i]["P_Status"].ToString().Trim() == "D" && dtc.Tables[1].Rows[i]["RM_ID"] != null)
+                                if ((dtc.Tables[1].Rows[i]["P_Status"].ToString().Trim() == "D" && dtc.Tables[1].Rows[i]["RM_ID"] != null))
                                 {
                                     rm._RM_ID = dtc.Tables[1].Rows[i]["RM_ID"].ToString().Trim();
                                     rm._RM_ModId = LogInfo.mGuid;

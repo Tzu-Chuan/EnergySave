@@ -2,44 +2,44 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <script>
-        setInterval(function () {
-            var breakStatus = false;
-            if ($.getParamValue('stage') == "" || $.getParamValue('year') == null || $.getParamValue('year') == "" || $.getParamValue('month') == "") {
-                breakStatus = true;
-            }
-            if ($("#hidden_chktype").val() == "Y" || ($("#hidden_chktype").val() == "" && $("#hidden_chkstatus").val() == "A")) {
-                breakStatus = true;
-            }
-            if (breakStatus == true)
-                return;
-            //判斷如果現在是定稿或送審
-            if ($("#btn_save").prop("disabled") || $("#txt_Type01Real").prop("disabled"))
-                return;
-            var iframe = $('<iframe name="postiframe" id="postiframe" style="display: none" />');
-            var mid = $('<input type="hidden" name="mid" id="mid" value="' + $.getParamValue('v') + '" />');
-            var stage = $('<input type="hidden" name="stage" id="stage" value="' + $.getParamValue('stage') + '" />');
-            var year = $('<input type="hidden" name="year" id="year" value="' + $.getParamValue('year') + '" />');
-            var month = $('<input type="hidden" name="month" id="month" value="' + $.getParamValue('month') + '" />');
-            var rmtype = $('<input type="hidden" name="rmtype" id="rmtype" value="' + $.getParamValue('rmtype') + '" />');
-            var form = $("form")[0];
-            $("#postiframe").remove();
-            $("input[name='mid']").remove();
-            $("input[name='stage']").remove();
-            $("input[name='year']").remove();
-            $("input[name='month']").remove();
-            $("input[name='rmtype']").remove();
-            form.appendChild(iframe[0]);
-            form.appendChild(mid[0]);
-            form.appendChild(stage[0]);
-            form.appendChild(year[0]);
-            form.appendChild(month[0]);
-            form.setAttribute("action", "../handler/AutoSave_ReportMonth.ashx");
-            form.setAttribute("method", "post");
-            form.setAttribute("enctype", "multipart/form-data");
-            form.setAttribute("encoding", "multipart/form-data");
-            form.setAttribute("target", "postiframe");
-            form.submit();
-        }, 1200000);//20 minutes 1200000
+        //setInterval(function () {
+        //    var breakStatus = false;
+        //    if ($.getParamValue('stage') == "" || $.getParamValue('year') == null || $.getParamValue('year') == "" || $.getParamValue('month') == "") {
+        //        breakStatus = true;
+        //    }
+        //    if ($("#hidden_chktype").val() == "Y" || ($("#hidden_chktype").val() == "" && $("#hidden_chkstatus").val() == "A")) {
+        //        breakStatus = true;
+        //    }
+        //    if (breakStatus == true)
+        //        return;
+        //    //判斷如果現在是定稿或送審
+        //    if ($("#btn_save").prop("disabled") || $("#txt_Type01Real").prop("disabled"))
+        //        return;
+        //    var iframe = $('<iframe name="postiframe" id="postiframe" style="display: none" />');
+        //    var mid = $('<input type="hidden" name="mid" id="mid" value="' + $.getParamValue('v') + '" />');
+        //    var stage = $('<input type="hidden" name="stage" id="stage" value="' + $.getParamValue('stage') + '" />');
+        //    var year = $('<input type="hidden" name="year" id="year" value="' + $.getParamValue('year') + '" />');
+        //    var month = $('<input type="hidden" name="month" id="month" value="' + $.getParamValue('month') + '" />');
+        //    var rmtype = $('<input type="hidden" name="rmtype" id="rmtype" value="' + $.getParamValue('rmtype') + '" />');
+        //    var form = $("form")[0];
+        //    $("#postiframe").remove();
+        //    $("input[name='mid']").remove();
+        //    $("input[name='stage']").remove();
+        //    $("input[name='year']").remove();
+        //    $("input[name='month']").remove();
+        //    $("input[name='rmtype']").remove();
+        //    form.appendChild(iframe[0]);
+        //    form.appendChild(mid[0]);
+        //    form.appendChild(stage[0]);
+        //    form.appendChild(year[0]);
+        //    form.appendChild(month[0]);
+        //    form.setAttribute("action", "../handler/AutoSave_ReportMonth.ashx");
+        //    form.setAttribute("method", "post");
+        //    form.setAttribute("enctype", "multipart/form-data");
+        //    form.setAttribute("encoding", "multipart/form-data");
+        //    form.setAttribute("target", "postiframe");
+        //    form.submit();
+        //}, 1200000);//20 minutes 1200000
 
         $(function () {
             //$("#txt_stage").html("第" + $.getParamValue('stage') + "期");

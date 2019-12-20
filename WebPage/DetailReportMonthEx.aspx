@@ -413,11 +413,11 @@
                 str += '<div class="OchiTableInner width100">';
                 str += '<div class="OchiCellInner nowrap textcenter">本期累計核定數：</div>';
                 str += '<div class="OchiCellInner width33">';
-                str += '<span>' + xmlData.children("countFinish02").text().trim() + '&nbsp;(盞)</span>';
+                str += '<span>' + xmlData.children("countFinish02").text().trim() + '&nbsp;(' + strUnit + ')</span>';
                 str += '</div>';
                 str += '<div class="OchiCellInner nowrap textcenter">本期規劃數：</div>';
                 str += '<div class="OchiCellInner width50">';
-                str += '<span>' + xmlData.children("RM_Planning").text().trim() + '&nbsp;(盞)</span>';
+                str += '<span>' + xmlData.children("RM_Planning").text().trim() + '&nbsp;(' + strUnit + ')</span>';
                 str += '</div>';
                 str += '</div>';
 

@@ -321,24 +321,34 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
                 {
                     strHtml += "<tr><td rowspan='" + rowSpan + "' align='center' width = '5%'>本<br>月<br>執<br>行<br>進<br>度</td>";
                     strHtml += "<td rowspan='8' width='11%'>" + ItemCname + "</td>";
-                    strHtml += "<td colspan='6'>本期累計核定數：" + dt.Rows[i]["countFinish02"].ToString().Trim() + "&nbsp;(盞)</td>";
-                    strHtml += "<td colspan='6'>本期規劃數：" + strP_ExFinish + "&nbsp;(盞)</td>";
+                    strHtml += "<td colspan='6'>本期累計核定數：" + dt.Rows[i]["countFinish02"].ToString().Trim() + "&nbsp;(" + strUnit + "))</td>";
+                    strHtml += "<td colspan='6'>本期規劃數：" + strP_ExFinish + "&nbsp;(" + strUnit + "))</td>";
                     strHtml += "</tr>";
                 }
                 else
                 {
                     strHtml += "<tr>";
                     strHtml += "<td rowspan='8'>" + ItemCname + "</td>";
-                    strHtml += "<td colspan='6'>本期累計核定數：" + dt.Rows[i]["countFinish02"].ToString().Trim() + "&nbsp;(盞)</td>";
-                    strHtml += "<td colspan='6'>本期規劃數：" + strP_ExFinish + "&nbsp;(盞)</td>";
+                    strHtml += "<td colspan='6'>本期累計核定數：" + dt.Rows[i]["countFinish02"].ToString().Trim() + "&nbsp;(" + strUnit + "))</td>";
+                    strHtml += "<td colspan='6'>本期規劃數：" + strP_ExFinish + "&nbsp;(" + strUnit + "))</td>";
                     strHtml += "</tr>";
                 }
                 
                 strHtml += "<tr>";
-                strHtml += "<th colspan='3' width='21%'>本月申請數量(" + strUnit + ")</th>";
-                strHtml += "<th colspan='3' width='21%'>本月核定數量(" + strUnit + ")</th>";
-                strHtml += "<th colspan='3' width='21%'>本月申請總冷氣能力(kW)</th>";
-                strHtml += "<th colspan='3' width='21%'>本月完成總冷氣能力(kW)</th>";
+                if (strItem == "03") {
+                    strHtml += "<th colspan='3' width='21%'>本月申請數量(" + strUnit + ")</th>";
+                    strHtml += "<th colspan='3' width='21%'>本月核定數量(" + strUnit + ")</th>";
+                    strHtml += "<th colspan='3' width='21%'>本月申請總冷氣能力(kW)</th>";
+                    strHtml += "<th colspan='3' width='21%'>本月完成總冷氣能力(kW)</th>";
+                }
+                else {
+                    //02
+                    strHtml += "<th colspan='3' width='21%'>本月申請數量(" + strUnit + ")</th>";
+                    strHtml += "<th colspan='3' width='21%'>本月核定數量(" + strUnit + ")</th>";
+                    strHtml += "<th colspan='3' width='21%'>本月申請更換照明瓦數(W)</th>";
+                    strHtml += "<th colspan='3' width='21%'>本月完成更換照明瓦數(W)</th>";
+                }
+                
                 strHtml += "</tr>";
                 strHtml += "<tr>";
                 strHtml += "<td align='center'>服務業</td>";

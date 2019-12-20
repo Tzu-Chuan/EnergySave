@@ -226,8 +226,16 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 strHtml += "<td colspan='6'>本期規劃數：" + dt.Rows[i]["RM_Planning"].ToString().Trim() + strU + "</td>";
                 strHtml += "</tr>";
                 strHtml += "<tr>";
-                strHtml += "<td colspan='3' align='center' width='20%'>申請數量" + strU + "</td>";
-                strHtml += "<td colspan='3' align='center' width='20%'>核定數量" + strU + "</td>";
+                if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "01")
+                {
+                    strHtml += "<td colspan='3' align='center' width='20%'>申請數量(台)</td>";
+                    strHtml += "<td colspan='3' align='center' width='20%'>核定數量(台)</td>";
+                }
+                else {
+                    strHtml += "<td colspan='3' align='center' width='20%'>申請數量" + strU + "</td>";
+                    strHtml += "<td colspan='3' align='center' width='20%'>核定數量" + strU + "</td>";
+                }
+                
                 strHtml += "<td colspan='3' align='center' width='20%'>" + strAppTitle + "</td>";
                 strHtml += "<td colspan='3' align='center' width='20%'>" + strFinishTitle + "</td>";
                 strHtml += "</tr>";
