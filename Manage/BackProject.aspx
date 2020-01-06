@@ -124,8 +124,8 @@
     <input id="tmpid" runat="server" type="hidden" />
     <div class="container">
         <div class="twocol filetitlewrapper">
-	        <div class="left"><span class="filetitle font-size5">計畫退回草稿</span></div><!-- left -->
-            <div class="right">計畫退回草稿</div><!-- right -->
+	        <div class="left"><span class="filetitle font-size5">計畫書退回</span></div><!-- left -->
+            <div class="right">計畫書退回</div><!-- right -->
         </div><!-- twocol -->
         <br />
         <div class="twocol">
