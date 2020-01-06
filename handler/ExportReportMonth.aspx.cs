@@ -205,20 +205,20 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "01")
                 {
                     strU = "(KW)";
-                    strAppTitle = "申請總冷<br>氣能力(KW)";
-                    strFinishTitle = "完成總冷<br>氣能力(kW)";
+                    strAppTitle = "本月申請總冷<br>氣能力(KW)";
+                    strFinishTitle = "本月完成總冷<br>氣能力(kW)";
                 }
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "02")
                 {
                     strU = "(具)";
-                    strAppTitle = "申請更換<br>照明瓦數(W)";
-                    strFinishTitle = "完成更換<br>照明瓦數(W)";
+                    strAppTitle = "本月申請更換<br>照明瓦數(W)";
+                    strFinishTitle = "本月完成更換<br>照明瓦數(W)";
                 }
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "03")
                 {
                     strU = "(盞)";
-                    strAppTitle = "申請更換<br>照明瓦數(W)";
-                    strFinishTitle = "完成更換<br>照明瓦數(W)";
+                    strAppTitle = "本月申請更換<br>照明瓦數(W)";
+                    strFinishTitle = "本月完成更換<br>照明瓦數(W)";
                 }
 
                 strHtml += "<td rowspan='8' width='15%'>" + ItemLineBreak(dt.Rows[i]["C_Item_cn"].ToString().Trim()) + "</td>";
@@ -228,12 +228,12 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 strHtml += "<tr>";
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "01")
                 {
-                    strHtml += "<td colspan='3' align='center' width='20%'>申請數量(台)</td>";
-                    strHtml += "<td colspan='3' align='center' width='20%'>核定數量(台)</td>";
+                    strHtml += "<td colspan='3' align='center' width='20%'>本月申請數量(台)</td>";
+                    strHtml += "<td colspan='3' align='center' width='20%'>本月核定數量(台)</td>";
                 }
                 else {
-                    strHtml += "<td colspan='3' align='center' width='20%'>申請數量" + strU + "</td>";
-                    strHtml += "<td colspan='3' align='center' width='20%'>核定數量" + strU + "</td>";
+                    strHtml += "<td colspan='3' align='center' width='20%'>本月申請數量" + strU + "</td>";
+                    strHtml += "<td colspan='3' align='center' width='20%'>本月核定數量" + strU + "</td>";
                 }
                 
                 strHtml += "<td colspan='3' align='center' width='20%'>" + strAppTitle + "</td>";
@@ -279,8 +279,8 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 strHtml += "</tr>";
                 strHtml += "<tr>";
                 strHtml += "<td colspan='3' align='center'>申請數預期年節電量(度)</td>";
-                strHtml += "<td colspan='3' align='center'>申請數預期年節電量(度)</td>";
-                strHtml += "<td colspan='6' align='center'>申請數預期年節電量(度)</td>";
+                strHtml += "<td colspan='3' align='center'>核定數預期年節電量(度)</td>";
+                strHtml += "<td colspan='6' align='center'>未核定數之年節電量(度) </td>";
                 strHtml += "</tr>";
                 strHtml += "<tr>";
                 strHtml += "<td colspan='3' align='right'>" + dt.Rows[i]["RM_PreVal"].ToString().Trim() + "</td>";
@@ -341,9 +341,9 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 strHtml += "<td colspan='2' align='right'>" + dt.Rows[i]["RM_Type3ValueSum"].ToString().Trim() + "</td>";
                 strHtml += "</tr>";
                 strHtml += "<tr>";
-                strHtml += "<td align='center' colspan='3'>申請數預期<br>年節電量(度)</td>";
-                strHtml += "<td align='center' colspan='3'>申請數預期<br>年節電量(度)</td>";
-                strHtml += "<td align='center' colspan='6'>申請數預期<br>年節電量(度)</td>";
+                strHtml += "<td align='center' colspan='3'>申請數預期年節電量(度)</td>";
+                strHtml += "<td align='center' colspan='3'>核定數預期年節電量(度)</td>";
+                strHtml += "<td align='center' colspan='6'>未核定數之年節電量(度) </td>";
                 strHtml += "</tr >";
                 strHtml += "<tr>";
                 strHtml += "<td align='right' colspan='3'>" + dt.Rows[i]["RM_PreVal"].ToString().Trim() + "</td>";
@@ -383,7 +383,7 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
     {
         string strPeopleName = "", stePeoplePhone = "", strManager = "", strChkDate = "", strCreateDate = "";
         string thName1 = "", thName2 = "", thName3 = "";
-        string strU = "";
+        string strU = "", strUSumAppl = "", strUSumFinish = "";
         string strS = "", strE = "", strSY = "", strSM = "", strSD = "", strEY = "", strEM = "", strED = "";
 
         int CPTypeCount = 0;
@@ -468,14 +468,20 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "01")
                 {
                     strU = "(台)";
+                    strUSumAppl = "本月申請總冷氣能力(kW)";
+                    strUSumFinish = "本月完成總冷氣能力(kW)";
                 }
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "02")
                 {
                     strU = "(具)";
+                    strUSumAppl = "本月申請更換照明瓦數(W)";
+                    strUSumFinish = "本月完成更換照明瓦數(W)";
                 }
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "03")
                 {
                     strU = "(盞)";
+                    strUSumAppl = "本月申請更換照明瓦數(W)";
+                    strUSumFinish = "本月完成更換照明瓦數(W)";
                 }
                 strHtml += "<td rowspan='8'>" + dt.Rows[i]["C_Item_cn"].ToString().Trim() + "</td>";
                 strHtml += "<td colspan='6'>本期累計核定數：" + dt.Rows[i]["RM_Finish"].ToString().Trim() + strU + "</td>";
@@ -484,8 +490,10 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
                 strHtml += "<tr>";
                 strHtml += "<td colspan='3' align='center'>申請數量" + strU + "</td>";
                 strHtml += "<td colspan='3' align='center'>核定數量" + strU + "</td>";
-                strHtml += "<td colspan='3' align='center'>申請總冷氣<br>能力(kW)</td>";
-                strHtml += "<td colspan='3' align='center'>完成總冷氣<br>能力(kW)</td>";
+                //strHtml += "<td colspan='3' align='center'>申請總冷氣<br>能力(kW)</td>";
+                //strHtml += "<td colspan='3' align='center'>完成總冷氣<br>能力(kW)</td>";
+                strHtml += "<td colspan='3' align='center'>" + strUSumAppl + "</td>";
+                strHtml += "<td colspan='3' align='center'>" + strUSumFinish + "</td>";
                 strHtml += "</tr>";
                 strHtml += "<tr>";
                 strHtml += "<td align='center'>" + thName1 + "</td>";

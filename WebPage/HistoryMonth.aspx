@@ -7,6 +7,7 @@
                  $("#divExport").show();
             }
              getddl("02", "#ddlCity");
+             getddl("02", "#ddlCityExport");
             getData(0);
 
             //限制只能輸入數字
@@ -31,7 +32,7 @@
 
              ////20190801新增 匯出列表全部資料
              $(document).on("click", "#exportExcelbtn", function () {
-                 window.location = "../handler/ExportHistoryMonthList.aspx?s=" + $("#exportStage").val() + "";
+                 window.location = "../handler/ExportHistoryMonthList.aspx?s=" + $("#exportStage").val() + "&city="+$("#ddlCityExport").val()+"";
             });
         });
 
@@ -213,6 +214,7 @@
                 <option value="2" >第二期</option>
                 <option value="3" >第三期</option>
             </select>
+            <select id="ddlCityExport"></select>
             <input type="button" id="exportExcelbtn" value="匯出資料" class="genbtn" /><!--20190801新增匯出列表全部資料-->
         </div>
         <br />

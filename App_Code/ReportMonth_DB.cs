@@ -1020,4 +1020,25 @@ else
         oda.Fill(ds);
         return ds;
     }
+
+    //刪除月報草稿   20191225新增   
+    public void delReportMonthNotCheck()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+
+        oCmd.CommandText = @"
+            update ReportMonth set RM_Status='D' where RM_ReportGuid=@RM_ReportGuid
+
+            update ReportCheck set RC_Status='D' where RC_ReportGuid=@RM_ReportGuid and RC_Status='A' and RC_ReportType='01'
+        ";
+
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        oCmd.Parameters.AddWithValue("@RM_ReportGuid", RM_ReportGuid);
+
+        oCmd.Connection.Open();
+        oCmd.ExecuteNonQuery();
+        oCmd.Connection.Close();
+    }
 }

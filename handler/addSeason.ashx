@@ -234,8 +234,8 @@ public class addSeason : IHttpHandler,IRequiresSessionState {
                 rc_db._RC_CreateId = LogInfo.mGuid;
                 //防止連點按鈕
                 DataTable chkDt = rc_db.CheckReportExist();
-                if (Int32.Parse(chkDt.Rows[0]["Total"].ToString()) == 0)
-                    rc_db.addSeason();
+                //if (Int32.Parse(chkDt.Rows[0]["Total"].ToString()) == 0)
+                //    rc_db.addSeason();
 
                 /// 季報送審 Log
                 l_db._L_Type = "05";

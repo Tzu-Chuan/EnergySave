@@ -1117,4 +1117,25 @@ where RS_ID=@RS_ID and RC_Status='A'
         oda.Fill(dt);
         return dt;
     }
+
+    //刪除季報草稿   20191225新增   
+    public void delReportSeasonNotCheck()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+
+        oCmd.CommandText = @"
+            update ReportSeason set RS_Status='D' where RS_Guid=@RS_Guid
+
+            update ReportCheck set RC_Status='D' where RC_ReportGuid=@RS_Guid and RC_Status='A' and RC_ReportType='02'
+        ";
+
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        oCmd.Parameters.AddWithValue("@RS_Guid", RS_Guid);
+
+        oCmd.Connection.Open();
+        oCmd.ExecuteNonQuery();
+        oCmd.Connection.Close();
+    }
 }

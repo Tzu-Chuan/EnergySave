@@ -14,6 +14,11 @@ public partial class handler_ExportHistoryMonthList : System.Web.UI.Page
     ReportCheck_DB rc_db = new ReportCheck_DB();
     protected void Page_Load(object sender, EventArgs e)
     {
+        /*
+         匯出月報歷史資料列表
+         傳入參數：期     Request.QueryString["s"]
+                   縣市    Request.QueryString["city"]
+         */
         Response.Clear();
         Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -35,14 +40,21 @@ public partial class handler_ExportHistoryMonthList : System.Web.UI.Page
             cs_center.Alignment = HorizontalAlignment.Center;//水平
 
             string str_stage = string.IsNullOrEmpty(Request.QueryString["s"]) ? "" : Request.QueryString["s"].ToString().Trim();
-            DataTable dt = new DataTable();
+            string str_city = string.IsNullOrEmpty(Request.QueryString["city"]) ? "" : Request.QueryString["city"].ToString().Trim();
+            DataTable dt = new DataTable(); 
             rc_db._RC_Stage = str_stage;
+            rc_db._strCity = str_city;
             dt = rc_db.getHistoryMonthList();
 
+            string strCityName = "";
             #region 資料
             int dataSrow = 1, dataScol = 0;//excel從第二列開始塞
             if (dt.Rows.Count > 0)
             {
+                if (str_city != "")
+                {
+                    strCityName = dt.Rows[0]["City"].ToString().Trim();
+                }
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     u_sheet.CreateRow(i + dataSrow);
@@ -57,7 +69,17 @@ public partial class handler_ExportHistoryMonthList : System.Web.UI.Page
             #endregion
 
             workbook.Write(ms);
-            string fileName = "第"+ str_stage + "期月報歷史資料列表" + DateTime.Now.ToString("yyyyMMddHHmmss");// DateTime.Now.ToString("yyyyMMddHHmmss")
+            //
+            string fileName = "";
+            if (str_city != "")
+            {
+                fileName = "月報歷史統計資料" + strCityName + "第" + str_stage + "期全部";
+            }
+            else {
+                fileName = "月報歷史統計資料第" + str_stage + "期全部";
+            }
+            //string fileName = "第"+ str_stage + "期月報歷史資料列表" + DateTime.Now.ToString("yyyyMMddHHmmss");// DateTime.Now.ToString("yyyyMMddHHmmss")
+
             Response.AddHeader("Content-Disposition", "attachment;filename=\"" + HttpUtility.UrlEncode(fileName, System.Text.Encoding.UTF8) + ".xlsx\"");//設定utf8 防止中文檔名亂碼
             //Response.AddHeader("Content-Disposition", String.Format("attachment;filename=" + fileName));
             Response.BinaryWrite(ms.ToArray());

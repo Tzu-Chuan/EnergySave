@@ -150,8 +150,10 @@ declare @rcStage nvarchar(5)=(select RC_Stage from ReportCheck where RC_Guid=@RC
 declare @rsID nvarchar(50)=(select RS_Guid from ReportSeason where RS_PorjectGuid=@ProID and RS_Year=@rcYear and RS_Season=@rcSeason and RS_Stage=@rcStage)
 
 update ReportCheck set RC_Status='D' where RC_Guid=@RC_Guid
-update PushItem_Desc set PD_Status='D' where PD_ProjectGuid=@ProID and PD_Year=@rcYear and PD_Season=@rcSeason and PD_Stage=@rcStage 
-update ExpandFinish set EF_Status='D' where EF_ReportId=@rsID ";
+--2019/12/31 調整成不需要重填
+--update PushItem_Desc set PD_Status='D' where PD_ProjectGuid=@ProID and PD_Year=@rcYear and PD_Season=@rcSeason and PD_Stage=@rcStage 
+--2019/12/24調整 累計數要留著
+--update ExpandFinish set EF_Status='D' where EF_ReportId=@rsID ";
         oCmd.CommandType = CommandType.Text;
         SqlDataAdapter oda = new SqlDataAdapter(oCmd);
 

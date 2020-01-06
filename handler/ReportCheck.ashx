@@ -51,6 +51,11 @@ public class ReportCheck : IHttpHandler, IRequiresSessionState
                 logdb._L_Desc = strchk;
             }
             logdb.addLog();
+
+            //更新累計資料
+            if (gcReportType=="01") {
+                rc.updateReportMonthNum();
+            }
             //審核通過發信
             //if (gcChkType=="Y") {
             //    //撈出承辦人 & 主管MAIL

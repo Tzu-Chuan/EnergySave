@@ -9,6 +9,13 @@
                 getData(0);
             });
 
+            //刪除 20191225新增的功能delReport
+            $(document).on("click", "a[name='delReport']", function () {
+                if (confirm("是否確定刪除草稿?")) {
+                    delData($(this).attr("id"));
+                }
+            });
+
             //TypeStr 查詢月報類別change事件
             $("#TypeStr").change(function () {
                 getData(0);
@@ -87,6 +94,7 @@
                                      if ($(this).children("MTypeNum").text().trim()=="02") {//擴大補助
                                          tabstr += '<a class="genbtn" href="ReportMonthEx.aspx?year=' + $(this).children("RM_Year").text().trim() + '&month=' + $(this).children("RM_Month").text().trim() + '&stage=' + $(this).children("RM_Stage").text().trim() + '&rmtype=' + $(this).children("MTypeNum").text().trim() + '">編輯</a>';
                                      }
+                                     tabstr += '<a class="genbtn" name="delReport" id="'+$(this).children("RM_ReportGuid").text().trim()+'">刪除</a>';
                                  }
                                  else if ($(this).children("RC_CheckType").text().trim() == "" && $(this).children("RC_Status").text().trim() == "A")
                                  {
@@ -140,6 +148,31 @@
         PageOption.PageNum = 10;
         PageOption.PrevStep = false;
         PageOption.NextStep = false;
+
+        //刪除
+        function delData(strRguid) {
+             $.ajax({
+                 type: "POST",
+                 async: false, //在沒有返回值之前,不會執行下一步動作
+                 url: "../handler/delReportMonth.aspx",
+                 data: {
+                     strReportGuid: strRguid
+                 },
+                 error: function (xhr) {
+                     alert("Error " + xhr.status);
+                     console.log(xhr.responseText);
+                 },
+                 success: function (data) {
+                     if ($(data).find("Error").length > 0) {
+                         alert($(data).find("Error").attr("Message"));
+                     }
+                     else {
+                         alert("刪除成功");
+                         getData(0);
+                     }
+                 }
+             });
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">

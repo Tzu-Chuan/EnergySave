@@ -90,7 +90,7 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
         return Month.ToString();
     }
 
-    //包含01~03其中一種  && 04 05 (中型 大型)其中一種
+    
     private string getHtml(DataTable dt)
     {
         string strHtml = "";
@@ -338,17 +338,15 @@ public partial class handler_ExportReportMonthEx : System.Web.UI.Page
                 if (strItem == "03") {
                     strHtml += "<th colspan='3' width='21%'>本月申請數量(" + strUnit + ")</th>";
                     strHtml += "<th colspan='3' width='21%'>本月核定數量(" + strUnit + ")</th>";
-                    strHtml += "<th colspan='3' width='21%'>本月申請總冷氣能力(kW)</th>";
-                    strHtml += "<th colspan='3' width='21%'>本月完成總冷氣能力(kW)</th>";
                 }
                 else {
                     //02
                     strHtml += "<th colspan='3' width='21%'>本月申請數量(" + strUnit + ")</th>";
                     strHtml += "<th colspan='3' width='21%'>本月核定數量(" + strUnit + ")</th>";
-                    strHtml += "<th colspan='3' width='21%'>本月申請更換照明瓦數(W)</th>";
-                    strHtml += "<th colspan='3' width='21%'>本月完成更換照明瓦數(W)</th>";
                 }
-                
+                strHtml += "<th colspan='3' width='21%'>本月申請更換照明瓦數(W)</th>";
+                strHtml += "<th colspan='3' width='21%'>本月完成更換照明瓦數(W)</th>";
+
                 strHtml += "</tr>";
                 strHtml += "<tr>";
                 strHtml += "<td align='center'>服務業</td>";

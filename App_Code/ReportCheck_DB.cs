@@ -23,6 +23,7 @@ public class ReportCheck_DB
     string strKeyword = string.Empty;
     string strCheckType = string.Empty;
     string strReportType = string.Empty;
+    string strCity = string.Empty;
     #endregion
     #region 全公用
     public string _M_Guid
@@ -40,6 +41,10 @@ public class ReportCheck_DB
     public string _strReportType
     {
         set { strReportType = value; }
+    }
+    public string _strCity
+    {
+        set { strCity = value; }
     }
     #endregion
 
@@ -630,7 +635,7 @@ and RC_Status='A' ");
         return ds;
     }
 
-    //20190801新增撈季報歷史資料列表所有資料
+    //20190801新增撈月報歷史資料列表所有資料
     public DataTable getHistoryMonthList()
     {
         SqlCommand oCmd = new SqlCommand();
@@ -638,9 +643,10 @@ and RC_Status='A' ");
         StringBuilder sb = new StringBuilder();
 
         sb.Append(@"
-select ROW_NUMBER() over (order by RC_CheckType,RC_CreateDate desc,RC_ID desc) itemNo,
+select ROW_NUMBER() over (order by mm.M_City asc,RC_Stage asc,RC_Year asc,RC_Month asc) itemNo,
 city_type.C_Item_cn City,
 case ReportCheck.RC_ReportType when '01' then '設備汰換' when '03' then '擴大補助' else '' end as ReportType,
+ReportCheck.RC_Stage,
 ReportCheck.RC_Year,
 ReportCheck.RC_Month,
 mm.M_Name MbName,
@@ -654,6 +660,11 @@ left join Member ad on ad.M_Guid=RC_Boss
 left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=mm.M_City
 where  RC_Status='A' and RC_CheckType='Y' and (RC_ReportType='01' or RC_ReportType='03') and RC_Stage=@RC_Stage
 ");
+        if (strCity != "")
+        {
+            sb.Append(@" and mm.M_City=@M_City ");
+            oCmd.Parameters.AddWithValue("@M_City", strCity);
+        }
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
@@ -698,5 +709,169 @@ where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y'  and RC_Stage=@R
         DataTable ds = new DataTable();
         oda.Fill(ds);
         return ds;
+    }
+
+    //202001新增 設備汰換月報送審後更新當期底下該月份以後的所有月報累計值
+    public void updateReportMonthNum()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+
+        
+        oCmd.CommandText = @"
+/*
+功能：設備汰換閱報送審後，更新該期該月份以後所有月報的完成數
+	  因為就算審核通過了，還是可以抽單重填，但原系統設定每份月報送審後就不能再修改，
+	  每份月報都要上一份月報審核通過後才能繼續填下一份月報，且還有人一次填寫多月的月報未送審，
+	  現在這樣搞的話月報的累計數字完全不對
+	  所以才要在送審後去更新後面月報的數字
+
+傳入參數：RC_ReportGuid
+--68aa9ea46b8a4494b19e6858b62dc043--9  9cbfe62eb3da42b3922cb66da822d444--8 
+--1438b091a01441e6b7689ecefe9afe58--4  d7d12ec809c947aa9406e0fa15b33386--5
+--0feb9f52b0a44e4ba86d41a439fbef3e--6 c634e417c1034200adc714a5cdd9dbec--7
+--select * from ReportMonth where RM_ProjectGuid='68aa9ea46b8a4494b19e6858b62dc043' and RM_Year='2019' and RM_Status='A' and RM_ReportType='01'
+作者：王晨峻
+*/
+
+declare @RC_ReportGuid nvarchar(50)=@RC_ReportGuid
+declare @RM_ProjectGuid nvarchar(50)=''--縣市計畫代號
+declare @RM_ReportType nvarchar(50)=''--月報類別
+declare @RM_Stage nvarchar(50)=''--期
+declare @RM_Year nvarchar(50)=''--年
+declare @RM_Month nvarchar(50)=''--月
+--根據帶過來的RC_ReportGuid 找到ReportMonth裡面該筆月報資料
+select top 1  @RM_ProjectGuid=RM_ProjectGuid,@RM_ReportType=RM_ReportType, @RM_Stage=RM_Stage,@RM_Year=RM_Year,@RM_Month=RM_Month
+from ReportMonth 
+where RM_ReportGuid=@RC_ReportGuid and RM_Status='A'
+--select @RM_ProjectGuid
+--select @RM_ReportType,@RM_Stage,@RM_Year,@RM_Month
+
+--撈出該份月報以後所有已經審核通過的月報
+select RM_ID,RM_ReportGuid,RM_ProjectGuid,RM_CPType,RM_Stage,RM_Year,RM_Month,RM_ReportType,RM_Status,RC_CheckType,RC_Status
+into #tmpRM
+from ReportMonth
+left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_CheckType='Y' and RC_Status='A'  and RC_Stage=@RM_Stage and RC_Month=RM_Month and RC_Year=RM_Year
+where RM_ProjectGuid=@RM_ProjectGuid and RM_Stage=@RM_Stage and RM_ReportType=@RM_ReportType and RM_Status='A' and RC_CheckType='Y' and RC_Stage=@RM_Stage and RC_Status='A' 
+and CONVERT(int,(isnull(RM_Year,'0')+isnull(RM_Month,'0')))>CONVERT(int,(isnull(@RM_Year,'0')+isnull(@RM_Month,'0')))
+order by RM_Year,RM_Month
+
+--group by出有幾分月報要更新 進#tmpwhile 跑while
+select RM_ReportGuid,RM_ProjectGuid,RM_Stage,RM_Year,RM_Month,RM_ReportType 
+into #tmpwhile
+from #tmpRM
+group by RM_ReportGuid,RM_ProjectGuid,RM_Stage,RM_Year,RM_Month,RM_ReportType
+
+--while 迴圈
+declare @introwC int;
+declare @whileRM_ReportGuid nvarchar(50);
+declare @whileRM_ProjectGuid nvarchar(50);
+declare @whileRM_Stage nvarchar(50);
+declare @whileRM_Year nvarchar(50);
+declare @whileRM_Month nvarchar(50);
+declare @whileRM_ReportType nvarchar(50);
+declare @numRM_Finish01 decimal(10,1)
+declare @numRM_Finish01KW decimal(10,1)
+declare @numRM_Finish02 decimal(10,1)
+declare @numRM_Finish03 decimal(10,1)
+declare @numRM_Finish04 decimal(10,1)
+declare @numRM_Finish05 decimal(10,1)
+create table #tmpWhileNum(
+	RM_CPType nvarchar(50)
+	,countFinishKW decimal(10,1)
+	,countFinish03 decimal(10,1)
+	,countFinish02 decimal(10,1)
+	--,countApplyKW decimal(10,1)
+	--,countApply01 decimal(10,1)
+)
+select @introwC = COUNT(*) from #tmpwhile
+
+while @introwC > 0
+begin
+	select top 1 @whileRM_ReportGuid=RM_ReportGuid,@whileRM_ProjectGuid=RM_ProjectGuid,@whileRM_Stage=RM_Stage
+			,@whileRM_Year=RM_Year,@whileRM_Month=RM_Month,@whileRM_ReportType=RM_ReportType
+	from #tmpwhile order by RM_Stage asc,RM_Year asc,RM_Month asc
+
+	--select @whileRM_Year,@whileRM_Month
+	--找出這一期小於這個月月報的所有資料出來SUM
+	insert into #tmpWhileNum(RM_CPType,countFinishKW,countFinish03,countFinish02)
+	select RM_CPType--RM_Stage,RM_Year,RM_Month,RM_ReportGuid,RM_ProjectGuid,RM_ReportType,RC_Status,RC_CheckType
+	,SUM(isnull(RM_Type4ValueSum,0.0)) as countFinishKW --累計完成數 KW(無風管)
+	,SUM(isnull(RM_Type3ValueSum,0.0)) as countFinish03--累計完成數(老舊 停車場 中型 大型)
+	,SUM(isnull(RM_Type2ValueSum,0.0)) as countFinish02--累計核定數(老舊 停車場 中型 大型)
+	--,SUM(isnull(RM_Type3ValueSum,0.0)) as countApplyKW--累計申請數 KW(無風管)
+	--,SUM(isnull(RM_Type1ValueSum,0.0)) as countApply01--累計完成數(老舊 停車場 中型 大型)
+	from ReportMonth left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
+	where RM_ProjectGuid=@RM_ProjectGuid
+	and RM_Stage=@RM_Stage and RM_Status='A' and RM_ReportType=@RM_ReportType and RC_Status='A' and RC_CheckType='Y'
+	and CONVERT(int,(isnull(RM_Year,'0')+isnull(RM_Month,'0')))<CONVERT(int,(isnull(@whileRM_Year,'0')+isnull(@whileRM_Month,'0')))
+	group by RM_CPType--RM_Stage,RM_Year,RM_Month,RM_ReportGuid,RM_ProjectGuid,RM_ReportType,RC_Status,RC_CheckType
+
+	select @numRM_Finish01 = countFinish02 from #tmpWhileNum where RM_CPType='01' --update RM_Finish01
+	select @numRM_Finish01KW = countFinishKW from #tmpWhileNum where RM_CPType='01'--update RM_Finish
+	select @numRM_Finish02 = countFinish02 from #tmpWhileNum where RM_CPType='02'--update RM_Finish
+	select @numRM_Finish03 = countFinish02 from #tmpWhileNum where RM_CPType='03'--update RM_Finish
+	select @numRM_Finish04 = countFinish03 from #tmpWhileNum where RM_CPType='04'--update RM_Finish
+	select @numRM_Finish05 = countFinish03 from #tmpWhileNum where RM_CPType='05'--update RM_Finish
+	
+	--begin tran
+	----驗證用
+	----算好新的要update的數字
+	--select * from #tmpWhileNum
+	--select RM_ID,RM_Stage,RM_Year,RM_Month,RM_CPType,RM_Finish
+	--,RM_Type1ValueSum ,RM_Type2ValueSum,RM_Type3ValueSum,RM_Type4ValueSum,RM_Finish01 
+	--from ReportMonth where RM_ReportGuid=@whileRM_ReportGuid and RM_ProjectGuid=@whileRM_ProjectGuid and RM_Stage=@whileRM_Stage
+	--and RM_Year=@whileRM_Year and RM_Month=@whileRM_Month and RM_ReportType=@whileRM_ReportType and RM_Status='A'
+	----驗證用 END
+
+	--update 無風管
+	update ReportMonth set RM_Finish=@numRM_Finish01KW,RM_Finish01=@numRM_Finish01
+	where RM_ReportGuid=@whileRM_ReportGuid and RM_ProjectGuid=@whileRM_ProjectGuid and RM_Stage=@whileRM_Stage
+	and RM_Year=@whileRM_Year and RM_Month=@whileRM_Month and RM_ReportType=@whileRM_ReportType and RM_Status='A' and RM_CPType='01'
+	--update 老舊
+	update ReportMonth set RM_Finish=@numRM_Finish02
+	where RM_ReportGuid=@whileRM_ReportGuid and RM_ProjectGuid=@whileRM_ProjectGuid and RM_Stage=@whileRM_Stage
+	and RM_Year=@whileRM_Year and RM_Month=@whileRM_Month and RM_ReportType=@whileRM_ReportType and RM_Status='A' and RM_CPType='02'
+	--update 空調
+	update ReportMonth set RM_Finish=@numRM_Finish03
+	where RM_ReportGuid=@whileRM_ReportGuid and RM_ProjectGuid=@whileRM_ProjectGuid and RM_Stage=@whileRM_Stage
+	and RM_Year=@whileRM_Year and RM_Month=@whileRM_Month and RM_ReportType=@whileRM_ReportType and RM_Status='A' and RM_CPType='03'
+	--update 中型
+	update ReportMonth set RM_Finish=@numRM_Finish04
+	where RM_ReportGuid=@whileRM_ReportGuid and RM_ProjectGuid=@whileRM_ProjectGuid and RM_Stage=@whileRM_Stage
+	and RM_Year=@whileRM_Year and RM_Month=@whileRM_Month and RM_ReportType=@whileRM_ReportType and RM_Status='A' and RM_CPType='04'
+	--update 大型
+	update ReportMonth set RM_Finish=@numRM_Finish05
+	where RM_ReportGuid=@whileRM_ReportGuid and RM_ProjectGuid=@whileRM_ProjectGuid and RM_Stage=@whileRM_Stage
+	and RM_Year=@whileRM_Year and RM_Month=@whileRM_Month and RM_ReportType=@whileRM_ReportType and RM_Status='A' and RM_CPType='05'
+
+	----驗證用
+	--select RM_ID,RM_Stage,RM_Year,RM_Month,RM_CPType,RM_Finish
+	--,RM_Type1ValueSum ,RM_Type2ValueSum,RM_Type3ValueSum,RM_Type4ValueSum,RM_Finish01 
+	--from ReportMonth where RM_ReportGuid=@whileRM_ReportGuid and RM_ProjectGuid=@whileRM_ProjectGuid and RM_Stage=@whileRM_Stage
+	--and RM_Year=@whileRM_Year and RM_Month=@whileRM_Month and RM_ReportType=@whileRM_ReportType and RM_Status='A'
+	----驗證用 END
+	--rollback tran
+
+	--刪除跑迴圈的table
+	delete from #tmpwhile
+	where  RM_ReportGuid=@whileRM_ReportGuid and RM_ProjectGuid=@whileRM_ProjectGuid and RM_Stage=@whileRM_Stage
+			and RM_Year=@whileRM_Year and RM_Month=@whileRM_Month and RM_ReportType=@whileRM_ReportType
+	--迴圈
+	set @introwC = @introwC-1
+	delete from #tmpWhileNum
+end
+
+drop table #tmpRM
+drop table #tmpwhile
+drop table #tmpWhileNum
+        ";
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        oCmd.Parameters.AddWithValue("@RC_ReportGuid", RC_ReportGuid);
+
+        oCmd.Connection.Open();
+        oCmd.ExecuteNonQuery();
+        oCmd.Connection.Close();
     }
 }

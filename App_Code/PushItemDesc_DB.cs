@@ -95,7 +95,13 @@ declare @PerGuid nvarchar(50)=@mGuid
 declare @ProjectID nvarchar(50)=(select I_Guid from ProjectInfo where I_People=@PerGuid)
 
 select * from PushItem_Desc
-where PD_ProjectGuid=@ProjectID and PD_Year<=@PD_Year and PD_Season<=@PD_Season and PD_Stage<=@PD_Stage
+where PD_ProjectGuid=@ProjectID
+and PD_Stage+PD_Year+RIGHT(REPLICATE('0', 2) + CAST(PD_Season as NVARCHAR), 2)<=@PD_Stage+@PD_Year+RIGHT(REPLICATE('0', 2) + CAST(@PD_Season as NVARCHAR), 2)
+--如果今天填的是第一期108年第3季 畫面上應該要出現107年第4季 108年第1季108年第2季108年第3季
+--但如果是下面這種寫法 107年第4季不會出現
+--and PD_Year<=@PD_Year 
+--and PD_Season<=@PD_Season 
+--and PD_Stage<=@PD_Stage
 order by PD_PushitemGuid,PD_Year,PD_Season,PD_Stage
 ");
 
@@ -124,7 +130,8 @@ if @rCount>0
         update PushItem_Desc set
         PD_Summary=@PD_Summary,
         PD_BackwardDesc=@PD_BackwardDesc,
-        PD_ModDate=@PD_ModDate
+        PD_ModDate=@PD_ModDate,
+        PD_Status='A'
         where PD_PushitemGuid=@PD_PushitemGuid and PD_Year=@PD_Year and PD_Season=@PD_Season and PD_Stage=@PD_Stage
     end
 else

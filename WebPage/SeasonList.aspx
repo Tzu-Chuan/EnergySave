@@ -17,6 +17,10 @@
                 else
                     location.href = "ReportSeason.aspx?year=" + $("#nYear").val() + "&season=" + $("#nSeason").val() + "&stage=" + $("#nStage").val();
             });
+            //刪除 草稿
+            $(document).on("click", "a[name='delBtn']", function () {
+                delData($(this).attr("id"))
+            });
         });//js end
 
         function getData(p) {
@@ -55,8 +59,10 @@
                                      tabstr += '<td align="center" nowrap="nowrap">審核通過</td>';
                                  tabstr += '<td align="center" nowrap="nowrap">' + $.datepicker.formatDate('yy/mm/dd', new Date($(this).children("RS_CreateDate").text().trim())) + '</td>';
                                  tabstr += '<td align="center">';
-                                 if ($(this).children("RC_CheckType").text().trim() == "" && $(this).children("RC_Status").text().trim() == "")
+                                 if ($(this).children("RC_CheckType").text().trim() == "" && $(this).children("RC_Status").text().trim() == "") {
                                      tabstr += '<a class="genbtn" href="ReportSeason.aspx?year=' + $(this).children("RS_Year").text().trim() + '&season=' + $(this).children("RS_Season").text().trim() + '&stage=' + $(this).children("RS_Stage").text().trim() + '">編輯</a>';
+                                     tabstr += '<a class="genbtn" name="delBtn" href="javascript:void(0);" id="' + $(this).children("RS_Guid").text().trim() + '" >刪除</a>';
+                                 }
                                  else if ($(this).children("RC_CheckType").text().trim() == "" && $(this).children("RC_Status").text().trim() == "A")
                                      tabstr += '<a class="genbtn" href="DetailReportSeason.aspx?v='+$(this).children("RS_ID").text().trim()+'">查看</a>';
                                  tabstr += '</td></tr>';
@@ -91,6 +97,31 @@
             });
 
             $("#NewBlock").dialog("open");
+        }
+
+        //刪除 草稿
+        function delData(strRguid) {
+             $.ajax({
+                 type: "POST",
+                 async: false, //在沒有返回值之前,不會執行下一步動作
+                 url: "../handler/delReporSeason.aspx",
+                 data: {
+                     strReportGuid: strRguid
+                 },
+                 error: function (xhr) {
+                     alert("Error " + xhr.status);
+                     console.log(xhr.responseText);
+                 },
+                 success: function (data) {
+                     if ($(data).find("Error").length > 0) {
+                         alert($(data).find("Error").attr("Message"));
+                     }
+                     else {
+                         alert("刪除成功");
+                         getData(0);
+                     }
+                 }
+             });
         }
         
         //分頁設定
