@@ -99,6 +99,7 @@
                             <li><a href="<%= ResolveUrl("~/Manage/MonthManage.aspx") %>">月報</a></li>
                             <li><a href="<%= ResolveUrl("~/Manage/SeasonManage.aspx") %>">季報</a></li>
                             <li><a href="<%= ResolveUrl("~/Manage/MoneyExecute.aspx") %>">經費執行</a></li>
+                            <li><a href="<%= ResolveUrl("~/Manage/BackProject.aspx") %>">計畫退回草稿</a></li>
                         </ul>
                     </li>
                 </ul>

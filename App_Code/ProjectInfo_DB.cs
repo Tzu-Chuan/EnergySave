@@ -1237,4 +1237,22 @@ order by I_Modifydate desc,I_ID desc ");
         oda.Fill(ds);
         return ds;
     }
+
+    //計畫退回草稿
+    public void backProject()
+    {
+        SqlCommand oCmd = new SqlCommand();
+        oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
+        oCmd.CommandText = @"
+            update ProjectInfo set I_Flag='' where I_ID=@I_ID and I_Status='A'
+        ";
+        oCmd.CommandType = CommandType.Text;
+        SqlDataAdapter oda = new SqlDataAdapter(oCmd);
+        DateTime dtnow = DateTime.Now;
+        oCmd.Parameters.AddWithValue("@I_ID", I_ID);
+
+        oCmd.Connection.Open();
+        oCmd.ExecuteNonQuery();
+        oCmd.Connection.Close();
+    }
 }
