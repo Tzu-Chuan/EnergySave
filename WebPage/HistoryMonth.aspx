@@ -91,9 +91,9 @@
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("RC_CheckDate").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("AdName").text().trim() + '</td>';
                                     if($(this).children("RC_ReportType").text().trim() == "01")
-                                        tabstr += '<td align="center" nowrap="nowrap"><a href="DetailReportMonth.aspx?v=' + $(this).children("enGuid").text().trim() + '" class="genbtn">明細</a></td>';
+                                        tabstr += '<td align="center" nowrap="nowrap"><a href="DetailReportMonth.aspx?v=' + $(this).children("enGuid").text().trim() + '" class="genbtn" target="_blank">明細</a></td>';
                                     if($(this).children("RC_ReportType").text().trim() == "03")
-                                        tabstr += '<td align="center" nowrap="nowrap"><a href="DetailReportMonthEx.aspx?v=' + $(this).children("enGuid").text().trim() + '" class="genbtn">明細</a></td>';
+                                        tabstr += '<td align="center" nowrap="nowrap"><a href="DetailReportMonthEx.aspx?v=' + $(this).children("enGuid").text().trim() + '" class="genbtn" target="_blank">明細</a></td>';
                                     tabstr += '</tr>';
                                 });
                             }

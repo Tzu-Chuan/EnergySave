@@ -83,7 +83,7 @@
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("MbName").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("RC_CheckDate").text().trim() + '</td>';
                                     tabstr += '<td align="center" nowrap="nowrap">' + $(this).children("AdName").text().trim() + '</td>';
-                                    tabstr += '<td align="center" nowrap="nowrap"><a href="DetailReportSeason.aspx?v=' + $(this).children("RS_ID").text().trim() + '" class="genbtn">明細</a></td>';
+                                    tabstr += '<td align="center" nowrap="nowrap"><a href="DetailReportSeason.aspx?v=' + $(this).children("RS_ID").text().trim() + '" class="genbtn" target="_blank">明細</a></td>';
                                     tabstr += '</tr>';
                                 });
                             }
