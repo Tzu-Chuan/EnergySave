@@ -150,6 +150,7 @@ public class addCheckPoint : IHttpHandler,IRequiresSessionState {
                     cp_db._P_ExFinish = exfinish[pnum];
                 cp_db._P_CreateId = LogInfo.mGuid;
                 cp_db._P_ModId = LogInfo.mGuid;
+                cp_db._P_Sort = (pnum + 1);
                 cp_db.addPushItem();
 
                 for (int i = BreakNo; i < noAry.Count; i++)

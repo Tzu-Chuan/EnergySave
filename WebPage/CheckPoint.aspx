@@ -3,8 +3,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <%--common--%>
     <script type="text/javascript">
-       
-
         $(document).ready(function () {
             $("#loadimg").show();
             getData("01");
@@ -21,6 +19,49 @@
                     getData("03");
                     getData("04");
                 }
+            });
+
+            // 上移
+            $(document).on("click", "a[name='sortUp']", function () {
+                var PrevID = $(this).closest("tr").prev().attr("class");
+                var thisTr = '';
+                if ($(this).closest("tr").prev().length > 0) {
+                    $("." + $(this).closest("tr").attr("class")).each(function (i) {
+                        thisTr += this.outerHTML;
+                    });
+                    $("." + $(this).closest("tr").attr("class")).remove();
+                    $("#" + PrevID).before(thisTr);
+                }
+            });
+
+            // 下移
+            $(document).on("click", "a[name='sortDown']", function () {
+                var thisClass = $(this).closest("tr").attr("class");
+                var NextID = '';
+                var thisTr = '';
+                if ($(this).closest("tr").next().length > 0) {
+                    $("." + thisClass).each(function (i) {
+                        thisTr += this.outerHTML;
+                        // Get Next Group ID
+                        if ((i + 1) == $("." + thisClass).length) {
+                            if ($(this).closest("tr").next().length > 0)
+                                NextID = $(this).closest("tr").next().attr("id");
+                        }
+                    });
+                }
+                if (NextID != "") {
+                    $("." + $(this).closest("tr").attr("class")).remove();
+
+                    $("." + NextID).each(function (i) {
+                        if ((i + 1) == $("." + NextID).length)
+                            $(this).closest("tr").after(thisTr);
+                    });
+                }
+            });
+
+            // 上下移預設的Value 不會變,改過未存檔變換位子會回預設值
+            $(document).on("change", "input", function () {
+                $(this).attr("value", this.value);
             });
         });
 
@@ -114,6 +155,7 @@
                         if ($(data).find("PushItem[P_Type='" + tp + "']").length > 0) {
                             $(data).find("PushItem[P_Type='" + tp + "']").each(function (i) {
                                 var rid = randomId();
+                                //tabstr += '<tbody>';
                                 //First row
                                 tabstr += '<tr id="' + rid + '" class="' + rid + '">';
                                 tabstr += '<td nowrap="nowrap" rowspan="' + $(this).children().length + '">';
@@ -130,15 +172,8 @@
                                 }
                                 tabstr += '<input type="hidden" name="' + InputCode + 'pgid" value="' + $(this).attr("P_Guid") + '" />';
                                 tabstr += '<a href="javascript:void(0);" name="' + InputCode + 'delpibtn" aid="' + rid + '"><img src= "../App_Themes/images/icon-delete-new.png" /></a >';
-                                //if (tp == "04") {
-                                //    var VisStatus = ($(this).attr("P_ItemName") == "99") ? "" : "display:none";
-                                //    tabstr += '<div name="OtherPanel" style="margin-top:5px;' + VisStatus + '">';
-                                //    tabstr += '<div style="margin-top:5px;">類別：' + ddl_ExType($(this).attr("P_ExType")) + '</div>';
-                                //    var deviStatus = ($(this).attr("P_ExType") == "02") ? "" : "display:none";
-                                //    tabstr += '<div name="aSubPanel" style="margin-top:5px;' + deviStatus + '">';
-                                //    tabstr += '設備子分類：' + ddl_ExDeType($(this).attr("P_ExDeviceType")) + '</div>';
-                                //    tabstr += '</div>';
-                                //}
+                                tabstr += '<br>';
+                                tabstr += '<a href="javascript:void(0);" name="sortUp">上移</a>&nbsp;&nbsp;<a href="javascript:void(0);" name="sortDown">下移</a>';
                                 tabstr += '</td>';
                                 if (tp == "04") {
                                     tabstr += '<td rowspan="' + $(this).children().length + '">';
@@ -185,6 +220,7 @@
                                         }
                                     }
                                 });
+                                //tabstr += '</tbody>';
                             });
                             $(TagName).append(tabstr);
                             // 權限
@@ -1018,7 +1054,7 @@
                             <thead>
                                 <tr>
                                     <th nowrap="nowrap">推動項目</th>
-                                    <th nowrap="nowrap" class="width10">查核點</th>
+                                    <th nowrap="nowrap" class="width5">查核點</th>
                                     <th nowrap="nowrap" class="width20">預定時間</th>
                                     <th nowrap="nowrap" class="width50">查核點概述</th>
                                 </tr>

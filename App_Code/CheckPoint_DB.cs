@@ -34,6 +34,7 @@ public class CheckPoint_DB
     string P_ExFinish = string.Empty;
     string P_ExType = string.Empty;
     string P_ExDeviceType = string.Empty;
+    int P_Sort;
 
     DateTime P_CreateDate;
     DateTime P_ModDate;
@@ -89,6 +90,10 @@ public class CheckPoint_DB
     public string _P_ExDeviceType
     {
         set { P_ExDeviceType = value; }
+    }
+    public int _P_Sort
+    {
+        set { P_Sort = value; }
     }
     public DateTime _P_CreateDate
     {
@@ -200,7 +205,7 @@ public class CheckPoint_DB
 select * from PushItem
 left join Check_Point on CP_ParentId=P_Guid
 where CP_ProjectId=@CP_ProjectId and CP_Status='A' and P_Type=@P_Type and P_Period=@P_Period
-order by P_ID asc,convert(int,CP_ReserveYear) asc,convert(int,CP_ReserveMonth) asc ");//P_ID
+order by P_Sort,P_ID asc,convert(int,CP_ReserveYear) asc,convert(int,CP_ReserveMonth) asc ");//P_ID
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
@@ -228,6 +233,7 @@ if(@rownum>0)
         P_ExFinish=@P_ExFinish,
         P_ExType=@P_ExType,
         P_ExDeviceType=@P_ExDeviceType,
+        P_Sort=@P_Sort,
         P_ModId=@P_ModId,
         P_ModDate=@P_ModDate
         where P_Guid=@P_Guid
@@ -243,6 +249,7 @@ else
             P_ExFinish,
             P_ExType,
             P_ExDeviceType,
+            P_Sort,
 		    P_CreateId,
 		    P_ModDate,
 		    P_ModId,
@@ -256,6 +263,7 @@ else
             @P_ExFinish,
             @P_ExType,
             @P_ExDeviceType,
+            @P_Sort,
 		    @P_CreateId,
 		    @P_ModDate,
 		    @P_ModId,
@@ -277,6 +285,7 @@ else
         oCmd.Parameters.AddWithValue("@P_ExFinish", P_ExFinish);
         oCmd.Parameters.AddWithValue("@P_ExType", P_ExType);
         oCmd.Parameters.AddWithValue("@P_ExDeviceType", P_ExDeviceType);
+        oCmd.Parameters.AddWithValue("@P_Sort", P_Sort);
 
         oCmd.Connection.Open();
         oCmd.ExecuteNonQuery();
@@ -428,7 +437,7 @@ where CP_ProjectId=@ProjectId and CP_Status='A' and P_Period=@P_Period ");
         if (pType != "")
             sb.Append(@"and P_Type=@P_Type ");
 
-        sb.Append(@"order by P_Type,P_ID,CP_ReserveYear,CP_ReserveMonth 
+        sb.Append(@"order by P_Type,P_Sort,P_ID,CP_ReserveYear,CP_ReserveMonth 
 drop table #tmp
 ");
 
@@ -509,7 +518,7 @@ select * from PushItem
 left join Check_Point on CP_ParentId=P_Guid and CP_Status='A'
 left join #tmp on cpid=CP_ParentId
 where P_ParentId=@ProjectID and P_Status='A' 
-order by P_ID ");
+order by P_Sort,P_ID ");
 
         oCmd.CommandText = sb.ToString();
         oCmd.CommandType = CommandType.Text;
@@ -557,7 +566,7 @@ CP_Point,CP_ReserveYear,CP_ReserveMonth,CP_Desc,CP_Process,P_Guid,P_ParentId,Ite
 left join Check_Point on CP_ParentId=P_Guid and CP_Status='A'
 left join #tmp3 on pid=P_Guid
 where P_ParentId=@ProjectID and P_Status='A'
-order by P_ID
+order by P_sort,P_ID
 
 select CP_ReserveYear Y,CONVERT(int,CP_ReserveMonth) M,sum(CONVERT(float,CP_Process)) total
 from PushItem

@@ -97,7 +97,7 @@ where CP_ProjectId=@ProjectId and CP_Status='A' ");
         if (pType != "")
             sb.Append(@"and P_Type=@pType ");
 
-        sb.Append(@"order by pui.P_ID,P_Type,CP_ReserveYear,CP_ReserveMonth 
+        sb.Append(@"order by pui.P_Sort,pui.P_ID,pui.P_Type,CP_ReserveYear,CP_ReserveMonth 
 drop table #tmp
 ");
 
