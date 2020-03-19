@@ -436,11 +436,23 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
                 XmlNode cp = pNode[i].ChildNodes[j];
                 #region 年
                 if (j == 0)
-                    tmpCount += 1;
+                {
+                    if ((pNode[i].ChildNodes.Count == (j + 1))) //若剛好為最後一筆資料
+                    {
+                        year_str += "<th style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveYear").InnerText + "年</th></tr>";
+                    }
+                    else
+                        tmpCount += 1;
+                }
                 else if (pNode[i].ChildNodes[j - 1].SelectSingleNode("CP_ReserveYear").InnerText != cp.SelectSingleNode("CP_ReserveYear").InnerText) //跨年時
                 {
                     year_str += "<th colspan='" + tmpCount + "' style='text-align:center;'>" + pNode[i].ChildNodes[j - 1].SelectSingleNode("CP_ReserveYear").InnerText + "年</th>";
                     tmpCount = 1; //跨年需重置
+
+                    if ((pNode[i].ChildNodes.Count == (j + 1))) //若剛好為最後一筆資料
+                    {
+                        year_str += "<th colspan='" + tmpCount + "' style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveYear").InnerText + "年</th></tr>";
+                    }
                 }
                 else if (pNode[i].ChildNodes.Count == (j + 1)) //最後一筆資料
                 {
@@ -449,17 +461,19 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
                 }
                 else
                     tmpCount += 1;
+
+                
                 #endregion
 
                 #region 月
-                month_str += "<th style='text - align:center;'>" + cp.SelectSingleNode("CP_ReserveMonth").InnerText + "月</th>";
+                month_str += "<th style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveMonth").InnerText + "月</th>";
                 #endregion
 
                 #region 執行進度-Body
                 if (j == 0)
                 {
                     cpstr += "<tr>";
-                    cpstr += "<td rowspan='3' style='text-align:center;'>" + pNode[i].Attributes[3].Value + "%</td>";
+                    cpstr += "<td rowspan='3' style='text-align:center; width:200px;'>" + pNode[i].Attributes[3].Value + "%</td>";
                     cpstr += "<td style='text-align:center;'>查核點</td>";
                     cpstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Point").InnerText + "</td>";
                     pstr += "<tr>";
