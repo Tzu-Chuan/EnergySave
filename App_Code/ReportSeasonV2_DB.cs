@@ -417,7 +417,7 @@ from PushItem
 left join Check_Point on CP_ParentId=P_Guid and CP_Status='A'
 left join ExpandFinish on EF_ReportId=@rsID and EF_PushitemId=P_Guid and EF_Status='A'
 where P_ParentId=@ProjectID and P_Status='A' and P_Period=@stage
-order by P_Type,P_Sort,P_ID,CONVERT(int,CP_ReserveYear),CONVERT(int,CP_ReserveMonth)
+order by P_Type,P_ID,CONVERT(int,CP_ReserveYear),CONVERT(int,CP_ReserveMonth)
 ");
 
         oCmd.CommandText = sb.ToString();

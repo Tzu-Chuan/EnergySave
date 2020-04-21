@@ -10,7 +10,14 @@ public class saveReportMonthEx : IHttpHandler,IRequiresSessionState {
     Member_DB mb = new Member_DB();
     ReportMonth_DB rm = new ReportMonth_DB();
     Log_DB logdb = new Log_DB();
-    public void ProcessRequest (HttpContext context) {
+    public void ProcessRequest (HttpContext context)
+    {
+        //string mid = (context.Request["mid"] != null) ? context.Request["mid"].ToString() : "";
+        string mid = LogInfo.id;
+        string stage = (context.Request["stage"] != null) ? context.Request["stage"].ToString() : "";
+        string year = (context.Request["year"] != null) ? context.Request["year"].ToString() : "";
+        string month = (context.Request["month"] != null) ? context.Request["month"].ToString() : "";
+        string savetype = (context.Request["savetype"] != null) ? context.Request["savetype"].ToString() : "";
         try
         {
             if (LogInfo.mGuid == "")
@@ -19,11 +26,7 @@ public class saveReportMonthEx : IHttpHandler,IRequiresSessionState {
                 return;
             }
 
-            //string mid = (context.Request["mid"] != null) ? context.Request["mid"].ToString() : "";
-            string mid = LogInfo.id;
-            string stage = (context.Request["stage"] != null) ? context.Request["stage"].ToString() : "";
-            string year = (context.Request["year"] != null) ? context.Request["year"].ToString() : "";
-            string month = (context.Request["month"] != null) ? context.Request["month"].ToString() : "";
+
             mb._M_ID = mid;
             string iguid = mb.getProgectGuidByPersonId();
             if (iguid=="") {
@@ -160,11 +163,11 @@ public class saveReportMonthEx : IHttpHandler,IRequiresSessionState {
 
             logdb.addLog();
 
-            context.Response.Write("<script type='text/JavaScript'>parent.feedback('succeed');</script>");
+            context.Response.Write("<script type='text/JavaScript'>parent.feedback('succeed','" + savetype + "');</script>");
         }
         catch (Exception ex)
         {
-            context.Response.Write("<script type='text/JavaScript'>parent.feedback('Error：" + ex.Message.Replace("'", "\"") + "');</script>");
+            context.Response.Write("<script type='text/JavaScript'>parent.feedback('Error：" + ex.Message.Replace("'", "\"") + "','" + savetype + "');</script>");
         }
     }
 

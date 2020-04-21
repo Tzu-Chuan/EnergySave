@@ -734,7 +734,7 @@ where RC_ReportType='02' and RC_Status='A' and RC_CheckType='Y'  and RC_Stage=@R
 作者：王晨峻
 */
 
-declare @RC_ReportGuid nvarchar(50)=@RC_ReportGuid
+declare @RC_ReportGuid nvarchar(50)=@RC_ReportGuidUpdate
 declare @RM_ProjectGuid nvarchar(50)=''--縣市計畫代號
 declare @RM_ReportType nvarchar(50)=''--月報類別
 declare @RM_Stage nvarchar(50)=''--期
@@ -868,7 +868,7 @@ drop table #tmpWhileNum
         ";
         oCmd.CommandType = CommandType.Text;
         SqlDataAdapter oda = new SqlDataAdapter(oCmd);
-        oCmd.Parameters.AddWithValue("@RC_ReportGuid", RC_ReportGuid);
+        oCmd.Parameters.AddWithValue("@RC_ReportGuidUpdate", RC_ReportGuid);
 
         oCmd.Connection.Open();
         oCmd.ExecuteNonQuery();

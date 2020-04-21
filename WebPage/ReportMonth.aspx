@@ -68,54 +68,7 @@
 
             //儲存
             $(document).on("click", "#btn_save", function () {
-                //var errMsg = "";
-                //if ($("#txt_stage").val() == "") {
-                //    errMsg += "[請選擇期數]\n";
-                //}
-                //if ($("#txt_year").val() == null || $("#txt_year").val() == "") {
-                //    errMsg += "[請選擇年份]\n";
-                //}
-                //if ($("#txt_month").val() == "") {
-                //    errMsg += "[請選擇月份]\n";
-                //}
-                //if (errMsg != "") {
-                //    alert(errMsg);
-                //    return;
-                //}
-                if ($.getParamValue('stage') == "" || $.getParamValue('year') == "" || $.getParamValue('month') == "") {
-                    alert("參數錯誤，請重新操作");
-                    location.href = "ReportMonthList.aspx";
-                    return;
-                }
-                var iframe = $('<iframe name="postiframe" id="postiframe" style="display: none" />');
-                var mid = $('<input type="hidden" name="mid" id="mid" value="' + $.getParamValue('v') + '" />');
-                //var stage = $('<input type="hidden" name="stage" id="stage" value="' + $("#txt_stage").val() + '" />');
-                //var year = $('<input type="hidden" name="year" id="year" value="' + $("#txt_year").val() + '" />');
-                //var month = $('<input type="hidden" name="month" id="month" value="' + $("#txt_month").val() + '" />');
-                var stage = $('<input type="hidden" name="stage" id="stage" value="' + $.getParamValue('stage') + '" />');
-                var year = $('<input type="hidden" name="year" id="year" value="' + $.getParamValue('year') + '" />');
-                var month = $('<input type="hidden" name="month" id="month" value="' + $.getParamValue('month') + '" />');
-
-                var form = $("form")[0];
-
-                $("#postiframe").remove();
-                $("input[name='mid']").remove();
-                $("input[name='stage']").remove();
-                $("input[name='year']").remove();
-                $("input[name='month']").remove();
-
-                form.appendChild(iframe[0]);
-                form.appendChild(mid[0]);
-                form.appendChild(stage[0]);
-                form.appendChild(year[0]);
-                form.appendChild(month[0]);
-
-                form.setAttribute("action", "../handler/saveReportMonth.ashx");
-                form.setAttribute("method", "post");
-                form.setAttribute("enctype", "multipart/form-data");
-                form.setAttribute("encoding", "multipart/form-data");
-                form.setAttribute("target", "postiframe");
-                form.submit();
+                saveFunc("save");
             });
 
             //數字的輸入欄位 keyup
@@ -160,23 +113,21 @@
                             }
                         }
                     }
-                    //else {
-                    //    if (re.test(strVal) && strVal > 0) {
-                    //        return true;
-                    //    } else {
-                    //        alert("請輸入數字且為正整數");
-                    //        $(this).css("border-color", "red");
-                    //        $(this).val("");
-                    //        return false;
-                    //    }
-                    //}
                 }
                 return true;
             });
-            //數字欄位 blur 計算合計用
-            $(document).on("blur", "input", function () {
+
+            $(document).on("change", "input", function () {
                 sumVal($(this).attr("id"));
+                saveFunc("autosave");
             });
+             $(document).on("change", "textarea", function () {
+                saveFunc("autosave");
+            });
+            //數字欄位 blur 計算合計用
+            //$(document).on("blur", "input", function () {
+            //    sumVal($(this).attr("id"));
+            //});
 
             //取消
             $("#btn_cancel").click(function () {
@@ -758,8 +709,63 @@
             $("#txt_year").empty().append(str);
         }
 
+        //儲存  點儲存按鈕 strType="save"  自動存檔 strType="autosave"
+        function saveFunc(strType) {
+            //var errMsg = "";
+                //if ($("#txt_stage").val() == "") {
+                //    errMsg += "[請選擇期數]\n";
+                //}
+                //if ($("#txt_year").val() == null || $("#txt_year").val() == "") {
+                //    errMsg += "[請選擇年份]\n";
+                //}
+                //if ($("#txt_month").val() == "") {
+                //    errMsg += "[請選擇月份]\n";
+                //}
+                //if (errMsg != "") {
+                //    alert(errMsg);
+                //    return;
+                //}
+                if ($.getParamValue('stage') == "" || $.getParamValue('year') == "" || $.getParamValue('month') == "") {
+                    alert("參數錯誤，請重新操作");
+                    location.href = "ReportMonthList.aspx";
+                    return;
+                }
+                var iframe = $('<iframe name="postiframe" id="postiframe" style="display: none" />');
+                var mid = $('<input type="hidden" name="mid" id="mid" value="' + $.getParamValue('v') + '" />');
+                //var stage = $('<input type="hidden" name="stage" id="stage" value="' + $("#txt_stage").val() + '" />');
+                //var year = $('<input type="hidden" name="year" id="year" value="' + $("#txt_year").val() + '" />');
+                //var month = $('<input type="hidden" name="month" id="month" value="' + $("#txt_month").val() + '" />');
+                var stage = $('<input type="hidden" name="stage" id="stage" value="' + $.getParamValue('stage') + '" />');
+                var year = $('<input type="hidden" name="year" id="year" value="' + $.getParamValue('year') + '" />');
+                var month = $('<input type="hidden" name="month" id="month" value="' + $.getParamValue('month') + '" />');
+                var savetype = $('<input type="hidden" name="savetype" id="savetype" value="' +strType + '" />');
+
+                var form = $("form")[0];
+
+                $("#postiframe").remove();
+                $("input[name='mid']").remove();
+                $("input[name='stage']").remove();
+                $("input[name='year']").remove();
+                $("input[name='month']").remove();
+                $("input[name='savetype']").remove();
+
+                form.appendChild(iframe[0]);
+                form.appendChild(mid[0]);
+                form.appendChild(stage[0]);
+                form.appendChild(year[0]);
+                form.appendChild(month[0]);
+                form.appendChild(savetype[0]);
+
+                form.setAttribute("action", "../handler/saveReportMonth.ashx");
+                form.setAttribute("method", "post");
+                form.setAttribute("enctype", "multipart/form-data");
+                form.setAttribute("encoding", "multipart/form-data");
+                form.setAttribute("target", "postiframe");
+                form.submit();
+        }
+
         //儲存form post後 回傳值
-        function feedback(str) {
+        function feedback(str,strtype) {
             var form = document.body.getElementsByTagName('form')[0];
             form.target = '';
             form.method = "post";
@@ -771,8 +777,10 @@
                 alert(str);
 
             if (str == "succeed") {
-                alert("儲存完成");
-                load_data();
+                if (strtype == "save") {
+                    alert("儲存完成");
+                    load_data();
+                }
                 //getBasicWork();
                 //getPlace();
                 //getSmart();

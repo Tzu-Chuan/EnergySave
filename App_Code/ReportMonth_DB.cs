@@ -399,7 +399,7 @@ public class ReportMonth_DB
                         select a.P_Guid,a.P_ParentId,a.P_Type,a.P_ItemName,a.P_Period,c.C_Item_cn ,a.P_Status,b.*,d.M_Name as M_Name,d.M_Tel,d.M_Manager_ID,e.M_Name as M__Manage_Name,f.RC_CheckType,f.RC_Status,f.RC_CheckDate,
                                 g.I_Finish_item1_1,g.I_Finish_item1_2,g.I_Finish_item1_3,g.I_Finish_item2_1,g.I_Finish_item2_2,g.I_Finish_item2_3,
                                 g.I_Finish_item3_1,g.I_Finish_item3_2,g.I_Finish_item3_3,g.I_Finish_item4_1,g.I_Finish_item4_2,g.I_Finish_item4_3,
-                                g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3
+                                g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3,a.P_Sort
                         from PushItem a
                         left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid  and a.P_ItemName=b.RM_CPType and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and b.RM_ReportType='01'
                         left join CodeTable c on c.C_Group='07' and a.P_ItemName = c.C_Item
@@ -409,7 +409,7 @@ public class ReportMonth_DB
                         left join ProjectInfo g on g.I_Guid = @I_Guid and g.I_Status<>'D'
                         where P_ParentId=@I_Guid and P_Period=@P_Period  and a.P_Status<>'D' and P_Type='03' -- and RM_Year=@RM_Year and RM_Month=@RM_Month
                     )#tmp
-                    order by #tmp.P_ItemName asc
+                    order by #tmp.P_Sort asc,#tmp.P_ItemName asc
                 end
             else
                 begin
@@ -423,7 +423,7 @@ public class ReportMonth_DB
                         select a.P_Guid,a.P_ParentId,a.P_Type,a.P_ItemName,a.P_Period,c.C_Item_cn ,a.P_Status,b.*,d.M_Name as M_Name,d.M_Tel,d.M_Manager_ID,e.M_Name as M_Manage_Name,f.RC_CheckType,f.RC_Status,f.RC_CheckDate,
                                 g.I_Finish_item1_1,g.I_Finish_item1_2,g.I_Finish_item1_3,g.I_Finish_item2_1,g.I_Finish_item2_2,g.I_Finish_item2_3,
                                 g.I_Finish_item3_1,g.I_Finish_item3_2,g.I_Finish_item3_3,g.I_Finish_item4_1,g.I_Finish_item4_2,g.I_Finish_item4_3,
-                                g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3
+                                g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3,a.P_Sort
                         from PushItem a
                         left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid and a.P_ItemName=b.RM_CPType and a.P_Guid=b.RM_PGuid and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and b.RM_ReportType='01'
                         left join CodeTable c on c.C_Group='07' and a.P_ItemName = c.C_Item
@@ -433,7 +433,7 @@ public class ReportMonth_DB
                         left join ProjectInfo g on g.I_Guid = @I_Guid and g.I_Status<>'D'
                         where P_ParentId=@I_Guid and P_Period=@P_Period and b.RM_Status<>'D' and P_Type='03'
                     )#tmp
-                    order by #tmp.P_ItemName asc
+                    order by #tmp.P_Sort asc,#tmp.P_ItemName asc
                 end
         ");
         
@@ -622,7 +622,7 @@ public class ReportMonth_DB
             left join CodeTable g on g.C_Group='07' and b.P_ItemName=g.C_Item
             left join CodeTable h on d.M_City=h.C_Item and h.C_Group='02'
             where a.RM_ReportGuid=@RM_ReportGuid and RM_Status<>'D' and RM_ReportType='01'
-  
+            order by b.P_Sort asc
         ");
 
         oCmd.CommandText = sb.ToString();
@@ -685,6 +685,7 @@ from
 	,b.P_ExFinish,i.C_Item_cn as P_ItemName_c,b.P_ExType,b.P_ExDeviceType,b.P_Period,
 	case a.RM_P_ExType when '01' then '行政' when '02' then '設備' else '' end as P_ExType_c,
 	case a.RM_P_ExDeviceType when '01' then '空調' when '02' then '照明' when '03' then '非照明' else '' end as P_ExDeviceType_c
+    ,b.P_Sort
 	from ReportMonth a
 	left join PushItem b on a.RM_PGuid = b.P_Guid
 	left join ProjectInfo c on a.RM_ProjectGuid = c.I_Guid and I_Status<>'D'
@@ -696,6 +697,7 @@ from
 	left join CodeTable i on b.P_ItemName=i.C_Item and i.C_Group='09'
 	where a.RM_ReportGuid=@RM_ReportGuid and RM_Status<>'D' and RM_ReportType='02'
 )#tmp
+order by #tmp.P_Sort asc
   
         ");
 
@@ -908,7 +910,7 @@ if @checkflag<>'Y' or @checkflag is null
         into #tmpAll
         from (
             select a.P_Guid,a.P_ParentId,a.P_Type,a.P_ItemName,a.P_Period,c.C_Item_cn ,a.P_Status,b.*,d.M_Name as M_Name,d.M_Tel,d.M_Manager_ID,e.M_Name as M__Manage_Name,f.RC_CheckType,f.RC_Status,f.RC_CheckDate,
-                    a.P_ExFinish,h.C_Item_cn as P_ItemName_c
+                    a.P_ExFinish,h.C_Item_cn as P_ItemName_c,a.P_Sort
 					--a.P_ExType,a.P_ExDeviceType,a.P_ExType,a.P_ExDeviceType,
                     --case a.P_ExType when '01' then '行政' when '02' then '設備' else '' end as P_ExType_c,
                     --case a.P_ExDeviceType when '01' then '空調' when '02' then '照明' when '03' then '非照明' else '' end as P_ExDeviceType_c
@@ -943,12 +945,12 @@ if @checkflag<>'Y' or @checkflag is null
 		if @rcount=0
 			begin
 				select 'Y' as strFirst,b.RC_Status,a.* from #tmpAll a left join ReportCheck b on RM_ReportGuid=b.RC_ReportGuid and b.RC_ReportType='03' and b.RC_Status='A'
-				order by a.P_ItemName asc
+				order by a.P_Sort asc,a.P_ItemName asc
 			end
 		else
 			begin
 				select 'N' as strFirst,b.RC_Status,a.* from #tmpAll a left join ReportCheck b on RM_ReportGuid=b.RC_ReportGuid and b.RC_ReportType='03' and b.RC_Status='A'
-				order by a.P_ItemName asc
+				order by a.P_Sort asc, a.P_ItemName asc
 			end
 
 		drop table #tmpAll
@@ -965,7 +967,7 @@ else
         into #tmpAll2
         from (
             select a.P_Guid,a.P_ParentId,a.P_Type,a.P_ItemName,a.P_Period,c.C_Item_cn ,a.P_Status,b.*,d.M_Name as M_Name,d.M_Tel,d.M_Manager_ID,e.M_Name as M_Manage_Name,f.RC_CheckType,f.RC_Status,f.RC_CheckDate,
-                    a.P_ExFinish,h.C_Item_cn as P_ItemName_c
+                    a.P_ExFinish,h.C_Item_cn as P_ItemName_c,a.P_Sort
 					--a.P_ExType,a.P_ExDeviceType,
                     --case a.P_ExType when '01' then '行政' when '02' then '設備' else '' end as P_ExType_c,
                     --case a.P_ExDeviceType when '01' then '空調' when '02' then '照明' when '03' then '非照明' else '' end as P_ExDeviceType_c
@@ -995,12 +997,12 @@ else
 		if @rcount=0
 			begin
 				select 'Y' as strFirst,b.RC_Status,a.* from #tmpAll2 a left join ReportCheck b on RM_ReportGuid=b.RC_ReportGuid and b.RC_ReportType='03' and b.RC_Status='A'
-				order by a.P_ItemName asc
+				order by a.P_Sort asc,a.P_ItemName asc
 			end
 		else
 			begin
 				select 'N' as strFirst,b.RC_Status,a.* from #tmpAll2 a left join ReportCheck b on RM_ReportGuid=b.RC_ReportGuid and b.RC_ReportType='03' and b.RC_Status='A'
-				order by a.P_ItemName asc
+				order by a.P_Sort asc,a.P_ItemName asc
 			end
 
 		drop table #tmpAll2
