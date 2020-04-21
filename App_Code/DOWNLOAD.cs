@@ -34,7 +34,7 @@ namespace ED.HR.DOWNLOAD.WebForm
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Response.Write("Error：" + ex.Message);
                 Response.End();

@@ -267,7 +267,7 @@
                     tabstr += '<input type="text" name="' + NameCode + 'pushitem" class="inputex width85" maxlength="50" />&nbsp;';
                     break;
                 case "#smartTab":
-                    tabstr += getddl_func("07","");
+                    tabstr += getddl_func("07", "");
                     break;
                 case "#allowanceTab":
                     tabstr += getddl_func("09", "");
@@ -282,6 +282,8 @@
             //    tabstr += '設備子分類：' + ddl_ExDeType() + '</div>';
             //    tabstr += '</div>';
             //}
+            tabstr += '<br>';
+            tabstr += '<a href="javascript:void(0);" name="sortUp">上移</a>&nbsp;&nbsp;<a href="javascript:void(0);" name="sortDown">下移</a>';
             tabstr += '</td>';
             if (TabName == "#allowanceTab") {
                 tabstr += '<td rowspan="1">';
