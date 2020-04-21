@@ -392,7 +392,7 @@ drop table #tmpAll ");
         sb.Append(@"
 declare @PerGuid nvarchar(50)=@mGuid
 declare @ProjectID nvarchar(50)=(select I_Guid from ProjectInfo where I_People=@PerGuid)
-declare @rsID nvarchar(50)=(select RS_Guid from ReportSeason where RS_PorjectGuid=@ProjectID and RS_Year=@year and RS_Season=@season and RS_Stage=@stage)
+declare @rsID nvarchar(50)=(select RS_Guid from ReportSeason where RS_PorjectGuid=@ProjectID and RS_Year=@year and RS_Season=@season and RS_Stage=@stage and RS_Status='A')
 
 --查詢基本資料
 select 
