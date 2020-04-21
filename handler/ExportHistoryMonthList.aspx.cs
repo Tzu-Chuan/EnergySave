@@ -80,7 +80,9 @@ public partial class handler_ExportHistoryMonthList : System.Web.UI.Page
             }
             //string fileName = "第"+ str_stage + "期月報歷史資料列表" + DateTime.Now.ToString("yyyyMMddHHmmss");// DateTime.Now.ToString("yyyyMMddHHmmss")
 
-            Response.AddHeader("Content-Disposition", "attachment;filename=\"" + HttpUtility.UrlEncode(fileName, System.Text.Encoding.UTF8) + ".xlsx\"");//設定utf8 防止中文檔名亂碼
+            string BrowserName = Request.Browser.Browser.ToLower();
+            fileName = (BrowserName != "firefox") ? Server.UrlEncode(fileName + ".xlsx") : fileName + ".xlsx"; // firefox 就愛跟別人不一樣
+            Response.AddHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");//設定utf8 防止中文檔名亂碼
             //Response.AddHeader("Content-Disposition", String.Format("attachment;filename=" + fileName));
             Response.BinaryWrite(ms.ToArray());
 
