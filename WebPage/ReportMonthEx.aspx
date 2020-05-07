@@ -393,7 +393,7 @@
             if (strItem == "04" || strItem == "26" || strItem == "30" || strItem == "31") {
                 strUnit = "套";
             }
-            if (strItem == "05" || strItem == "06" || strItem == "07" || strItem == "08" || strItem == "09" || strItem == "10" || strItem == "11" || strItem == "12" || strItem == "13" || strItem == "14" || strItem == "15" || strItem == "19" || strItem == "20") {
+            if (strItem == "05" || strItem == "06" || strItem == "07" || strItem == "08" || strItem == "09" || strItem == "10" || strItem == "11" || strItem == "12" || strItem == "13" || strItem == "14" || strItem == "15" || strItem == "19" || strItem == "20" || strItem == "34") {
                 strUnit = "台";
             }
             if (strItem == "17" || strItem == "18" || strItem == "24" || strItem == "28" || strItem == "32") {

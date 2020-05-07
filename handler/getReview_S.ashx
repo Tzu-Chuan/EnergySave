@@ -20,6 +20,7 @@ public class getReview_S : IHttpHandler,IRequiresSessionState {
             string city = (context.Request["city"] != null) ? context.Request["city"].ToString() : "";
             string sday = (context.Request["sday"] != null) ? context.Request["sday"].ToString() : "";
             string eday = (context.Request["eday"] != null) ? context.Request["eday"].ToString() : "";
+            string stage = (context.Request["stage"] != null) ? context.Request["stage"].ToString() : "";
             string year = (context.Request["year"] != null) ? context.Request["year"].ToString() : "";
             year = (year != "") ? (Int32.Parse(year) + 1911).ToString() : "";
             string season = (context.Request["season"] != null) ? context.Request["season"].ToString() : "";
@@ -34,7 +35,7 @@ public class getReview_S : IHttpHandler,IRequiresSessionState {
             string xmlStr2 = string.Empty;
 
             rc_db._strKeyword = SearchStr;
-            DataSet ds = rc_db.getReviewSeason(pageStart.ToString(), pageEnd.ToString(), sday, eday, city, LogInfo.mGuid, year.ToString(), season);
+            DataSet ds = rc_db.getReviewSeason(pageStart.ToString(), pageEnd.ToString(), sday, eday, city, LogInfo.mGuid, year.ToString(), season,stage);
             DataTable dt = ds.Tables[1];
 
 

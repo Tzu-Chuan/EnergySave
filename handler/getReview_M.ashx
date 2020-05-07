@@ -19,6 +19,7 @@ public class getReview_M : IHttpHandler,IRequiresSessionState {
 
             string sday = (context.Request["sday"] != null) ? context.Request["sday"].ToString() : "";
             string eday = (context.Request["eday"] != null) ? context.Request["eday"].ToString() : "";
+            string stage = (context.Request["stage"] != null) ? context.Request["stage"].ToString() : "";
             string year = (context.Request["year"] != null) ? context.Request["year"].ToString() : "";
             year = (year != "") ? (Int32.Parse(year) + 1911).ToString() : "";
             string month = (context.Request["month"] != null) ? context.Request["month"].ToString() : "";
@@ -35,7 +36,7 @@ public class getReview_M : IHttpHandler,IRequiresSessionState {
 
             rc_db._strKeyword = SearchStr;
             rc_db._strReportType = typestr;
-            DataSet ds = rc_db.getReviewMonth(pageStart.ToString(), pageEnd.ToString(), sday, eday, LogInfo.mGuid, year.ToString(), month);
+            DataSet ds = rc_db.getReviewMonth(pageStart.ToString(), pageEnd.ToString(), sday, eday, LogInfo.mGuid, year.ToString(), month,stage);
             DataTable dt = ds.Tables[1];
                 
 
