@@ -222,42 +222,45 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
 
                 #region 擴大補助預計完成數
                 XmlDocument xDoc = new XmlDocument();
-                xDoc.LoadXml(dt.Rows[0]["RS_CheckPointData"].ToString().Trim());
-                XmlNodeList pNode = xDoc.SelectNodes("/cpList/PushItem[@P_Type='04']");
-                //查詢累計完成數資料
-                DataTable ExDt = ef_db.GetDataByRSID(id);
-                strHtml = "<table width='100%' border='1' cellspacing='0' cellpadding='0'>";
-                strHtml += "<thead>";
-                strHtml += "<tr>";
-                strHtml += "<th nowrap='nowrap' style='width:50%;'>項目</th>";
-                strHtml += "<th nowrap='nowrap' style='width:25%;'>本期預計完成數</th>";
-                strHtml += "<th nowrap='nowrap' style='width:25%;'>本期累計完成數</th>";
-                strHtml += "</tr>";
-                strHtml += "</thead>";
-                strHtml += "<tbody>";
-                if (pNode.Count > 0)
+                if (dt.Rows[0]["RS_CheckPointData"].ToString().Trim() != "")
                 {
-                    for (int i = 0; i < pNode.Count; i++)
+                    xDoc.LoadXml(dt.Rows[0]["RS_CheckPointData"].ToString().Trim());
+                    XmlNodeList pNode = xDoc.SelectNodes("/cpList/PushItem[@P_Type='04']");
+                    //查詢累計完成數資料
+                    DataTable ExDt = ef_db.GetDataByRSID(id);
+                    strHtml = "<table width='100%' border='1' cellspacing='0' cellpadding='0'>";
+                    strHtml += "<thead>";
+                    strHtml += "<tr>";
+                    strHtml += "<th nowrap='nowrap' style='width:50%;'>項目</th>";
+                    strHtml += "<th nowrap='nowrap' style='width:25%;'>本期預計完成數</th>";
+                    strHtml += "<th nowrap='nowrap' style='width:25%;'>本期累計完成數</th>";
+                    strHtml += "</tr>";
+                    strHtml += "</thead>";
+                    strHtml += "<tbody>";
+                    if (pNode.Count > 0)
                     {
-                        strHtml += "<tr>";
-                        strHtml += "<td style='text-align:center;'>" + pNode[i].Attributes[3].Value + "</td>";
-                        strHtml += "<td style='text-align:right;'>" + pNode[i].Attributes[5].Value + "</td>";
-                        if (ExDt.Rows.Count > 0)
+                        for (int i = 0; i < pNode.Count; i++)
                         {
-                            for (int a = 0; a < ExDt.Rows.Count; a++)
+                            strHtml += "<tr>";
+                            strHtml += "<td style='text-align:center;'>" + pNode[i].Attributes[3].Value + "</td>";
+                            strHtml += "<td style='text-align:right;'>" + pNode[i].Attributes[5].Value + "</td>";
+                            if (ExDt.Rows.Count > 0)
                             {
-                                if (ExDt.Rows[a]["EF_PushitemId"].ToString() == pNode[i].Attributes[0].Value)
+                                for (int a = 0; a < ExDt.Rows.Count; a++)
                                 {
-                                    strHtml += "<td style='text-align:right;'>" + ExDt.Rows[a]["EF_Finish"].ToString() + "</td>";
+                                    if (ExDt.Rows[a]["EF_PushitemId"].ToString() == pNode[i].Attributes[0].Value)
+                                    {
+                                        strHtml += "<td style='text-align:right;'>" + ExDt.Rows[a]["EF_Finish"].ToString() + "</td>";
+                                    }
                                 }
+                                strHtml += "</tr>";
                             }
-                            strHtml += "</tr>";
                         }
                     }
+                    strHtml += "</tbody>";
+                    strHtml += "</table>";
+                    builder.InsertHtml(strHtml);
                 }
-                strHtml += "</tbody>";
-                strHtml += "</table>";
-                builder.InsertHtml(strHtml);
                 #endregion
                 #endregion
 
@@ -411,133 +414,136 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
         string tmpHtml = string.Empty;
         XmlDocument xDoc = new XmlDocument();
         XmlDocument xDoc2 = new XmlDocument();
-        ///CheckPoint
-        xDoc.LoadXml(cpxml);
-        XmlNodeList pNode = xDoc.SelectNodes("/cpList/PushItem[@P_Type='" + type + "']");
-        ///PushItemDesc
-        xDoc2.LoadXml(pdxml);
-        for (int i = 0; i < pNode.Count; i++)
+        if (!string.IsNullOrEmpty(cpxml) && !string.IsNullOrEmpty(pdxml))
         {
-            string year_str = string.Empty; //年
-            string month_str = "<tr>"; //月
-            string cpstr = string.Empty; // 查核點
-            string pstr = string.Empty; // 預定進度
-            string realstr = string.Empty; // 實際進度
-            string cpdesc = string.Empty; // 查核點進度說明
-            int tmpCount = 0; // 年 colspan
-            tmpHtml += "<div style='font-size:14pt;'><b>" + (i + 1) + "、" + pNode[i].Attributes[3].Value + "</b></div>";
-            tmpHtml += "<div style='font-size:12pt;'>(1)執行進度</div>";
-            tmpHtml += "<table width='100%' border='1' cellspacing='0' cellpadding='0'>";
-            tmpHtml += "<thead><tr>";
-            tmpHtml += "<th nowrap='nowrap' rowspan='2' style='width:150px;'>工作比重(%)</th>";
-            tmpHtml += "<th nowrap='nowrap' rowspan='2' style='width:150px;'>年月<br />進度(%)</th>";
-            for (int j = 0; j < pNode[i].ChildNodes.Count; j++)
+            ///CheckPoint
+            xDoc.LoadXml(cpxml);
+            XmlNodeList pNode = xDoc.SelectNodes("/cpList/PushItem[@P_Type='" + type + "']");
+            ///PushItemDesc
+            xDoc2.LoadXml(pdxml);
+            for (int i = 0; i < pNode.Count; i++)
             {
-                XmlNode cp = pNode[i].ChildNodes[j];
-                #region 年
-                if (j == 0)
+                string year_str = string.Empty; //年
+                string month_str = "<tr>"; //月
+                string cpstr = string.Empty; // 查核點
+                string pstr = string.Empty; // 預定進度
+                string realstr = string.Empty; // 實際進度
+                string cpdesc = string.Empty; // 查核點進度說明
+                int tmpCount = 0; // 年 colspan
+                tmpHtml += "<div style='font-size:14pt;'><b>" + (i + 1) + "、" + pNode[i].Attributes[3].Value + "</b></div>";
+                tmpHtml += "<div style='font-size:12pt;'>(1)執行進度</div>";
+                tmpHtml += "<table width='100%' border='1' cellspacing='0' cellpadding='0'>";
+                tmpHtml += "<thead><tr>";
+                tmpHtml += "<th nowrap='nowrap' rowspan='2' style='width:150px;'>工作比重(%)</th>";
+                tmpHtml += "<th nowrap='nowrap' rowspan='2' style='width:150px;'>年月<br />進度(%)</th>";
+                for (int j = 0; j < pNode[i].ChildNodes.Count; j++)
                 {
-                    if ((pNode[i].ChildNodes.Count == (j + 1))) //若剛好為最後一筆資料
+                    XmlNode cp = pNode[i].ChildNodes[j];
+                    #region 年
+                    if (j == 0)
                     {
-                        year_str += "<th style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveYear").InnerText + "年</th></tr>";
+                        if ((pNode[i].ChildNodes.Count == (j + 1))) //若剛好為最後一筆資料
+                        {
+                            year_str += "<th style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveYear").InnerText + "年</th></tr>";
+                        }
+                        else
+                            tmpCount += 1;
+                    }
+                    else if (pNode[i].ChildNodes[j - 1].SelectSingleNode("CP_ReserveYear").InnerText != cp.SelectSingleNode("CP_ReserveYear").InnerText) //跨年時
+                    {
+                        year_str += "<th colspan='" + tmpCount + "' style='text-align:center;'>" + pNode[i].ChildNodes[j - 1].SelectSingleNode("CP_ReserveYear").InnerText + "年</th>";
+                        tmpCount = 1; //跨年需重置
+
+                        if ((pNode[i].ChildNodes.Count == (j + 1))) //若剛好為最後一筆資料
+                        {
+                            year_str += "<th colspan='" + tmpCount + "' style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveYear").InnerText + "年</th></tr>";
+                        }
+                    }
+                    else if (pNode[i].ChildNodes.Count == (j + 1)) //最後一筆資料
+                    {
+                        tmpCount += 1; //最後一筆也要算
+                        year_str += "<th colspan='" + tmpCount + "' style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveYear").InnerText + "年</th></tr>";
                     }
                     else
                         tmpCount += 1;
-                }
-                else if (pNode[i].ChildNodes[j - 1].SelectSingleNode("CP_ReserveYear").InnerText != cp.SelectSingleNode("CP_ReserveYear").InnerText) //跨年時
-                {
-                    year_str += "<th colspan='" + tmpCount + "' style='text-align:center;'>" + pNode[i].ChildNodes[j - 1].SelectSingleNode("CP_ReserveYear").InnerText + "年</th>";
-                    tmpCount = 1; //跨年需重置
 
-                    if ((pNode[i].ChildNodes.Count == (j + 1))) //若剛好為最後一筆資料
+
+                    #endregion
+
+                    #region 月
+                    month_str += "<th style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveMonth").InnerText + "月</th>";
+                    #endregion
+
+                    #region 執行進度-Body
+                    if (j == 0)
                     {
-                        year_str += "<th colspan='" + tmpCount + "' style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveYear").InnerText + "年</th></tr>";
+                        cpstr += "<tr>";
+                        cpstr += "<td rowspan='3' style='text-align:center; width:200px;'>" + pNode[i].Attributes[3].Value + "%</td>";
+                        cpstr += "<td style='text-align:center;'>查核點</td>";
+                        cpstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Point").InnerText + "</td>";
+                        pstr += "<tr>";
+                        pstr += "<td style='text-align:center;'>累計預定進度(%)</td>";
+                        pstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Process").InnerText + "%</td>";
+                        realstr += "<tr>";
+                        realstr += "<td style='text-align:center;'>累計實際進度(%)</td>";
+                        realstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_RealProcess").InnerText + "</td>";
                     }
+                    else if (pNode[i].ChildNodes.Count == (j + 1)) //最後一筆資料
+                    {
+                        cpstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Point").InnerText + "</td></tr>";
+                        pstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Process").InnerText + "%</td></tr>";
+                        realstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_RealProcess").InnerText + "</td>";
+                    }
+                    else
+                    {
+                        cpstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Point").InnerText + "</td>";
+                        pstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Process").InnerText + "%</td>";
+                        realstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_RealProcess").InnerText + "</td>";
+                    }
+                    #endregion
+
+                    #region 查核點進度說明-Body
+                    //cpdesc += "<tr>";
+                    //cpdesc += "<td>" + cp.SelectSingleNode("CP_Point").InnerText + "  " + cp.SelectSingleNode("CP_Desc").InnerText + "</td>";
+                    //cpdesc += "<td>" + cp.SelectSingleNode("CP_Summary").InnerText.Replace("\r\n", "<br>") + "</td>";
+                    //cpdesc += "<td>" + cp.SelectSingleNode("CP_BackwardDesc").InnerText.Replace("\r\n", "<br>") + "</td>";
+                    //cpdesc += "</tr>";
+
+                    cpdesc += cp.SelectSingleNode("CP_Point").InnerText + "  " + cp.SelectSingleNode("CP_Desc").InnerText + "<br>";
+                    #endregion
                 }
-                else if (pNode[i].ChildNodes.Count == (j + 1)) //最後一筆資料
+                tmpHtml += year_str + month_str;
+                tmpHtml += "</tr></thead>";
+                tmpHtml += "<tbody>" + cpstr + pstr + realstr + "</tbody>";
+                tmpHtml += "</table></div>";
+                tmpHtml += "<div class='font-size3 margin10T'>(2)查核點進度說明</div>";
+                tmpHtml += "<div class='stripecomplex margin5T font-normal'>";
+                tmpHtml += "<table width='100%' border='1' cellspacing='0' cellpadding='0'>";
+                tmpHtml += "<thead><tr>";
+                tmpHtml += "<th>查核點</th>";
+                tmpHtml += "<th>年 季</th>";
+                tmpHtml += "<th style='width:35%;'>辦理情形</th>";
+                tmpHtml += "<th style='width:35%;'>進度差異說明</th>";
+                tmpHtml += "</tr></thead>";
+                /// 進度說明
+                string pdstr = "";
+                XmlNodeList pdNode = xDoc2.SelectNodes("/pdList/pd_item[@PD_PushitemGuid='" + pNode[i].Attributes[0].Value + "']");
+                ///Rowspan
+                int rspan_tmp = pdNode.Count;
+                for (int j = 0; j < pdNode.Count; j++)
                 {
-                    tmpCount += 1; //最後一筆也要算
-                    year_str += "<th colspan='" + tmpCount + "' style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveYear").InnerText + "年</th></tr>";
+                    XmlNode pd = pdNode[j];
+                    pdstr += "<tr>";
+                    if (j == 0)
+                        pdstr += "<td rowspan=" + rspan_tmp + ">" + cpdesc + "</td>";
+                    pdstr += "<td nowrap='nowrap' style='text-align:center;'>" + pd.Attributes[5].Value + "年<br>第" + pd.Attributes[6].Value + "季</td>";
+                    pdstr += "<td>" + pd.Attributes[7].Value + "</td>";
+                    pdstr += "<td>" + pd.Attributes[8].Value + "</td>";
+                    pdstr += "</tr>";
                 }
-                else
-                    tmpCount += 1;
-
-                
-                #endregion
-
-                #region 月
-                month_str += "<th style='text-align:center;'>" + cp.SelectSingleNode("CP_ReserveMonth").InnerText + "月</th>";
-                #endregion
-
-                #region 執行進度-Body
-                if (j == 0)
-                {
-                    cpstr += "<tr>";
-                    cpstr += "<td rowspan='3' style='text-align:center; width:200px;'>" + pNode[i].Attributes[3].Value + "%</td>";
-                    cpstr += "<td style='text-align:center;'>查核點</td>";
-                    cpstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Point").InnerText + "</td>";
-                    pstr += "<tr>";
-                    pstr += "<td style='text-align:center;'>累計預定進度(%)</td>";
-                    pstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Process").InnerText + "%</td>";
-                    realstr += "<tr>";
-                    realstr += "<td style='text-align:center;'>累計實際進度(%)</td>";
-                    realstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_RealProcess").InnerText + "</td>";
-                }
-                else if (pNode[i].ChildNodes.Count == (j + 1)) //最後一筆資料
-                {
-                    cpstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Point").InnerText + "</td></tr>";
-                    pstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Process").InnerText + "%</td></tr>";
-                    realstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_RealProcess").InnerText + "</td>";
-                }
-                else
-                {
-                    cpstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Point").InnerText + "</td>";
-                    pstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_Process").InnerText + "%</td>";
-                    realstr += "<td style='text-align:center;'>" + cp.SelectSingleNode("CP_RealProcess").InnerText + "</td>";
-                }
-                #endregion
-
-                #region 查核點進度說明-Body
-                //cpdesc += "<tr>";
-                //cpdesc += "<td>" + cp.SelectSingleNode("CP_Point").InnerText + "  " + cp.SelectSingleNode("CP_Desc").InnerText + "</td>";
-                //cpdesc += "<td>" + cp.SelectSingleNode("CP_Summary").InnerText.Replace("\r\n", "<br>") + "</td>";
-                //cpdesc += "<td>" + cp.SelectSingleNode("CP_BackwardDesc").InnerText.Replace("\r\n", "<br>") + "</td>";
-                //cpdesc += "</tr>";
-
-                cpdesc += cp.SelectSingleNode("CP_Point").InnerText + "  " + cp.SelectSingleNode("CP_Desc").InnerText + "<br>";
-                #endregion
+                tmpHtml += "<tbody>" + pdstr + "</tbody>";
+                tmpHtml += "</table></div>";
             }
-            tmpHtml += year_str + month_str;
-            tmpHtml += "</tr></thead>";
-            tmpHtml += "<tbody>" + cpstr + pstr + realstr + "</tbody>";
-            tmpHtml += "</table></div>";
-            tmpHtml += "<div class='font-size3 margin10T'>(2)查核點進度說明</div>";
-            tmpHtml += "<div class='stripecomplex margin5T font-normal'>";
-            tmpHtml += "<table width='100%' border='1' cellspacing='0' cellpadding='0'>";
-            tmpHtml += "<thead><tr>";
-            tmpHtml += "<th>查核點</th>";
-            tmpHtml += "<th>年 季</th>";
-            tmpHtml += "<th style='width:35%;'>辦理情形</th>";
-            tmpHtml += "<th style='width:35%;'>進度差異說明</th>";
-            tmpHtml += "</tr></thead>";
-            /// 進度說明
-            string pdstr = "";
-            XmlNodeList pdNode = xDoc2.SelectNodes("/pdList/pd_item[@PD_PushitemGuid='" + pNode[i].Attributes[0].Value + "']");
-            ///Rowspan
-            int rspan_tmp = pdNode.Count;
-            for (int j = 0; j < pdNode.Count; j++)
-            {
-                XmlNode pd = pdNode[j];
-                pdstr += "<tr>";
-                if (j == 0)
-                    pdstr += "<td rowspan=" + rspan_tmp + ">" + cpdesc + "</td>";
-                pdstr += "<td nowrap='nowrap' style='text-align:center;'>" + pd.Attributes[5].Value + "年<br>第" + pd.Attributes[6].Value + "季</td>";
-                pdstr += "<td>" + pd.Attributes[7].Value + "</td>";
-                pdstr += "<td>" + pd.Attributes[8].Value + "</td>";
-                pdstr += "</tr>";
-            }
-            tmpHtml += "<tbody>" + pdstr + "</tbody>";
-            tmpHtml += "</table></div>";
         }
         return tmpHtml;
     }
