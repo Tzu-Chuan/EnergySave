@@ -35,6 +35,7 @@
                     CurrentPage: p,
                     sday: $("#startday").val(),
                     eday: $("#endday").val(),
+                    stage: $("#stagestr").val(),
                     year: $("#yearstr").val(),
                     month: $("#monthstr").val(),
                     SearchStr: $("#SearchStr").val(),
@@ -89,7 +90,7 @@
                                 });
                             }
                             else
-                                tabstr += "<tr><td colspan='7'>查詢無資料</td></tr>";
+                                tabstr += "<tr><td colspan='8'>查詢無資料</td></tr>";
                             $("#tablist tbody").append(tabstr);
                             $(".stripeMe tr").mouseover(function () { $(this).addClass("spe"); }).mouseout(function () { $(this).removeClass("spe"); });
                             $(".stripeMe table:not(td > table) > tbody > tr:not('.spe'):even").addClass("alt");
@@ -134,6 +135,12 @@
         </div>
         <div style="margin-top: 5px;">送審日期：<input type="text" id="startday" class="inputex Jdatepicker" />&nbsp;~&nbsp;<input type="text" id="endday" class="inputex Jdatepicker" /></div>
         <div style="margin-top: 5px;">
+            期：<select id="stagestr" class="inputex" >
+                <option value="">--請選擇--</option>
+                <option value="1">第一期</option>
+                <option value="2">第二期</option>
+                <option value="3">第三期</option>
+              </select>
             年：<input type="text" id="yearstr" class="inputex num" style="width: 50px;" maxlength="3" />
             月：
             <select id="monthstr" class="inputex">

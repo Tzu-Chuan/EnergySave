@@ -244,7 +244,7 @@ values(
         return dt;
     }
 
-    public DataSet getReviewMonth(string pStart, string pEnd, string startDay, string endDay, string bossID, string year, string month)
+    public DataSet getReviewMonth(string pStart, string pEnd, string startDay, string endDay, string bossID, string year, string month, string stage)
     {
         SqlCommand oCmd = new SqlCommand();
         oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
@@ -255,6 +255,8 @@ values(
 	left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=M_City
 where (RC_ReportType='01' or RC_ReportType='03') and M_Manager_ID=@M_Manager_ID and RC_Status='A' ");
 
+        if (stage != "")
+            sb.Append(@"and RC_Stage=@RC_Stage ");
         if (year != "")
             sb.Append(@"and RC_Year=@RC_Year ");
         if (month != "")
@@ -285,7 +287,9 @@ where (RC_ReportType='01' or RC_ReportType='03') and M_Manager_ID=@M_Manager_ID 
 	left join CodeTable city_type on city_type.C_Group='02' and city_type.C_Item=M_City
 	where (RC_ReportType='01' or RC_ReportType='03') and M_Manager_ID=@M_Manager_ID and RC_Status='A' ");
 
-        if(year!="")
+        if (stage != "")
+            sb.Append(@"and RC_Stage=@RC_Stage ");
+        if (year!="")
             sb.Append(@"and RC_Year=@RC_Year ");
         if (month != "")
             sb.Append(@"and RC_Month=@RC_Month ");
@@ -322,6 +326,7 @@ where (RC_ReportType='01' or RC_ReportType='03') and M_Manager_ID=@M_Manager_ID 
             oCmd.Parameters.AddWithValue("@endDay", DateTime.Parse(endDay).AddDays(1));
         oCmd.Parameters.AddWithValue("@pStart", pStart);
         oCmd.Parameters.AddWithValue("@pEnd", pEnd);
+        oCmd.Parameters.AddWithValue("@RC_Stage", stage);
         oCmd.Parameters.AddWithValue("@RC_Year", year);
         oCmd.Parameters.AddWithValue("@RC_Month", month);
         oCmd.Parameters.AddWithValue("@RC_ReportType", strReportType);
@@ -329,7 +334,7 @@ where (RC_ReportType='01' or RC_ReportType='03') and M_Manager_ID=@M_Manager_ID 
         return ds;
     }
 
-    public DataSet getReviewSeason(string pStart, string pEnd, string startDay, string endDay, string city, string bossID, string year, string season)
+    public DataSet getReviewSeason(string pStart, string pEnd, string startDay, string endDay, string city, string bossID, string year, string season, string stage)
     {
         SqlCommand oCmd = new SqlCommand();
         oCmd.Connection = new SqlConnection(ConfigurationManager.AppSettings["ConnectionString"]);
@@ -343,6 +348,8 @@ where RC_ReportType='02' and RC_Status='A' ");
 
         if (city != "")
             sb.Append(@"and mm.M_City=@city ");
+        if (stage != "")
+            sb.Append(@"and RC_Stage=@RC_Stage ");
         if (year != "")
             sb.Append(@"and RC_Year=@RC_Year ");
         if (season != "")
@@ -374,6 +381,8 @@ where RC_ReportType='02' and RC_Status='A' ");
 
         if (city != "")
             sb.Append(@"and mm.M_City=@city ");
+        if (stage != "")
+            sb.Append(@"and RC_Stage=@RC_Stage ");
         if (year != "")
             sb.Append(@"and RC_Year=@RC_Year ");
         if (season != "")
@@ -404,6 +413,7 @@ where RC_ReportType='02' and RC_Status='A' ");
         oCmd.Parameters.AddWithValue("@pStart", pStart);
         oCmd.Parameters.AddWithValue("@pEnd", pEnd);
         oCmd.Parameters.AddWithValue("@city", city);
+        oCmd.Parameters.AddWithValue("@RC_Stage", stage);
         oCmd.Parameters.AddWithValue("@RC_Year", year);
         oCmd.Parameters.AddWithValue("@RC_Season", season);
         oda.Fill(ds);

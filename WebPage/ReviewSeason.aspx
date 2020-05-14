@@ -36,6 +36,7 @@
                     city: $("#city").val(),
                     sday: $("#startday").val(),
                     eday: $("#endday").val(),
+                    stage: $("#stagestr").val(),
                     year: $("#yearstr").val(),
                     season: $("#seasonstr").val(),
                     SearchStr: $("#SearchStr").val()
@@ -112,6 +113,12 @@
 
         <div style="margin-top:5px;">送審日期：<input type="text" id="startday" class="inputex Jdatepicker" />&nbsp;~&nbsp;<input type="text" id="endday" class="inputex Jdatepicker" /></div>
         <div style="margin-top:5px;">
+            期：<select id="stagestr" class="inputex" >
+                <option value="">--請選擇--</option>
+                <option value="1">第一期</option>
+                <option value="2">第二期</option>
+                <option value="3">第三期</option>
+              </select>
             年： 
             <select id="yearstr" class="inputex">
                 <option value="">--請選擇--</option>

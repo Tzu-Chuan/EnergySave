@@ -3158,7 +3158,7 @@ if @strExType ='1'--服務業(機關、學校)
     begin
         select C_Group,C_Item_cn,C_Item from CodeTable 
         where C_Group='09' and C_Item<>'99' 
-            and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
+            and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34')
         order by C_Item
     end
 if @strExType ='2'--住宅
@@ -3209,7 +3209,7 @@ if @strExType ='1'--服務業(機關、學校)
             left join ReportMonth on I_Guid=RM_ProjectGuid and RM_Stage=@strStage and RM_ReportType='02'
             left join ReportCheck on RM_ReportGuid = RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
             where C_Group='02' --and RC_Status='A' and RC_CheckType='Y'
-                    and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
+                    and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34')
         )#tmp
         group by C_Item,C_Item_cn,I_Guid,RM_Stage,RM_Year,RM_Season
     end
@@ -3306,7 +3306,7 @@ if @strExType ='1'--服務業(機關、學校)
     begin
         select C_Group,C_Item_cn,C_Item from CodeTable 
         where C_Group='09' and C_Item<>'99' 
-            and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
+            and C_Item in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34')
         order by C_Item
     end
 if @strExType ='2'--住宅
@@ -3405,7 +3405,7 @@ if @strExType ='1'--服務業(機關、學校)
 	        from #tmptmp a
 	        left join ReportMonth b on a.RM_ProjectGuid=b.RM_ProjectGuid and a.RM_Stage=b.RM_Stage  and a.RM_ReportGuid=b.RM_ReportGuid
 	        where CONVERT(int,(isnull(b.RM_Year,'0')+isnull(b.RM_Month,'0')))>=CONVERT(int,a.maxmonth) and b.RM_Stage=@strStage and b.RM_Status='A'
-                and b.RM_CPType in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32')
+                and b.RM_CPType in ('01','02','03','04','05','07','11','18','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34')
         )tmp
         group by maxmonth,RM_ProjectGuid,RM_CPType,RM_CPType,RM_Stage
 
