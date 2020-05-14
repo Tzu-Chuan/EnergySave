@@ -497,9 +497,15 @@
                 //} else {
                 //    strUnit = "台";
                 //}
+                
                 var splitcountFinish03 = "", countFinish03 = "";
                 splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
                 countFinish03 = splitcountFinish03[0];
+
+                if (strItem == "27") {
+                    countFinish03 = xmlData.children("countFinish03").text().trim();
+                }
+
                 str += '<div class="OchiRow">';
                 str += '<div class="OchiCell OchiTitle TitleSetWidth">' + ItemCname + '</div>';
                 str += '<div class="OchiCell width100">';
