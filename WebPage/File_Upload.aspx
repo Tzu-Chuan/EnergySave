@@ -77,11 +77,8 @@
                                 };
                             };
 
-                            var fileListTable = '<table width="100%" border="0" cellspacing="0" cellpadding="0">';
-                            fileListTable += '<tr>';
-                            fileListTable += '<td>檔案列表</td>';
-                            fileListTable += '</tr></table>';
-                            if ($("#plupload_content").find("table").length == 0) {
+                            var fileListTable = '<div name="ListTitle" style="border-bottom:solid 1px #dddddd;">檔案列表</div>';
+                            if ($("#plupload_content").find("div[name='ListTitle']").length == 0) {
                                 $("#plupload_content").prepend(fileListTable);
                             }
 
@@ -89,8 +86,8 @@
                             $.each(files, function (i, file) {
                                 Flist += '<li id="' + file.id + '">';
                                 Flist += '<!--<div class="plupload_fileSizeList" ><span>' + plupload.formatSize(file.size) + '</span></div > -->';
-                                Flist += '<div class="fileNameList" style="border-bottom:solid 1px #dddddd;"><a href="javascript:void(0);"><img src="../App_Themes/images/icon-delete-new.png" border="0" id="deleteFile' + files[i].id + '" style="margin-top: 5px;" /></a>';
-                                Flist += '<span style="margin-left:10px;">' + file.name + '</span></div></li>';
+                                Flist += '<div class="fileNameList" style="padding-bottom:5px; border-bottom:solid 1px #dddddd;"><a href="javascript:void(0);"><img src="../App_Themes/images/icon-delete-new.png" border="0" id="deleteFile' + files[i].id + '" style="margin-top: 5px;" /></a>';
+                                Flist += '<span style="margin-left:10px;">' + file.name + ' (' + plupload.formatSize(file.size) + ')</span><span name="filepercent" style="padding-left:5px;"></span></div></li>';
                             });
                             Flist += '</ul>';
                             $('#filelist').append(Flist);
@@ -117,9 +114,7 @@
                             }
                         },
                         UploadProgress: function (up, file) {
-                            //$("#progressbar").progressbar("value", (up.total.loaded / up.total.size) * 100);
-                            //$('#percentNum').html(((up.total.loaded / up.total.size) * 100).toFixed(0) + "%");
-                            //$('#' + file.id + " b").html(file.percent + "%");
+                            $("#" + file.id + "").find("span[name='filepercent']").html('<span>' + file.percent + '%</span>');
                         },
                         Error: function (up, err) {
                             if (err.code == "-600") {
