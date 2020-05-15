@@ -4,12 +4,14 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link href="../App_Themes/css/OchiLayout.css" rel="stylesheet" type="text/css" /><!-- ochsion layout base -->
-<link href="../App_Themes/css/OchiColor.css" rel="stylesheet" type="text/css" /><!-- ochsion layout color -->
-<script src="../js/jquery-1.11.2.min.js"></script>
-<script src="../js/downfile.js"></script>
-<script src="../js_plupload/plupload.full.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../App_Themes/css/OchiLayout.css" rel="stylesheet" type="text/css" /><!-- ochsion layout base -->
+    <link href="../App_Themes/css/OchiColor.css" rel="stylesheet" type="text/css" /><!-- ochsion layout color -->
+    <link href="../App_Themes/css/jquery-ui.css" rel="stylesheet" />
+    <script src="../js/jquery-1.11.2.min.js"></script>
+    <script src="../js/jquery-ui-1.10.2.custom.min.js"></script>
+    <script src="../js/downfile.js"></script>
+    <script src="../js_plupload/plupload.full.min.js"></script>
     <title></title>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -44,6 +46,7 @@
                             $('#warningStr').html("<div>目前瀏覽器優先使用: " + params.runtime + "</div>");
                         },
                         FilesAdded: function (up, files) {
+                            $("#recStr").html("");
                             if (up.total.size >= 2147483648) {
                                 up.removeFile(files[0]);
                                 alert("所有檔案相加其大小不可超過2GB");
@@ -87,7 +90,7 @@
                                 Flist += '<li id="' + file.id + '">';
                                 Flist += '<!--<div class="plupload_fileSizeList" ><span>' + plupload.formatSize(file.size) + '</span></div > -->';
                                 Flist += '<div class="fileNameList" style="padding-bottom:5px; border-bottom:solid 1px #dddddd;"><a href="javascript:void(0);"><img src="../App_Themes/images/icon-delete-new.png" border="0" id="deleteFile' + files[i].id + '" style="margin-top: 5px;" /></a>';
-                                Flist += '<span style="margin-left:10px;">' + file.name + ' (' + plupload.formatSize(file.size) + ')</span><span name="filepercent" style="padding-left:5px;"></span></div></li>';
+                                Flist += '<span style="margin-left:10px;">' + file.name + ' (' + plupload.formatSize(file.size) + ')</span>&nbsp;<div name="bar" style="width:100px; height:10px; display: inline-block;"></div>&nbsp;<span name="filepercent" style="padding-left:5px;"></span></li>';
                             });
                             Flist += '</ul>';
                             $('#filelist').append(Flist);
@@ -95,26 +98,34 @@
                             for (var i in files) {
                                 $('#deleteFile' + files[i].id).click(deleteHandle(up, files[i]));
                                 //調整 li 換行後的間距
-                                $("li#" + files[i].id + "").attr("style","margin-bottom:3px");
+                                $("li#" + files[i].id + "").attr("style", "margin-bottom:3px");
                             }
                         },
                         //BeforeUpload: function (up, files) {
                         //    $.extend(up.settings.multipart_params, { myfileid: $('#' + files.id + 'myfileid').val() });
                         //},
                         FileUploaded: function (up, files) {
+                         
+                        },
+                        UploadComplete: function (up, files) {
                             if ((uploader.total.uploaded) == uploader.files.length) {
-                                alert("檔案上傳完成");
+                                $("#recStr").html("檔案上傳成功");
                                 if ($.getParamValue('tp') == "06") {
                                     parent.upFile_feedback($.getParamValue('v'));
                                 }
                                 else {
                                     parent.upFile_feedback($.getParamValue('tp'));
                                 }
-                                parent.$.fancybox.close();
+                                $("#loadsp").hide();
+                                $("#btnsp").show();
+                                //parent.$.fancybox.close();
                             }
                         },
                         UploadProgress: function (up, file) {
                             $("#" + file.id + "").find("span[name='filepercent']").html('<span>' + file.percent + '%</span>');
+                            $("#" + file.id + "").find("div[name='bar']").progressbar({
+                                value: file.percent
+                            });
                         },
                         Error: function (up, err) {
                             if (err.code == "-600") {
@@ -129,6 +140,8 @@
                                 $("#ExceptionStr").html("[Exception]:" + innerText);
                             }
                             up.refresh(); // Reposition Flash/Silverlight
+                            $("#loadsp").hide();
+                            $("#btnsp").show();
                         }
                     }
                 });
@@ -136,6 +149,8 @@
             }
             catch (err) {
                 alert(err);
+                $("#loadsp").hide();
+                $("#btnsp").show();
             }
 
             uploader.init();
@@ -152,6 +167,8 @@
                     return false;
                 }
                 else {
+                    $("#loadsp").show();
+                    $("#btnsp").hide();
                     uploader.start();
                 }
             });
@@ -185,8 +202,8 @@
                                 <tr>
                                     <td>
                                         <div id="plupload_content">
-                                            <div id="filelist" style="margin-left:-20px;">
-                                            </div>
+                                            <div id="filelist" style="margin-left:-20px;"></div>
+                                            <div id="recStr" style="color:red;"></div>
                                         </div>
                                     </td>
                                 </tr>
@@ -196,7 +213,7 @@
                 </tr>
                 <tr>
                 <td colspan="2" align="right">
-                    <span id="loadsp" style="display:none;"><img alt="Loading..." src="../App_Themes/admin/images/LoadingProgressBar.gif" />資料處理中...</span>
+                    <span id="loadsp" style="display:none;"><img alt="Loading..." src="../App_Themes/images/loading.gif" width="30" style="position:absolute; right:110px;" />檔案上傳中...</span>
                     <span id="btnsp">
                         <input id="btnAdd" type="button" value="新增" class="genbtn" />
                         <input id="btnCancel" type="button" value="取消" class="genbtn" />
@@ -205,7 +222,7 @@
                 </tr>
             </table>
         </div>
-        <div id="warningStr" style="margin-top:5px;">您的瀏覽器不支援Flash,Silverlight以及HTML5</div>
+        <div class="warningStr" style="margin-top:5px;">您的瀏覽器不支援Flash,Silverlight以及HTML5</div>
         <div id="ExceptionStr" style="margin-top:5px; color:red;"></div>
     </div>
     </form>
