@@ -323,13 +323,13 @@
                                     
                                     if ($(this).children("P_ItemName").text().trim() == '01') {
                                         strHtml += '<div class="OchiCellInner nowrap textcenter">本期累計完成數:</div>';
-                                        strHtml += '<div class="OchiCellInner width50">' + strRM_Finish + '&nbsp;' + strunit + '</div>';
+                                        strHtml += '<div class="OchiCellInner width50">' + $(this).children("RM_Finish").text() + '&nbsp;' + strunit + '</div>';
                                     } else {
                                         strHtml += '<div class="OchiCellInner nowrap textcenter">本期累計核定數:</div>';
                                         strHtml += '<div class="OchiCellInner width50">' + strRM_Finish + '&nbsp;' + strunit + '</div>';
                                     }
                                     strHtml += '<div class="OchiCellInner nowrap textcenter">本期規劃數:</div>';
-                                    strHtml += '<div class="OchiCellInner width50">' + strRM_Planning + '&nbsp;' + strunit + '</div>';
+                                    strHtml += '<div class="OchiCellInner width50">' + $(this).children("RM_Planning").text().trim() + '&nbsp;' + strunit + '</div>';
                                     strHtml += '</div>';
                                     if ($(this).children("P_ItemName").text().trim() == '01') {
                                         strHtml += '<div class="OchiCell width100">';

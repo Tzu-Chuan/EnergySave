@@ -544,8 +544,8 @@
                 str += '<div class="OchiTableInner width100">';
                 str += '<div class="OchiCellInner nowrap textcenter">本期累計核定數：</div>';
                 str += '<div class="OchiCellInner width33">';
-                str += '<span>' + (splitRM_Finish01 == "" ? "0" : splitRM_Finish01) + '&nbsp;(盞)</span>';
-                str += '<input type="text" class="inputex" size="12" name="' + ptno + 'RM_Finish" value="' + (splitRM_Finish01 == "" ? "0" : splitRM_Finish01) + '" t="strint" readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
+                str += '<span>' + (strRM_Finish01 == "" ? "0" : strRM_Finish01) + '&nbsp;(盞)</span>';
+                str += '<input type="text" class="inputex" size="12" name="' + ptno + 'RM_Finish" value="' + (strRM_Finish01 == "" ? "0" : strRM_Finish01) + '" t="strint" readonly="readonly" style="background-color:#DDDDDD;display:none;" />';
                 str += '</div>';
                 str += '<div class="OchiCellInner nowrap textcenter">本期累計申請數：</div>';
                 str += '<div class="OchiCellInner width33">';
@@ -667,7 +667,11 @@
                     intflort = "strint";
                     splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
                     countFinish03 = splitcountFinish03[0];
-                } else {
+                } else if (strItem == "27") {
+                    intflort = "strflot";
+                    countFinish03 = xmlData.children("countFinish03").text().trim();
+                }
+                else {
                     //strUnit = "台";
                     intflort = "strint";
                     splitcountFinish03 = xmlData.children("countFinish03").text().trim().split('.');
