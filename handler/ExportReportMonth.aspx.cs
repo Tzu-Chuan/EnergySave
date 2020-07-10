@@ -467,7 +467,7 @@ public partial class handler_ExportReportMonth : System.Web.UI.Page
             {
                 if (dt.Rows[i]["RM_CPType"].ToString().Trim() == "01")
                 {
-                    strU = "(台)";
+                    strU = "(KW)";
                     strUSumAppl = "本月申請總冷氣能力(kW)";
                     strUSumFinish = "本月完成總冷氣能力(kW)";
                 }

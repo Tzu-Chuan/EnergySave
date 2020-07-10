@@ -376,65 +376,67 @@ public class ReportMonth_DB
         StringBuilder sb = new StringBuilder();
 
         sb.Append(@"
-            select a.M_ID,a.M_Name,a.M_Tel,a.M_Manager_ID as bossid,b.M_Name as bossname
-            from Member a left join Member b on a.M_Manager_ID=b.M_Guid
-            where a.M_ID=@M_ID
+select a.M_ID,a.M_Name,a.M_Tel,a.M_Manager_ID as bossid,b.M_Name as bossname
+from Member a left join Member b on a.M_Manager_ID=b.M_Guid
+where a.M_ID=@M_ID
 
-            declare @report_guid nvarchar(50);
-            declare @checkflag nvarchar(2);
-            set rowcount 1;
-            select @report_guid = RM_ReportGuid from ReportMonth where RM_ProjectGuid=@I_Guid and RM_Stage=@P_Period and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_ReportType=@RM_ReportType
-            set rowcount 0;
-            select @checkflag = RC_CheckType from ReportCheck where RC_ReportGuid = @report_guid and RC_Status<>'D'
+declare @report_guid nvarchar(50);
+declare @checkflag nvarchar(2);
+set rowcount 1;
+select @report_guid = RM_ReportGuid from ReportMonth where RM_ProjectGuid=@I_Guid and RM_Stage=@P_Period and RM_Year=@RM_Year and RM_Month=@RM_Month --and RM_ReportType=@RM_ReportType
+set rowcount 0;
+select @checkflag = RC_CheckType from ReportCheck where RC_ReportGuid = @report_guid and RC_Status<>'D'
 
-            if @checkflag<>'Y' or @checkflag is null
-                begin
-                    select #tmp.* ,
-                    (select sum(isnull(RM_Type4ValueSum,0.0)) from ReportMonth h left join ReportCheck j on h.RM_Stage=j.RC_Stage and j.RC_ReportType='01' where h.RM_Stage=#tmp.P_Period and  h.RM_Year+h.RM_Month<@RM_Year+@RM_Month and h.RM_CPType=#tmp.P_ItemName and j.RC_Status='A' and j.RC_CheckType='Y' and h.RM_Status<>'D' and h.RM_ReportGuid=j.RC_ReportGuid and h.RM_ProjectGuid=@I_Guid  ) as countFinishKW,--累計完成數 KW(無風管)
-                    (select sum(isnull(RM_Type3ValueSum,0)) from ReportMonth i left join ReportCheck k on i.RM_Stage=k.RC_Stage and k.RC_ReportType='01' where i.RM_Stage=#tmp.P_Period and  i.RM_Year+i.RM_Month<@RM_Year+@RM_Month and i.RM_CPType=#tmp.P_ItemName and k.RC_Status='A' and k.RC_CheckType='Y' and i.RM_Status<>'D' and i.RM_ReportGuid=k.RC_ReportGuid and i.RM_ProjectGuid=@I_Guid  ) as countFinish03,--累計完成數(老舊 停車場 中型 大型)
-                    (select sum(isnull(RM_Type2ValueSum,0)) from ReportMonth m left join ReportCheck n on m.RM_Stage=n.RC_Stage and n.RC_ReportType='01' where m.RM_Stage=#tmp.P_Period and  m.RM_Year+m.RM_Month<@RM_Year+@RM_Month and m.RM_CPType=#tmp.P_ItemName and n.RC_Status='A' and n.RC_CheckType='Y' and m.RM_Status<>'D' and m.RM_ReportGuid=n.RC_ReportGuid and m.RM_ProjectGuid=@I_Guid  ) as countFinish02,--累計核定數(老舊 停車場 中型 大型)
-                    (select sum(isnull(RM_Type3ValueSum,0.0)) from ReportMonth o left join ReportCheck p on o.RM_Stage=p.RC_Stage and p.RC_ReportType='01' where o.RM_Stage=#tmp.P_Period and  o.RM_Year+o.RM_Month<@RM_Year+@RM_Month and o.RM_CPType=#tmp.P_ItemName and p.RC_Status='A' and p.RC_CheckType='Y' and o.RM_Status<>'D' and o.RM_ReportGuid=p.RC_ReportGuid and o.RM_ProjectGuid=@I_Guid  ) as countApplyKW,--累計申請數 KW(無風管)
-                    (select sum(isnull(RM_Type1ValueSum,0)) from ReportMonth q left join ReportCheck r on q.RM_Stage=r.RC_Stage and r.RC_ReportType='01' where q.RM_Stage=#tmp.P_Period and  q.RM_Year+q.RM_Month<@RM_Year+@RM_Month and q.RM_CPType=#tmp.P_ItemName and r.RC_Status='A' and r.RC_CheckType='Y' and q.RM_Status<>'D' and q.RM_ReportGuid=r.RC_ReportGuid and q.RM_ProjectGuid=@I_Guid  ) as countApply01--累計完成數(老舊 停車場 中型 大型)
-                    from (
-                        select a.P_Guid,a.P_ParentId,a.P_Type,a.P_ItemName,a.P_Period,c.C_Item_cn ,a.P_Status,b.*,d.M_Name as M_Name,d.M_Tel,d.M_Manager_ID,e.M_Name as M__Manage_Name,f.RC_CheckType,f.RC_Status,f.RC_CheckDate,
-                                g.I_Finish_item1_1,g.I_Finish_item1_2,g.I_Finish_item1_3,g.I_Finish_item2_1,g.I_Finish_item2_2,g.I_Finish_item2_3,
-                                g.I_Finish_item3_1,g.I_Finish_item3_2,g.I_Finish_item3_3,g.I_Finish_item4_1,g.I_Finish_item4_2,g.I_Finish_item4_3,
-                                g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3,a.P_Sort
-                        from PushItem a
-                        left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid  and a.P_ItemName=b.RM_CPType and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and b.RM_ReportType='01'
-                        left join CodeTable c on c.C_Group='07' and a.P_ItemName = c.C_Item
-                        left join Member d on d.M_ID=@M_ID
-                        left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
-                        left join ReportCheck f on b.RM_ReportGuid = f.RC_ReportGuid and RC_Status<>'D'
-                        left join ProjectInfo g on g.I_Guid = @I_Guid and g.I_Status<>'D'
-                        where P_ParentId=@I_Guid and P_Period=@P_Period  and a.P_Status<>'D' and P_Type='03' -- and RM_Year=@RM_Year and RM_Month=@RM_Month
-                    )#tmp
-                    order by #tmp.P_Sort asc,#tmp.P_ItemName asc
-                end
-            else
-                begin
-                     select #tmp.* ,
-                    (select sum(isnull(RM_Type4ValueSum,0.0)) from ReportMonth h left join ReportCheck j on h.RM_Stage=j.RC_Stage and j.RC_ReportType='01' where h.RM_Stage=#tmp.P_Period and  h.RM_Year+h.RM_Month<@RM_Year+@RM_Month and h.RM_CPType=#tmp.P_ItemName and j.RC_Status='A' and j.RC_CheckType='Y' and h.RM_Status<>'D' and h.RM_ReportGuid=j.RC_ReportGuid  and h.RM_ProjectGuid=@I_Guid ) as countFinishKW,--累計完成數 KW(無風管)
-                    (select sum(isnull(RM_Type3ValueSum,0)) from ReportMonth i left join ReportCheck k on i.RM_Stage=k.RC_Stage and k.RC_ReportType='01' where i.RM_Stage=#tmp.P_Period and  i.RM_Year+i.RM_Month<@RM_Year+@RM_Month and i.RM_CPType=#tmp.P_ItemName and k.RC_Status='A' and k.RC_CheckType='Y' and i.RM_Status<>'D' and i.RM_ReportGuid=k.RC_ReportGuid  and i.RM_ProjectGuid=@I_Guid ) as countFinish03,--累計完成數(老舊 停車場 中型 大型)
-                    (select sum(isnull(RM_Type2ValueSum,0)) from ReportMonth m left join ReportCheck n on m.RM_Stage=n.RC_Stage and n.RC_ReportType='01' where m.RM_Stage=#tmp.P_Period and  m.RM_Year+m.RM_Month<@RM_Year+@RM_Month and m.RM_CPType=#tmp.P_ItemName and n.RC_Status='A' and n.RC_CheckType='Y' and m.RM_Status<>'D' and m.RM_ReportGuid=n.RC_ReportGuid  and m.RM_ProjectGuid=@I_Guid ) as countFinish02,--累計核定數(老舊 停車場 中型 大型)
-                    (select sum(isnull(RM_Type3ValueSum,0.0)) from ReportMonth o left join ReportCheck p on o.RM_Stage=p.RC_Stage and p.RC_ReportType='01' where o.RM_Stage=#tmp.P_Period and  o.RM_Year+o.RM_Month<@RM_Year+@RM_Month and o.RM_CPType=#tmp.P_ItemName and p.RC_Status='A' and p.RC_CheckType='Y' and o.RM_Status<>'D' and o.RM_ReportGuid=p.RC_ReportGuid and o.RM_ProjectGuid=@I_Guid  ) as countApplyKW,--累計申請數 KW(無風管)
-                    (select sum(isnull(RM_Type1ValueSum,0)) from ReportMonth q left join ReportCheck r on q.RM_Stage=r.RC_Stage and r.RC_ReportType='01' where q.RM_Stage=#tmp.P_Period and  q.RM_Year+q.RM_Month<@RM_Year+@RM_Month and q.RM_CPType=#tmp.P_ItemName and r.RC_Status='A' and r.RC_CheckType='Y' and q.RM_Status<>'D' and q.RM_ReportGuid=r.RC_ReportGuid and q.RM_ProjectGuid=@I_Guid  ) as countApply01--累計完成數(老舊 停車場 中型 大型)
-                    from (
-                        select a.P_Guid,a.P_ParentId,a.P_Type,a.P_ItemName,a.P_Period,c.C_Item_cn ,a.P_Status,b.*,d.M_Name as M_Name,d.M_Tel,d.M_Manager_ID,e.M_Name as M_Manage_Name,f.RC_CheckType,f.RC_Status,f.RC_CheckDate,
-                                g.I_Finish_item1_1,g.I_Finish_item1_2,g.I_Finish_item1_3,g.I_Finish_item2_1,g.I_Finish_item2_2,g.I_Finish_item2_3,
-                                g.I_Finish_item3_1,g.I_Finish_item3_2,g.I_Finish_item3_3,g.I_Finish_item4_1,g.I_Finish_item4_2,g.I_Finish_item4_3,
-                                g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3,a.P_Sort
-                        from PushItem a
-                        left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid and a.P_ItemName=b.RM_CPType and a.P_Guid=b.RM_PGuid and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and b.RM_ReportType='01'
-                        left join CodeTable c on c.C_Group='07' and a.P_ItemName = c.C_Item
-                        left join Member d on d.M_ID=@M_ID
-                        left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
-                        left join ReportCheck f on b.RM_ReportGuid = f.RC_ReportGuid and RC_Status<>'D'
-                        left join ProjectInfo g on g.I_Guid = @I_Guid and g.I_Status<>'D'
-                        where P_ParentId=@I_Guid and P_Period=@P_Period and b.RM_Status<>'D' and P_Type='03'
-                    )#tmp
-                    order by #tmp.P_Sort asc,#tmp.P_ItemName asc
-                end
+if @checkflag<>'Y' or @checkflag is null
+    begin
+        select #tmp.* ,
+        (select sum(isnull(RM_Type4ValueSum,0.0)) from ReportMonth h left join ReportCheck j on h.RM_Stage=j.RC_Stage and j.RC_ReportType='01' where h.RM_Stage=#tmp.P_Period and  h.RM_Year+h.RM_Month<@RM_Year+@RM_Month and h.RM_CPType=#tmp.P_ItemName and j.RC_Status='A' and j.RC_CheckType='Y' and h.RM_Status<>'D' and h.RM_ReportGuid=j.RC_ReportGuid and h.RM_ProjectGuid=@I_Guid  ) as countFinishKW,--累計完成數 KW(無風管)
+        (select sum(isnull(RM_Type3ValueSum,0)) from ReportMonth i left join ReportCheck k on i.RM_Stage=k.RC_Stage and k.RC_ReportType='01' where i.RM_Stage=#tmp.P_Period and  i.RM_Year+i.RM_Month<@RM_Year+@RM_Month and i.RM_CPType=#tmp.P_ItemName and k.RC_Status='A' and k.RC_CheckType='Y' and i.RM_Status<>'D' and i.RM_ReportGuid=k.RC_ReportGuid and i.RM_ProjectGuid=@I_Guid  ) as countFinish03,--累計完成數(老舊 停車場 中型 大型)
+        (select sum(isnull(RM_Type2ValueSum,0)) from ReportMonth m left join ReportCheck n on m.RM_Stage=n.RC_Stage and n.RC_ReportType='01' where m.RM_Stage=#tmp.P_Period and  m.RM_Year+m.RM_Month<@RM_Year+@RM_Month and m.RM_CPType=#tmp.P_ItemName and n.RC_Status='A' and n.RC_CheckType='Y' and m.RM_Status<>'D' and m.RM_ReportGuid=n.RC_ReportGuid and m.RM_ProjectGuid=@I_Guid  ) as countFinish02,--累計核定數(老舊 停車場 中型 大型)
+        (select sum(isnull(RM_Type3ValueSum,0.0)) from ReportMonth o left join ReportCheck p on o.RM_Stage=p.RC_Stage and p.RC_ReportType='01' where o.RM_Stage=#tmp.P_Period and  o.RM_Year+o.RM_Month<@RM_Year+@RM_Month and o.RM_CPType=#tmp.P_ItemName and p.RC_Status='A' and p.RC_CheckType='Y' and o.RM_Status<>'D' and o.RM_ReportGuid=p.RC_ReportGuid and o.RM_ProjectGuid=@I_Guid  ) as countApplyKW,--累計申請數 KW(無風管)
+        (select sum(isnull(RM_Type1ValueSum,0)) from ReportMonth q left join ReportCheck r on q.RM_Stage=r.RC_Stage and r.RC_ReportType='01' where q.RM_Stage=#tmp.P_Period and  q.RM_Year+q.RM_Month<@RM_Year+@RM_Month and q.RM_CPType=#tmp.P_ItemName and r.RC_Status='A' and r.RC_CheckType='Y' and q.RM_Status<>'D' and q.RM_ReportGuid=r.RC_ReportGuid and q.RM_ProjectGuid=@I_Guid  ) as countApply01--累計完成數(老舊 停車場 中型 大型)
+        from (
+            select a.P_Guid,a.P_ParentId,a.P_Type,a.P_ItemName,a.P_Period,c.C_Item_cn ,a.P_Status,b.*,d.M_Name as M_Name,d.M_Tel,d.M_Manager_ID,e.M_Name as M__Manage_Name,f.RC_CheckType,f.RC_Status,f.RC_CheckDate,
+                    g.I_Finish_item1_1,g.I_Finish_item1_2,g.I_Finish_item1_3,g.I_Finish_item2_1,g.I_Finish_item2_2,g.I_Finish_item2_3,
+                    g.I_Finish_item3_1,g.I_Finish_item3_2,g.I_Finish_item3_3,g.I_Finish_item4_1,g.I_Finish_item4_2,g.I_Finish_item4_3,
+                    g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3,a.P_Sort
+            from PushItem a
+            left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid  and a.P_ItemName=b.RM_CPType and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and b.RM_ReportType='01'
+            left join CodeTable c on c.C_Group='07' and a.P_ItemName = c.C_Item
+            left join Member d on d.M_ID=@M_ID
+            left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
+            left join ReportCheck f on b.RM_ReportGuid = f.RC_ReportGuid and RC_Status<>'D'
+            left join ProjectInfo g on g.I_Guid = @I_Guid and g.I_Status<>'D'
+            where P_ParentId=@I_Guid and P_Period=@P_Period  and a.P_Status<>'D' and P_Type='03' -- and RM_Year=@RM_Year and RM_Month=@RM_Month
+        )#tmp
+        where #tmp.P_ItemName<>'99'
+        order by #tmp.P_Sort asc,#tmp.P_ItemName asc
+    end
+else
+    begin
+            select #tmp.* ,
+        (select sum(isnull(RM_Type4ValueSum,0.0)) from ReportMonth h left join ReportCheck j on h.RM_Stage=j.RC_Stage and j.RC_ReportType='01' where h.RM_Stage=#tmp.P_Period and  h.RM_Year+h.RM_Month<@RM_Year+@RM_Month and h.RM_CPType=#tmp.P_ItemName and j.RC_Status='A' and j.RC_CheckType='Y' and h.RM_Status<>'D' and h.RM_ReportGuid=j.RC_ReportGuid  and h.RM_ProjectGuid=@I_Guid ) as countFinishKW,--累計完成數 KW(無風管)
+        (select sum(isnull(RM_Type3ValueSum,0)) from ReportMonth i left join ReportCheck k on i.RM_Stage=k.RC_Stage and k.RC_ReportType='01' where i.RM_Stage=#tmp.P_Period and  i.RM_Year+i.RM_Month<@RM_Year+@RM_Month and i.RM_CPType=#tmp.P_ItemName and k.RC_Status='A' and k.RC_CheckType='Y' and i.RM_Status<>'D' and i.RM_ReportGuid=k.RC_ReportGuid  and i.RM_ProjectGuid=@I_Guid ) as countFinish03,--累計完成數(老舊 停車場 中型 大型)
+        (select sum(isnull(RM_Type2ValueSum,0)) from ReportMonth m left join ReportCheck n on m.RM_Stage=n.RC_Stage and n.RC_ReportType='01' where m.RM_Stage=#tmp.P_Period and  m.RM_Year+m.RM_Month<@RM_Year+@RM_Month and m.RM_CPType=#tmp.P_ItemName and n.RC_Status='A' and n.RC_CheckType='Y' and m.RM_Status<>'D' and m.RM_ReportGuid=n.RC_ReportGuid  and m.RM_ProjectGuid=@I_Guid ) as countFinish02,--累計核定數(老舊 停車場 中型 大型)
+        (select sum(isnull(RM_Type3ValueSum,0.0)) from ReportMonth o left join ReportCheck p on o.RM_Stage=p.RC_Stage and p.RC_ReportType='01' where o.RM_Stage=#tmp.P_Period and  o.RM_Year+o.RM_Month<@RM_Year+@RM_Month and o.RM_CPType=#tmp.P_ItemName and p.RC_Status='A' and p.RC_CheckType='Y' and o.RM_Status<>'D' and o.RM_ReportGuid=p.RC_ReportGuid and o.RM_ProjectGuid=@I_Guid  ) as countApplyKW,--累計申請數 KW(無風管)
+        (select sum(isnull(RM_Type1ValueSum,0)) from ReportMonth q left join ReportCheck r on q.RM_Stage=r.RC_Stage and r.RC_ReportType='01' where q.RM_Stage=#tmp.P_Period and  q.RM_Year+q.RM_Month<@RM_Year+@RM_Month and q.RM_CPType=#tmp.P_ItemName and r.RC_Status='A' and r.RC_CheckType='Y' and q.RM_Status<>'D' and q.RM_ReportGuid=r.RC_ReportGuid and q.RM_ProjectGuid=@I_Guid  ) as countApply01--累計完成數(老舊 停車場 中型 大型)
+        from (
+            select a.P_Guid,a.P_ParentId,a.P_Type,a.P_ItemName,a.P_Period,c.C_Item_cn ,a.P_Status,b.*,d.M_Name as M_Name,d.M_Tel,d.M_Manager_ID,e.M_Name as M_Manage_Name,f.RC_CheckType,f.RC_Status,f.RC_CheckDate,
+                    g.I_Finish_item1_1,g.I_Finish_item1_2,g.I_Finish_item1_3,g.I_Finish_item2_1,g.I_Finish_item2_2,g.I_Finish_item2_3,
+                    g.I_Finish_item3_1,g.I_Finish_item3_2,g.I_Finish_item3_3,g.I_Finish_item4_1,g.I_Finish_item4_2,g.I_Finish_item4_3,
+                    g.I_Finish_item5_1,g.I_Finish_item5_2,g.I_Finish_item5_3,a.P_Sort
+            from PushItem a
+            left join ReportMonth b on a.P_ParentId=b.RM_ProjectGuid and a.P_ItemName=b.RM_CPType and a.P_Guid=b.RM_PGuid and b.RM_Stage=@P_Period and b.RM_Year=@RM_Year and b.RM_Month=@RM_Month and (b.RM_Status<>'D' or b.RM_Status is null) and b.RM_ReportType='01'
+            left join CodeTable c on c.C_Group='07' and a.P_ItemName = c.C_Item
+            left join Member d on d.M_ID=@M_ID
+            left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
+            left join ReportCheck f on b.RM_ReportGuid = f.RC_ReportGuid and RC_Status<>'D'
+            left join ProjectInfo g on g.I_Guid = @I_Guid and g.I_Status<>'D'
+            where P_ParentId=@I_Guid and P_Period=@P_Period and b.RM_Status<>'D' and P_Type='03'
+        )#tmp
+        where #tmp.P_ItemName<>'99'
+        order by #tmp.P_Sort asc,#tmp.P_ItemName asc
+    end
         ");
         
         oCmd.CommandText = sb.ToString();
