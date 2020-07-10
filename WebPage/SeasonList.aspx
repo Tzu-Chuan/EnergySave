@@ -19,7 +19,7 @@
             });
             //刪除 草稿
             $(document).on("click", "a[name='delBtn']", function () {
-                delData($(this).attr("id"))
+				delData($(this).attr("id"), $(this).attr("year"), $(this).attr("season"), $(this).attr("stage"));
             });
         });//js end
 
@@ -61,7 +61,7 @@
                                  tabstr += '<td align="center">';
                                  if ($(this).children("RC_CheckType").text().trim() == "" && $(this).children("RC_Status").text().trim() == "") {
                                      tabstr += '<a class="genbtn" href="ReportSeason.aspx?year=' + $(this).children("RS_Year").text().trim() + '&season=' + $(this).children("RS_Season").text().trim() + '&stage=' + $(this).children("RS_Stage").text().trim() + '">編輯</a>';
-                                     tabstr += '<a class="genbtn" name="delBtn" href="javascript:void(0);" id="' + $(this).children("RS_Guid").text().trim() + '" >刪除</a>';
+                                     tabstr += '<a class="genbtn" name="delBtn" href="javascript:void(0);" id="' + $(this).children("RS_Guid").text().trim() + '" year="' + $(this).children("RS_Year").text().trim() + '" season="' + $(this).children("RS_Season").text().trim() + '" stage="' + $(this).children("RS_Stage").text().trim() + '" >刪除</a>';
                                  }
                                  else if ($(this).children("RC_CheckType").text().trim() == "" && $(this).children("RC_Status").text().trim() == "A")
                                      tabstr += '<a class="genbtn" href="DetailReportSeason.aspx?v='+$(this).children("RS_ID").text().trim()+'">查看</a>';
@@ -100,13 +100,16 @@
         }
 
         //刪除 草稿
-        function delData(strRguid) {
+        function delData(strRguid,year,season,stage) {
              $.ajax({
                  type: "POST",
                  async: false, //在沒有返回值之前,不會執行下一步動作
                  url: "../handler/delReporSeason.aspx",
                  data: {
-                     strReportGuid: strRguid
+                     strReportGuid: strRguid,
+                     year: year,
+                     season: season,
+                     stage: stage
                  },
                  error: function (xhr) {
                      alert("Error " + xhr.status);

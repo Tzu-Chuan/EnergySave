@@ -147,7 +147,7 @@ declare  @ProID nvarchar(50)=(select I_Guid from ProjectInfo where I_People=(sel
 declare @rcYear nvarchar(5)=(select convert(int,RC_Year)-1911 from ReportCheck where RC_Guid=@RC_Guid)
 declare @rcSeason nvarchar(5)=(select RC_Season from ReportCheck where RC_Guid=@RC_Guid)
 declare @rcStage nvarchar(5)=(select RC_Stage from ReportCheck where RC_Guid=@RC_Guid)
-declare @rsID nvarchar(50)=(select RS_Guid from ReportSeason where RS_PorjectGuid=@ProID and RS_Year=@rcYear and RS_Season=@rcSeason and RS_Stage=@rcStage)
+declare @rsID nvarchar(50)=(select RS_Guid from ReportSeason where RS_PorjectGuid=@ProID and RS_Year=@rcYear and RS_Season=@rcSeason and RS_Stage=@rcStage and RS_Status='A')
 
 update ReportCheck set RC_Status='D' where RC_Guid=@RC_Guid
 --2019/12/31 調整成不需要重填

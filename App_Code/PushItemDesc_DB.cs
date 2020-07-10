@@ -96,7 +96,7 @@ declare @ProjectID nvarchar(50)=(select I_Guid from ProjectInfo where I_People=@
 
 select * from PushItem_Desc
 where PD_ProjectGuid=@ProjectID
-and PD_Stage+PD_Year+RIGHT(REPLICATE('0', 2) + CAST(PD_Season as NVARCHAR), 2)<=@PD_Stage+@PD_Year+RIGHT(REPLICATE('0', 2) + CAST(@PD_Season as NVARCHAR), 2)
+and PD_Stage+PD_Year+RIGHT(REPLICATE('0', 2) + CAST(PD_Season as NVARCHAR), 2)<=@PD_Stage+@PD_Year+RIGHT(REPLICATE('0', 2) + CAST(@PD_Season as NVARCHAR), 2) and PD_Status='A'
 --如果今天填的是第一期108年第3季 畫面上應該要出現107年第4季 108年第1季108年第2季108年第3季
 --但如果是下面這種寫法 107年第4季不會出現
 --and PD_Year<=@PD_Year 

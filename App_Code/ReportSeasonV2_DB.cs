@@ -1128,11 +1128,17 @@ where RS_ID=@RS_ID and RC_Status='A'
             update ReportSeason set RS_Status='D' where RS_Guid=@RS_Guid
 
             update ReportCheck set RC_Status='D' where RC_ReportGuid=@RS_Guid and RC_Status='A' and RC_ReportType='02'
+
+            declare @proid nvarchar(50)=( select RS_PorjectGuid from ReportSeason where RS_Guid=@RS_Guid)
+            update PushItem_Desc set PD_Status='D' where PD_ProjectGuid=@proid and PD_Year=@RS_Year and PD_Season=@RS_Season and PD_Stage=@RS_Stage
         ";
 
         oCmd.CommandType = CommandType.Text;
         SqlDataAdapter oda = new SqlDataAdapter(oCmd);
         oCmd.Parameters.AddWithValue("@RS_Guid", RS_Guid);
+        oCmd.Parameters.AddWithValue("@RS_Year", RS_Year);
+        oCmd.Parameters.AddWithValue("@RS_Season", RS_Season);
+        oCmd.Parameters.AddWithValue("@RS_Stage", RS_Stage);
 
         oCmd.Connection.Open();
         oCmd.ExecuteNonQuery();

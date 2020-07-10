@@ -22,8 +22,14 @@ public partial class handler_delReporSeason : System.Web.UI.Page
         try
         {
             string strguid = (Request["strReportGuid"] != null) ? Request["strReportGuid"].ToString().Trim() : "";
+            string year = (Request["year"] != null) ? Request["year"].ToString().Trim() : "";
+            string season = (Request["season"] != null) ? Request["season"].ToString().Trim() : "";
+            string stage = (Request["stage"] != null) ? Request["stage"].ToString().Trim() : "";
 
             rs_db._RS_Guid = strguid;
+            rs_db._RS_Year = year;
+            rs_db._RS_Season = season;
+            rs_db._RS_Stage = stage;
             rs_db.delReportSeasonNotCheck();
 
             xDoc.LoadXml("<?xml version='1.0' encoding='utf-8'?><root><Response>success</Response></root>");
