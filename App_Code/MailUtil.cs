@@ -72,6 +72,7 @@ public class MailUtil
         message.IsBodyHtml = true;
         message.BodyEncoding = System.Text.Encoding.UTF8;
 
-        client.Send(message);
+        if (ConfigurationManager.AppSettings["MailStatus"] == "true")
+            client.Send(message);
     }
 }

@@ -19,7 +19,7 @@ public class ValidateNumber : IHttpHandler, IRequiresSessionState
         context.Session["ValidateNumber"] = str_ValidateCode;
 
         //取得圖片物件
-        System.Drawing.Image image = this.CreateCheckCodeImage(context, str_ValidateCode);
+        System.Drawing.Image image = this.CreateCheckCodeImage(str_ValidateCode);
         System.IO.MemoryStream ms = new System.IO.MemoryStream();
         image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
         /*輸出圖片*/
@@ -69,7 +69,7 @@ public class ValidateNumber : IHttpHandler, IRequiresSessionState
     #endregion
 
     #region 產生圖片
-    private System.Drawing.Image CreateCheckCodeImage(HttpContext context, string checkCode)
+    private System.Drawing.Image CreateCheckCodeImage(string checkCode)
     {
         System.Drawing.Bitmap image = new System.Drawing.Bitmap((checkCode.Length * 23), 35);//產生圖片，寬23*位數，高40像素
         System.Drawing.Graphics g = Graphics.FromImage(image);

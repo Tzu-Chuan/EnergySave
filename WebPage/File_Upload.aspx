@@ -57,8 +57,8 @@
                             var extenError = false;
                             $.each(up.files, function (i, file) {
                                 var filename = file.name.toLowerCase();
-                                var ppostion = filename.indexOf(".");
-                                var exten = filename.substring(ppostion, filename.length);
+                                var extary = filename.split('.');
+								var exten = "." + extary[extary.length - 1];
                                 if (exten != ".doc" && exten != ".docx" && exten != ".xls" && exten != ".xlsx" && exten != ".ppt" && exten != ".pptx" && exten != ".pdf") {
                                     alert("檔案格式限制：.doc、.docx、.xls、.xlsx、.ppt、.pptx、.pdf");
                                     extenError = true;

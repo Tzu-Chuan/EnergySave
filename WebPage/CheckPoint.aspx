@@ -303,7 +303,8 @@
             var thisyear = parseInt(new Date().getFullYear()) - 1911;
             y = (y == null) ? thisyear : y;
             var startyear = 107;
-            var endyear = thisyear + 2;
+			//var endyear = thisyear + 2;
+			var endyear = 112;
             var str = '<select name="' + NameCode + 'cp_year" class="inputex">';
             for (var i = startyear; i <= endyear; i++) {
                 if (y != null) {
