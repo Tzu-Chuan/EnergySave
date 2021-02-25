@@ -76,26 +76,43 @@ public class ReportMonth : IHttpHandler,IRequiresSessionState
                     rm._RM_Month = lmrdmonth;
                     rm._RM_ReportType = lmrreporttype;
                     DataSet dtc = rm.selectMonthReportBefore();
+
                     if (dtc.Tables[0].Rows.Count > 0)
                     {
                         //原本有填過資料 但未審核
                         //先判斷有沒有在上一次填寫月報受刪除掉的"推動項目"
                         //推動項目如果有刪掉 就先UPDATE 月報status='D'
-                        if (dtc.Tables[1].Rows.Count > 0 && dtc.Tables[1].Rows[0]["RC_CheckType"].ToString().Trim()!="Y")
+                        //Tables[1] = 最新的推動項目   Tables[0] = 當前月報的推動項目
+                        for (int k = 0; k < dtc.Tables[0].Rows.Count; k++)
                         {
-                            for (int i = 0; i < dtc.Tables[1].Rows.Count; i++)
+                            DataRow[] dr = dtc.Tables[1].Select("P_ItemName = '" + dtc.Tables[0].Rows[k]["RM_CPType"] + "' and P_Guid = '" + dtc.Tables[0].Rows[k]["RM_PGuid"] + "' and P_Period = '" + dtc.Tables[0].Rows[k]["RM_Stage"] + "'  and P_Status = 'A' ");
+                            if (dr.Length == 0)
                             {
-                                //如果 P_Status='D' 表示是刪除掉的推動項目
-                                //要去看該推動項目是否有在月報裡面 如果有 就將月報該資料射程 RM_Status='D'
-                                if ((dtc.Tables[1].Rows[i]["P_Status"].ToString().Trim() == "D" && dtc.Tables[1].Rows[i]["RM_ID"] != null))
-                                {
-                                    rm._RM_ID = dtc.Tables[1].Rows[i]["RM_ID"].ToString().Trim();
-                                    rm._RM_ModId = LogInfo.mGuid;
-                                    rm._RM_PGuid = dtc.Tables[1].Rows[i]["P_Guid"].ToString().Trim();
-                                    rm.deleteMonthReport();
-                                }
+                                rm._RM_ID = dtc.Tables[0].Rows[k]["RM_ID"].ToString().Trim();
+                                rm._RM_ModId = LogInfo.mGuid;
+                                rm._RM_PGuid = dtc.Tables[0].Rows[k]["RM_PGuid"].ToString().Trim();
+                                rm.deleteMonthReport();
                             }
+
                         }
+
+
+
+                        //if (dtc.Tables[1].Rows.Count > 0 && dtc.Tables[1].Rows[0]["RC_CheckType"].ToString().Trim()!="Y")
+                        //{
+                        //    for (int i = 0; i < dtc.Tables[1].Rows.Count; i++)
+                        //    {
+                        //        //如果 P_Status='D' 表示是刪除掉的推動項目
+                        //        //要去看該推動項目是否有在月報裡面 如果有 就將月報該資料射程 RM_Status='D'
+                        //        if (dtc.Tables[1].Rows[i]["P_Status"].ToString().Trim() == "D" && dtc.Tables[1].Rows[i]["RM_ID"] != null)
+                        //        {
+                        //            rm._RM_ID = dtc.Tables[1].Rows[i]["RM_ID"].ToString().Trim();
+                        //            rm._RM_ModId = LogInfo.mGuid;
+                        //            rm._RM_PGuid = dtc.Tables[1].Rows[i]["P_Guid"].ToString().Trim();
+                        //            rm.deleteMonthReport();
+                        //        }
+                        //    }
+                        //}
                     }
 
                     if (lmrreporttype == "01")
@@ -148,7 +165,7 @@ public class ReportMonth : IHttpHandler,IRequiresSessionState
                         ds = rm.selectMonthReport();
                     }
                     if (gcrcreporttype=="03") {
-                            ds = rm.selectMonthReportEx();
+                        ds = rm.selectMonthReportEx();
                     }
 
                     if (ds.Tables[1].Rows.Count>0) {

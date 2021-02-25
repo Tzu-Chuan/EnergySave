@@ -872,8 +872,8 @@
                             if (i == 0)
                                 pdstr += '<td rowspan="' + rspan_tmp + '">' + cpdesc + '</td>';
                             pdstr += '<td nowrap="nowrap" style="text-align:center;">' + $(this).attr("PD_Year") + '年<br>第' + $(this).attr("PD_Season") + '季</td>';
-                            pdstr += '<td>' + $(this).attr("PD_Summary") + '</td>';
-                            pdstr += '<td>' + $(this).attr("PD_BackwardDesc") + '</td>';
+                            pdstr += '<td style="word-break:break-all;">' + $(this).attr("PD_Summary") + '</td>';
+                            pdstr += '<td style="word-break:break-all;">' + $(this).attr("PD_BackwardDesc") + '</td>';
                             pdstr += '</tr>';
                         });
                     }

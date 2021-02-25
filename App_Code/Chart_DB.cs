@@ -1131,8 +1131,8 @@ begin
 		
             --根據機關代碼查出計畫GUID
 	        select @PJGuid=I_Guid 
-	        from Member left join ProjectInfo on M_City=@City and M_Guid=I_People and M_Status='A' and I_Status='A' and I_Flag='Y'
-	        where I_Guid is not null
+	        from ProjectInfo 
+	        where I_Guid is not null and I_City=@City and I_Status='A' and I_Flag='Y'-- and M_Guid=I_People and M_Status='A'
 	        --根據計畫GUID & 期數 月報資料
 	        select RM_Stage,RM_CPType,SUM(RM_Type1Value1) as RM_SUM1,SUM(RM_Type1Value2) as RM_SUM2,SUM(RM_Type1Value3) as RM_SUM3 into #tmpRM 
 	        from

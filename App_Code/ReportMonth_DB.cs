@@ -383,7 +383,7 @@ where a.M_ID=@M_ID
 declare @report_guid nvarchar(50);
 declare @checkflag nvarchar(2);
 set rowcount 1;
-select @report_guid = RM_ReportGuid from ReportMonth where RM_ProjectGuid=@I_Guid and RM_Stage=@P_Period and RM_Year=@RM_Year and RM_Month=@RM_Month --and RM_ReportType=@RM_ReportType
+select @report_guid = RM_ReportGuid from ReportMonth where RM_ProjectGuid=@I_Guid and RM_Stage=@P_Period and RM_Year=@RM_Year and RM_Month=@RM_Month and RM_ReportType=@RM_ReportType
 set rowcount 0;
 select @checkflag = RC_CheckType from ReportCheck where RC_ReportGuid = @report_guid and RC_Status<>'D'
 
@@ -409,7 +409,7 @@ if @checkflag<>'Y' or @checkflag is null
             left join ProjectInfo g on g.I_Guid = @I_Guid and g.I_Status<>'D'
             where P_ParentId=@I_Guid and P_Period=@P_Period  and a.P_Status<>'D' and P_Type='03' -- and RM_Year=@RM_Year and RM_Month=@RM_Month
         )#tmp
-        where #tmp.P_ItemName<>'99'
+        where #tmp.P_ItemName<>'99' and #tmp.P_Status='A' and (#tmp.RM_Status='A' or #tmp.RM_Status is null)
         order by #tmp.P_Sort asc,#tmp.P_ItemName asc
     end
 else
@@ -432,9 +432,9 @@ else
             left join Member e on d.M_id=@M_ID and d.M_Manager_ID = e.M_Guid
             left join ReportCheck f on b.RM_ReportGuid = f.RC_ReportGuid and RC_Status<>'D'
             left join ProjectInfo g on g.I_Guid = @I_Guid and g.I_Status<>'D'
-            where P_ParentId=@I_Guid and P_Period=@P_Period and b.RM_Status<>'D' and P_Type='03'
+            where P_ParentId=@I_Guid and P_Period=@P_Period and P_Type='03'
         )#tmp
-        where #tmp.P_ItemName<>'99'
+        where #tmp.P_ItemName<>'99' and #tmp.P_Status='A' and (#tmp.RM_Status='A' or #tmp.RM_Status is null)
         order by #tmp.P_Sort asc,#tmp.P_ItemName asc
     end
         ");
@@ -689,7 +689,7 @@ from
 	case a.RM_P_ExDeviceType when '01' then '空調' when '02' then '照明' when '03' then '非照明' else '' end as P_ExDeviceType_c
     ,b.P_Sort
 	from ReportMonth a
-	left join PushItem b on a.RM_PGuid = b.P_Guid
+	left join PushItem b on a.RM_PGuid = b.P_Guid and b.P_Type='04'
 	left join ProjectInfo c on a.RM_ProjectGuid = c.I_Guid and I_Status<>'D'
 	left join Member d on c.I_People = d.M_Guid and d.M_Status<>'D'
 	left join Member e on d.M_Manager_ID=e.M_Guid and e.M_Status<>'D'

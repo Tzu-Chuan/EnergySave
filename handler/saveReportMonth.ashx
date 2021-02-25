@@ -62,12 +62,13 @@ public class saveReportMonth : IHttpHandler,IRequiresSessionState
             string RM_ChkVal = null;
             string RM_NotChkVal = null;
             string RM_Remark = null;
-            string RM_ReportGuid = Guid.NewGuid().ToString("N");
+
             string mod_RM_ReportGuid = null;
             report_type = (context.Request["report_type"] != null) ? context.Request["report_type"].ToString().Split(',') : null;
             report_P_Guid = (context.Request["report_P_Guid"] != null) ? context.Request["report_P_Guid"].ToString().Split(',') : null;
             report_Guid = (context.Request["report_Guid"] != null) ? context.Request["report_Guid"].ToString().Split(',') : null;
             mod_RM_ReportGuid = (report_Guid[0] != null) ? report_Guid[0].ToString() : null;
+            string RM_ReportGuid = (mod_RM_ReportGuid == null || mod_RM_ReportGuid=="") ? Guid.NewGuid().ToString("N") : mod_RM_ReportGuid;
 
             for (int i = 0; i < report_type.Length; i++)
             {

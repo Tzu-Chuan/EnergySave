@@ -284,6 +284,14 @@
                             //$("#div_data").empty();
                             var strCreateDate;
                             var strChkDate;
+
+                            var strReportGuid = "";
+                            $(data).find("data_item").each(function (i) {
+                                if (strReportGuid == "") {
+                                    strReportGuid = $(this).children("RM_ReportGuid").text().trim();
+                                }
+                            });
+
                             $(data).find("data_item").each(function (i) {
                                 var strRow1Th1, strRow1Th2, strRow1Th3, strRow1Th4;
                                 var strRow2Th1, strRow2Th2, strRow2Th3;
@@ -515,7 +523,7 @@
                                         strHtml += '</div>';
                                         strHtml += '<div><input type="hidden" name="report_type" value="' + $(this).children("P_ItemName").text().trim() + '" /></div>';
                                         strHtml += '<div><input type="hidden" name="report_P_Guid" value="' + $(this).children("P_Guid").text().trim() + '" /></div>';
-                                        strHtml += '<div><input type="hidden" name="report_Guid" value="' + $(this).children("RM_ReportGuid").text().trim() + '" /></div>';
+                                        strHtml += '<div><input type="hidden" name="report_Guid" value="' + strReportGuid + '" /></div>';
                                         //$(this).children("P_ItemName").text().trim()
                                     } else {
                                         if ($(this).children("P_ItemName").text().trim() == '04') {
@@ -627,7 +635,7 @@
                                         strHtml += '</div>';
                                         strHtml += '<div><input type="hidden" name="report_type" value="' + $(this).children("P_ItemName").text().trim() + '" /></div>';
                                         strHtml += '<div><input type="hidden" name="report_P_Guid" value="' + $(this).children("P_Guid").text().trim() + '" /></div>';
-                                        strHtml += '<div><input type="hidden" name="report_Guid" value="' + $(this).children("RM_ReportGuid").text().trim() + '" /></div>';
+                                        strHtml += '<div><input type="hidden" name="report_Guid" value="' + strReportGuid + '" /></div>';
                                     }
                                 }
                                 

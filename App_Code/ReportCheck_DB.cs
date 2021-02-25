@@ -806,9 +806,12 @@ begin
 	--找出這一期小於這個月月報的所有資料出來SUM
 	insert into #tmpWhileNum(RM_CPType,countFinishKW,countFinish03,countFinish02)
 	select RM_CPType--RM_Stage,RM_Year,RM_Month,RM_ReportGuid,RM_ProjectGuid,RM_ReportType,RC_Status,RC_CheckType
-	,SUM(isnull(RM_Type4ValueSum,0.0)) as countFinishKW --累計完成數 KW(無風管)
-	,SUM(isnull(RM_Type3ValueSum,0.0)) as countFinish03--累計完成數(老舊 停車場 中型 大型)
-	,SUM(isnull(RM_Type2ValueSum,0.0)) as countFinish02--累計核定數(老舊 停車場 中型 大型)
+	--,SUM(isnull(RM_Type4ValueSum,0.0)) as countFinishKW --累計完成數 KW(無風管)
+	--,SUM(isnull(RM_Type3ValueSum,0.0)) as countFinish03--累計完成數(老舊 停車場 中型 大型)
+	--,SUM(isnull(RM_Type2ValueSum,0.0)) as countFinish02--累計核定數(老舊 停車場 中型 大型)
+	,SUM(isnull(RM_Type4Value1,0.0))+SUM(isnull(RM_Type4Value2,0.0))+SUM(isnull(RM_Type4Value3,0.0)) as countFinishKW --累計完成數 KW(無風管)
+	,SUM(isnull(RM_Type3Value1,0.0))+SUM(isnull(RM_Type3Value2,0.0))+SUM(isnull(RM_Type3Value3,0.0)) as countFinish03--累計完成數(老舊 停車場 中型 大型)
+	,SUM(isnull(RM_Type2Value1,0.0))+SUM(isnull(RM_Type2Value2,0.0))+SUM(isnull(RM_Type2Value3,0.0)) as countFinish02--累計核定數(老舊 停車場 中型 大型)
 	--,SUM(isnull(RM_Type3ValueSum,0.0)) as countApplyKW--累計申請數 KW(無風管)
 	--,SUM(isnull(RM_Type1ValueSum,0.0)) as countApply01--累計完成數(老舊 停車場 中型 大型)
 	from ReportMonth left join ReportCheck on RM_ReportGuid=RC_ReportGuid and RC_Status='A' and RC_CheckType='Y'
