@@ -98,7 +98,7 @@
                                 });
                             }
                             else
-                                tabstr += "<tr><td colspan='8'>查詢無資料</td></tr>";
+                                tabstr += "<tr><td colspan='9'>查詢無資料</td></tr>";
                             $("#tablist tbody").append(tabstr);
                             if ($("comp", data).text() == "SA")
                                 $("#cityspan").show();
