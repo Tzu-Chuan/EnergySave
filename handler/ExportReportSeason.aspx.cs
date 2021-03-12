@@ -552,10 +552,10 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
                     XmlNode pd = pdNode[j];
                     pdstr += "<tr>";
                     if (j == 0)
-                        pdstr += "<td rowspan=" + rspan_tmp + ">" + cpdesc + "</td>";
-                    pdstr += "<td nowrap='nowrap'>" + pd.Attributes[5].Value + "年<br>第" + pd.Attributes[6].Value + "季</td>";
-                    pdstr += "<td>" + pd.Attributes[7].Value + "</td>";
-                    pdstr += "<td>" + pd.Attributes[8].Value + "</td>";
+                        pdstr += "<td rowspan=" + rspan_tmp + " style='width:30%; word-break:break-all;'>" + cpdesc + "</td>";
+                    pdstr += "<td nowrap='nowrap' style='word-break:break-all;'>" + pd.Attributes[5].Value + "年<br>第" + pd.Attributes[6].Value + "季</td>";
+                    pdstr += "<td style='width:30%; word-break:break-all;'>" + pd.Attributes[7].Value + "</td>";
+                    pdstr += "<td style='width:30%; word-break:break-all;'>" + pd.Attributes[8].Value + "</td>";
                     pdstr += "</tr>";
                 }
                 tmpHtml += "<tbody>" + pdstr + "</tbody>";
