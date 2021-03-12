@@ -13,6 +13,7 @@ using System.Configuration;
 using System.Drawing;
 using System.Xml;
 using System.Text;
+using Microsoft.Office.Interop;
 
 public partial class handler_ExportReportSeason : System.Web.UI.Page
 {
@@ -291,19 +292,35 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
             }
             #endregion
 
-            doc.Save(Server.MapPath("~/Template/" + newName + ext));
+            doc.Save(Server.MapPath("~/Template/" + newName + ".docx"));
             Response.Clear();
             Response.ClearHeaders();
 
-            FileName = "季報-(" + f_city + ")" + f_year + "年第" + f_season + "季";
+			// pdf 用word轉檔,直接輸出table欄寬無法變更
+			if (ext == ".pdf")
+			{
+				//建立 word application instance
+				Microsoft.Office.Interop.Word.Application appWord = new Microsoft.Office.Interop.Word.Application();
+				//開啟 word 檔案
+				var wordDocument = appWord.Documents.Open(Server.MapPath("~/Template/" + newName + ".docx"));
+				//匯出為 pdf
+				wordDocument.ExportAsFixedFormat(Server.MapPath("~/Template/" + newName + ext), Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF);
+				//關閉 word 檔
+				wordDocument.Close();
+				//結束 word
+				appWord.Quit();
+			}
+
+			FileName = "季報-(" + f_city + ")" + f_year + "年第" + f_season + "季";
             string BrowserName = Request.Browser.Browser.ToLower();
             FileName = (BrowserName != "firefox") ? Server.UrlEncode(FileName + ext) : FileName + ext; // firefox 就愛跟別人不一樣
             Response.AddHeader("content-disposition", "attachment;filename=" + FileName);
             Response.ContentType="application/octet-stream";
             Response.WriteFile(Server.MapPath("~/Template/" + newName + ext));
             Response.Flush();
-            File.Delete(Server.MapPath("~/Template/" + newName + ext));
-            Response.End();
+            File.Delete(Server.MapPath("~/Template/" + newName + ".docx"));
+            File.Delete(Server.MapPath("~/Template/" + newName + ".pdf"));
+			Response.End();
         }
     }
 
@@ -522,8 +539,8 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
                 tmpHtml += "<thead><tr>";
                 tmpHtml += "<th>查核點</th>";
                 tmpHtml += "<th>年 季</th>";
-                tmpHtml += "<th style='width:35%;'>辦理情形</th>";
-                tmpHtml += "<th style='width:35%;'>進度差異說明</th>";
+                tmpHtml += "<th>辦理情形</th>";
+                tmpHtml += "<th>進度差異說明</th>";
                 tmpHtml += "</tr></thead>";
                 /// 進度說明
                 string pdstr = "";
@@ -536,7 +553,7 @@ public partial class handler_ExportReportSeason : System.Web.UI.Page
                     pdstr += "<tr>";
                     if (j == 0)
                         pdstr += "<td rowspan=" + rspan_tmp + ">" + cpdesc + "</td>";
-                    pdstr += "<td nowrap='nowrap' style='text-align:center;'>" + pd.Attributes[5].Value + "年<br>第" + pd.Attributes[6].Value + "季</td>";
+                    pdstr += "<td nowrap='nowrap'>" + pd.Attributes[5].Value + "年<br>第" + pd.Attributes[6].Value + "季</td>";
                     pdstr += "<td>" + pd.Attributes[7].Value + "</td>";
                     pdstr += "<td>" + pd.Attributes[8].Value + "</td>";
                     pdstr += "</tr>";
